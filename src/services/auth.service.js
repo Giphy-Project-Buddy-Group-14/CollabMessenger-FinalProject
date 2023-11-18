@@ -35,6 +35,6 @@ export const signIn = async (email, password) => {
   }
 };
 
-export const logoutUser = () => {
-  return signOut(auth);
-};
+// export const logoutUser = () => {
+//   return signOut(auth);
+// };
