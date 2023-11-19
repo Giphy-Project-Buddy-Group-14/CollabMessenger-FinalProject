@@ -1,6 +1,7 @@
-
 import { createContext, useState, useContext, useEffect } from 'react';
 import Cookies from 'js-cookie';
+import PropTypes from 'prop-types';
+
 
 const AuthContext = createContext();
 
@@ -18,10 +19,10 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const login = (userData) => {
+  const login = (user) => {
     setAuthenticated(true);
-    setUser(userData);
-    Cookies.set('auth', JSON.stringify({ isAuthenticated: true, user: userData }));
+    setUser(user);
+    Cookies.set('auth', JSON.stringify({ isAuthenticated: true, user: user }));
   };
 
   const logout = () => {
@@ -41,3 +42,6 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired
+}
