@@ -1,6 +1,12 @@
 import PropTypes from 'prop-types';
 
-export default function InputSection({ onChange, title, type, placeholder }) {
+export default function InputSection({
+  onChange,
+  label,
+  type,
+  placeholder,
+  value,
+}) {
   return (
     <>
       <div className="mt-4">
@@ -8,7 +14,7 @@ export default function InputSection({ onChange, title, type, placeholder }) {
           htmlFor={type}
           className="block text-sm font-medium text-gray-50 undefined"
         >
-          {title}
+          {label}
         </label>
         <div className="flex flex-col items-start">
           <input
@@ -18,6 +24,7 @@ export default function InputSection({ onChange, title, type, placeholder }) {
             placeholder={placeholder}
             required
             onChange={onChange}
+            value={value}
           />
         </div>
       </div>
@@ -27,7 +34,8 @@ export default function InputSection({ onChange, title, type, placeholder }) {
 
 InputSection.propTypes = {
   onChange: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
