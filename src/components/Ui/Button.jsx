@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-export default function Button({title, onClick}) {
+export default function Button({ title, onClick }) {
   return (
     <div>
       <button
@@ -16,4 +16,4 @@ export default function Button({title, onClick}) {
 Button.propTypes = {
   title: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
-}
+};

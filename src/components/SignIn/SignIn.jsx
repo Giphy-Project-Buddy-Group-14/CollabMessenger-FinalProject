@@ -50,7 +50,7 @@ export default function SignIn() {
             <div className="mt-4">
               <InputSection
                 onChange={emailChangeHandler}
-                title="Email"
+                label="Email"
                 type="email"
                 placeholder="name@mail.com"
               />
@@ -58,7 +58,7 @@ export default function SignIn() {
             <div className="mt-4">
               <InputSection
                 onChange={passwordChangeHandler}
-                title="Password"
+                label="Password"
                 type="password"
               />
             </div>

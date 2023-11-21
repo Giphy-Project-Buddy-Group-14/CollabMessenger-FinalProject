@@ -2,7 +2,6 @@ import { createContext, useState, useContext, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
 
-
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -43,5 +42,5 @@ export const useAuth = () => {
 };
 
 AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired
-}
+  children: PropTypes.node.isRequired,
+};

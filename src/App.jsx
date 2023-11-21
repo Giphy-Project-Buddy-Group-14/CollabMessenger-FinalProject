@@ -8,6 +8,9 @@ import Sidebar from './components/SideBar/SideBar';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ChatSection from './components/Ui/ChatSection';
+import Profile from './components/Profile/Profile';
+import EditProfile from './components/EditProfile/EditProfile';
+import RouteOutlet from './components/RouteOutlet/RouteOutlet';
 
 function App() {
   return (
@@ -40,6 +43,19 @@ function App() {
                 path="chat"
                 element={<ChatSection />}
               />
+              <Route
+                path="profile"
+                element={<RouteOutlet />}
+              >
+                <Route
+                  index
+                  element={<Profile />}
+                />
+                <Route
+                  path="edit"
+                  element={<EditProfile />}
+                />
+              </Route>
               <Route
                 path="signup"
                 element={<SignUp />}

@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import Button from '../Ui/Button';
 import InputSection from '../Ui/InputSection';
+import { createUser } from '../../services/user.service';
 export default function SignUp() {
   const navigate = useNavigate();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [username, setUsername] = useState();
 
   const emailChangeHandler = (event) => {
     setEmail(event.target.value);
@@ -17,11 +19,15 @@ export default function SignUp() {
     setPassword(event.target.value);
   };
 
+  const usernameChangeHandler = (event) => {
+    setUsername(event.target.value);
+  };
   const signUpHandler = async (event) => {
     event.preventDefault();
 
     try {
-      await signUp(email, password);
+      const user = await signUp(email, password);
+      await createUser(username, user.uid, email);
       toast.success('Sign up successful');
       navigate('/');
     } catch (error) {
@@ -43,7 +49,7 @@ export default function SignUp() {
             <div className="mb-4">
               <InputSection
                 onChange={emailChangeHandler}
-                title="Email"
+                label="Email"
                 type="email"
                 placeholder="name@mail.com"
               />
@@ -51,10 +57,18 @@ export default function SignUp() {
             <div className="mb-4">
               <InputSection
                 onChange={passwordChangeHandler}
-                title="Password"
+                label="Password"
                 type="password"
               />
             </div>
+            <div className="mb-4">
+              <InputSection
+                onChange={usernameChangeHandler}
+                label="Username"
+                type="text"
+              />
+            </div>
+
             <Button
               title="Sign Up"
               onClick={signUpHandler}
