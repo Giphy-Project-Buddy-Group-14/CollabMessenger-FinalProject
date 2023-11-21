@@ -16,8 +16,11 @@ export const signUp = async (email, password) => {
     console.log('User signed up:', user);
     return user;
   } catch (error) {
-    console.error('Sign in error:', error.message);
-    throw new Error(error.message);
+    if (error.code === 'auth/email-already-in-use'){
+      throw new Error('Email already in use');
+    } else {
+      throw new Error('Sign up error occurred...');
+    }
   }
 };
 

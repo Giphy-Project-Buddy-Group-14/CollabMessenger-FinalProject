@@ -22,6 +22,7 @@ export default function SignUp() {
   const usernameChangeHandler = (event) => {
     setUsername(event.target.value);
   };
+
   const signUpHandler = async (event) => {
     event.preventDefault();
 
@@ -31,8 +32,7 @@ export default function SignUp() {
       toast.success('Sign up successful');
       navigate('/');
     } catch (error) {
-      console.error(error.message);
-      toast.error('Sign up failed');
+      toast.error(error.message);
     }
   };
 

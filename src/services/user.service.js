@@ -8,6 +8,7 @@ import {
   orderByChild,
 } from 'firebase/database';
 import { db } from '../../firebaseAppConfig';
+import { setFileToStorage } from './storage.service';
 
 export const getUserByUsername = (username) => {
   return get(ref(db, `users/${username}`));
@@ -18,8 +19,10 @@ export const createUser = (username, uid, email) => {
     username,
     uid,
     email,
-    createdOn: new Date(),
-    updatedOn: new Date(),
+    firstName: '',
+    lastName: '',
+    phone: '',
+    createdOn: Date.now(),
   });
 };
 
@@ -54,20 +57,50 @@ export const getUserById = async (id) => {
   }
 };
 
-export const getUserData = (uid) => {
-  return get(query(ref(db, 'users'), orderByChild('uid'), equalTo(uid)));
+export const getUserData = async (uid) => {
+  try {
+    const userQuery = query(
+      ref(db, 'users'),
+      orderByChild('uid'),
+      equalTo(uid)
+    );
+    const userSnapshot = await get(userQuery);
+
+    if (userSnapshot.exists()) {
+      const user = extractFirstKeyContent(userSnapshot.val());
+      return user;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error('Error getting user data:', error);
+    throw error;
+  }
 };
 
-export const updateUser = async (id, content) => {
+export const updateUser = async (username, content) => {
   try {
-    const userRef = ref(db, `users/${id}`);
+    if (!username) {
+      throw new Error('Username is required for updates');
+    }
+    const userRef = ref(db, `users/${username}`);
     await update(userRef, {
       ...content,
       updatedOn: Date.now(),
     });
-    const result = await getUserById(id);
+    const result = await getUserById(username);
     return result;
   } catch (error) {
     console.error(error);
   }
+};
+
+export const updateProfilePic = async (file, currentUser) => {
+  const url = await setFileToStorage(file);
+
+  const updateProfilePic = {};
+  updateProfilePic[`/users/${currentUser}/profilePictureURL`] = url;
+
+  update(ref(db), updateProfilePic);
+  return url;
 };
