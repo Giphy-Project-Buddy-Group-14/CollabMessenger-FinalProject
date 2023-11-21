@@ -1,12 +1,14 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import PropTypes from 'prop-types';
+import { getUserData } from '../services/user.service';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState({});
 
   useEffect(() => {
     const storedAuth = Cookies.get('auth');
@@ -15,23 +17,32 @@ export const AuthProvider = ({ children }) => {
 
       setAuthenticated(isAuthenticated);
       setUser(user);
+
+      const fetchUser = async () => {
+        const fetchedUserData = await getUserData(user.uid);
+        setUserData(fetchedUserData);
+      }
+      fetchUser();
     }
   }, []);
 
-  const login = (user) => {
+  const login = async (user) => {
     setAuthenticated(true);
     setUser(user);
+    const fetchedUserData = await getUserData(user.uid);
+    setUserData(fetchedUserData);
     Cookies.set('auth', JSON.stringify({ isAuthenticated: true, user: user }));
   };
 
   const logout = () => {
     setAuthenticated(false);
     setUser(null);
+    setUserData({});
     Cookies.remove('auth');
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, userData, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
