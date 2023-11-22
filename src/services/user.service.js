@@ -2,6 +2,7 @@ import {
   get,
   set,
   ref,
+  child,
   update,
   query,
   equalTo,
@@ -103,4 +104,15 @@ export const updateProfilePic = async (file, currentUser) => {
 
   update(ref(db), updateProfilePic);
   return url;
+};
+
+export const checkIfUsernameExists = async (username) => {
+  try {
+    const usersRef = ref(db, 'users');
+    const snapshot = await get(child(usersRef, username));
+    return snapshot.exists();
+  }catch(error) {
+    console.error('Error checking if  username exists:', error.message);
+    throw new Error('Error checking if username exists');
+  }
 };

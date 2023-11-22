@@ -5,6 +5,9 @@ import { toast } from 'react-toastify';
 import Button from '../Ui/Button';
 import InputSection from '../Ui/InputSection';
 import { createUser } from '../../services/user.service';
+import { checkIfUsernameExists } from '../../services/user.service';
+import { MIN_USERNAME_LENGTH, MAX_USERNAME_LENGTH } from '../../common/constants';
+
 export default function SignUp() {
   const navigate = useNavigate();
   const [email, setEmail] = useState();
@@ -25,6 +28,18 @@ export default function SignUp() {
 
   const signUpHandler = async (event) => {
     event.preventDefault();
+
+   if(username.length < MIN_USERNAME_LENGTH || username.length > MAX_USERNAME_LENGTH) {
+    toast.error('Username must have between 5 and 35 symbols.');
+    return;
+   }
+
+   const usernameExists = await checkIfUsernameExists(username);
+   
+   if (usernameExists) {
+    toast.error('Username already exists.');
+    return
+   }
 
     try {
       const user = await signUp(email, password);
