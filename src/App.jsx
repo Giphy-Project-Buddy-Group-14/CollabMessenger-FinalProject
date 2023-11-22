@@ -4,7 +4,7 @@ import Home from './components/Home/Home';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SignIn from './components/SignIn/SignIn';
 import { AuthProvider } from './context/AuthContext';
-import Sidebar from './components/SideBar/SideBar';
+import Sidebar from './components/Sidebar/Sidebar';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ChatSection from './components/Ui/ChatSection';
@@ -12,12 +12,13 @@ import Profile from './components/Profile/Profile';
 import EditProfile from './components/EditProfile/EditProfile';
 import RouteOutlet from './components/RouteOutlet/RouteOutlet';
 import Users from './components/Users/Users';
+import AuthenticatedRoute from './components/hoc/AuthenticatedRoute';
 
 function App() {
   return (
     <>
       <ToastContainer
-        position="top-center"
+        position="bottom-left"
         autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -54,11 +55,19 @@ function App() {
               >
                 <Route
                   index
-                  element={<Profile />}
+                  element={
+                    <AuthenticatedRoute>
+                      <Profile />
+                    </AuthenticatedRoute>
+                  }
                 />
                 <Route
                   path="edit"
-                  element={<EditProfile />}
+                  element={
+                    <AuthenticatedRoute>
+                      <EditProfile />
+                    </AuthenticatedRoute>
+                  }
                 />
               </Route>
               <Route

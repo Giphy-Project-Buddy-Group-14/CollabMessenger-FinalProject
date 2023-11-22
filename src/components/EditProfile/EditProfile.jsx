@@ -4,17 +4,25 @@ import Button from '../Ui/Button';
 import { getUserById } from '../../services/user.service';
 import { useAuth } from '../../context/AuthContext';
 import LoadingIndicator from '../Ui/Loading';
-// import { toast } from 'react-toastify';
-// import { updateProfilePic } from '../../services/user.service';
+import { toast } from 'react-toastify';
+import { updateProfilePic } from '../../services/user.service';
 import { updateUser } from '../../services/user.service';
+import Avatar from '../Avatar/Avatar';
+import { useNavigate } from 'react-router-dom';
+
 export default function EditProfile() {
   const [phone, setPhone] = useState('');
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(true);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [isPictureReady, setIsPictureReady] = useState(false);
 
-  // const [picture, setPicture] = useState();
+  const navigate = useNavigate()
+
+  const [uploadedPictureUrl, setUploadedPictureUrl] = useState(
+    '/src/assets/empty_profile_pic.webp'
+  );
 
   const { user, userData } = useAuth();
 
@@ -36,10 +44,25 @@ export default function EditProfile() {
 
   const updateHandler = async (event) => {
     event.preventDefault();
-    const content = { phone: phone, firstName: firstName, lastName: lastName };
-    console.log('content -->', content);
-    console.log('userData -->', userData);
-    await updateUser(userData.username, content);
+
+    setLoading(true);
+
+    try {
+      const content = {
+        phone: phone,
+        firstName: firstName,
+        lastName: lastName,
+      };
+      await updateUser(userData.username, content);
+      toast.success('Successfully updated profile!');
+      navigate('/profile');
+    } catch (error) {
+      console.error(error.message);
+      toast.error(error.message);
+    }
+
+    // setIsPictureReady(false);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -52,23 +75,31 @@ export default function EditProfile() {
         setUsername(fetchedUser.username);
         setFirstName(fetchedUser.firstName);
         setLastName(fetchedUser.lastName);
+        setUploadedPictureUrl(fetchedUser.profilePictureURL);
       };
       fetchUser();
     }
 
     setLoading(false);
-  }, [user]);
+  }, []);
 
-  // const handleFileChange = async (event) => {
-  //   const file = event.target.files[0];
-  //   try {
-  //     const data = await updateProfilePic(file, userData.username);
-  //     setPicture(data);
-  //     toast.success('Successfully uploaded profile picture');
-  //   } catch (error) {
-  //     toast.error(error.message);
-  //   }
-  // };
+  const updateImageHandler = async (event) => {
+    setIsPictureReady(true);
+
+    event.preventDefault();
+    const file = event.target.files[0];
+
+    try {
+      const pictureUrl = await updateProfilePic(file, userData);
+      setUploadedPictureUrl(pictureUrl);
+      toast.success('Successfully uploaded profile picture!');
+    } catch (error) {
+      console.error(error.message);
+      toast.error(error.message);
+    }
+
+    setIsPictureReady(false);
+  };
 
   return (
     <>
@@ -118,15 +149,17 @@ export default function EditProfile() {
                   justifyContent: 'center',
                 }}
               >
-                <img
-                  className="w-24 h-24 mb-3 rounded-full shadow-lg"
-                  src="/src/assets/empty_profile_pic.webp"
-                  alt="Profile image"
+                <Avatar
+                  src={uploadedPictureUrl}
+                  isLoading={isPictureReady}
                 />
-                <Button
-                  title="Edit image"
-                  onClick={updateHandler}
-                />
+                <div className="flex flex-col items-start">
+                  <input
+                    type="file"
+                    id="fileInput"
+                    onChange={updateImageHandler}
+                  />
+                </div>
               </div>
               <Button
                 title="Update"

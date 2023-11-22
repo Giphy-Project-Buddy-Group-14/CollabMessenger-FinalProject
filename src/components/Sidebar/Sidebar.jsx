@@ -1,16 +1,18 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { Outlet } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import Navbar from '../Navbar/Navbar';
+import { Link, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import Navbar from "../Navbar/Navbar";
 
 export default function Sidebar() {
   const navigate = useNavigate();
 
   const { isAuthenticated, logout } = useAuth();
 
-  const signOutHandler = () => {
+  const signOutHandler = (event) => {
+    event.preventDefault();
+
     logout();
-    navigate('/');
+    navigate("/signin");
   };
 
   return (
@@ -59,13 +61,13 @@ export default function Sidebar() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  {' '}
+                  {" "}
                   <path
                     stroke="none"
                     d="M0 0h24v24H0z"
-                  />{' '}
-                  <polyline points="5 12 3 12 12 3 21 12 19 12" />{' '}
-                  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />{' '}
+                  />{" "}
+                  <polyline points="5 12 3 12 12 3 21 12 19 12" />{" "}
+                  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />{" "}
                   <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
                 </svg>
                 <span className="ms-3">Home</span>
@@ -86,19 +88,44 @@ export default function Sidebar() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  {' '}
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />{' '}
+                  {" "}
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />{" "}
                   <circle
                     cx="9"
                     cy="7"
                     r="4"
-                  />{' '}
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />{' '}
+                  />{" "}
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />{" "}
                   <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
                 <span className="flex-1 ms-3 whitespace-nowrap">Users</span>
               </Link>
             </li>
+
+            {isAuthenticated && (
+              <li>
+                <Link
+                  to="/profile"
+                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                >
+                  <svg
+                    className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1"
+                      d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+                    />
+                  </svg>
+
+                  <span className="flex-1 ms-3 whitespace-nowrap">Profile</span>
+                </Link>
+              </li>
+            )}
 
             {isAuthenticated && (
               <li>
@@ -142,12 +169,12 @@ export default function Sidebar() {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    {' '}
+                    {" "}
                     <path
                       stroke="none"
                       d="M0 0h24v24H0z"
-                    />{' '}
-                    <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />{' '}
+                    />{" "}
+                    <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />{" "}
                     <path d="M7 12h14l-3 -3m0 6l3 -3" />
                   </svg>
                   <span className="flex-1 ms-3 whitespace-nowrap">Sign In</span>
@@ -198,12 +225,12 @@ export default function Sidebar() {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    {' '}
+                    {" "}
                     <path
                       stroke="none"
                       d="M0 0h24v24H0z"
-                    />{' '}
-                    <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />{' '}
+                    />{" "}
+                    <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />{" "}
                     <path d="M20 12h-13l3 -3m0 6l-3 -3" />
                   </svg>
                   <span className="flex-1 ms-3 whitespace-nowrap">Logout</span>

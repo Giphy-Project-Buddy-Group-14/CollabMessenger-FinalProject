@@ -45,7 +45,7 @@ export default function SignUp() {
       const user = await signUp(email, password);
       await createUser(username, user.uid, email);
       toast.success('Sign up successful');
-      navigate('/');
+      navigate('/signin');
     } catch (error) {
       toast.error(error.message);
     }

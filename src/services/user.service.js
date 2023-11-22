@@ -39,22 +39,23 @@ function extractFirstKeyContent(data) {
   return null;
 }
 
-export const getUserById = async (id) => {
+export const getUserById = async (uid) => {
+  const usersRef = ref(db, 'users');
+  const queryRef = query(usersRef, orderByChild('uid'), equalTo(uid));
+
   try {
-    const result = await get(
-      ref(db, `users`),
-      orderByChild('uid'),
-      equalTo(id)
-    );
-    if (!result.exists()) {
-      throw new Error(`User with id ${id} does not exist!`);
+    const snapshot = await get(queryRef);
+
+    if (snapshot.exists()) {
+      const userData = snapshot.val();
+      const user = extractFirstKeyContent(userData);
+      return user;
+    } else {
+      return null;
     }
-
-    const user = extractFirstKeyContent(result.val());
-
-    return user;
   } catch (error) {
-    console.error(error);
+    console.error('Error fetching user data:', error);
+    throw error;
   }
 };
 
@@ -96,11 +97,13 @@ export const updateUser = async (username, content) => {
   }
 };
 
-export const updateProfilePic = async (file, currentUser) => {
-  const url = await setFileToStorage(file);
+export const updateProfilePic = async (file, userData) => {
+  const { username, uid } = userData;
 
+  const url = await setFileToStorage(uid, file);
+  console.log('url---> ', url);
   const updateProfilePic = {};
-  updateProfilePic[`/users/${currentUser}/profilePictureURL`] = url;
+  updateProfilePic[`/users/${username}/profilePictureURL`] = url;
 
   update(ref(db), updateProfilePic);
   return url;
