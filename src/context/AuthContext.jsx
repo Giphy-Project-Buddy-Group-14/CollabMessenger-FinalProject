@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const storedAuth = Cookies.get('auth');
@@ -21,9 +22,11 @@ export const AuthProvider = ({ children }) => {
       const fetchUser = async () => {
         const fetchedUserData = await getUserData(user.uid);
         setUserData(fetchedUserData);
-      }
+      };
       fetchUser();
     }
+
+    setIsLoading(false);
   }, []);
 
   const login = async (user) => {
@@ -42,7 +45,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, userData, login, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, user, userData, login, logout, isLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );
