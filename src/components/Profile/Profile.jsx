@@ -1,22 +1,22 @@
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import { useAuth } from '../../context/AuthContext';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { useAuth } from "../../context/AuthContext";
+import { useEffect } from "react";
+import { useState } from "react";
 export default function Profile() {
   const { userData } = useAuth();
 
   // const [loading, setLoading] = useState(true);
 
-  const [firstName, setFirstName] = useState('');
+  // const [firstName, setFirstName] = useState('');
 
   // const [lastName, setLastName] = useState('');
   // const [isPictureReady, setIsPictureReady] = useState(false);
-  
+
   // const { username, firstName, lastName } = userData;
 
-  useEffect(() => {
-    setFirstName(userData)
-  }, [])
+  // useEffect(() => {
+  //   setFirstName(userData)
+  // }, [])
 
   return (
     <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
@@ -29,10 +29,10 @@ export default function Profile() {
           alt="Bonnie image"
         />
         <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-          {firstName}
+          John Smith
         </h5>
         <span className="text-sm text-gray-500 dark:text-gray-400">
-          {/* {username} */}
+          johnsmith
         </span>
         <div className="flex mt-4 md:mt-6">
           <Link
