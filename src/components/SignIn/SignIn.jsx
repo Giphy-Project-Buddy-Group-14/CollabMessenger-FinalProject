@@ -20,9 +20,7 @@ export default function SignIn() {
       const user = await signIn(email, password);
       login(user);
       toast.success('Login successful');
-      setTimeout(() => {
-        navigate('/');
-      }, 500);
+      navigate('/');
     } catch (error) {
       console.error(error.message);
       toast.error('Authentication failed');

@@ -11,12 +11,13 @@ import ChatSection from './components/Ui/ChatSection';
 import Profile from './components/Profile/Profile';
 import EditProfile from './components/EditProfile/EditProfile';
 import RouteOutlet from './components/RouteOutlet/RouteOutlet';
+import Users from './components/Users/Users';
 
 function App() {
   return (
     <>
       <ToastContainer
-        position="top-right"
+        position="top-center"
         autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -38,6 +39,10 @@ function App() {
               <Route
                 index
                 element={<Home />}
+              />
+              <Route
+                path="users"
+                element={<Users />}
               />
               <Route
                 path="chat"
