@@ -7,12 +7,12 @@ import { AuthProvider } from './context/AuthContext';
 import Sidebar from './components/Sidebar/Sidebar';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ChatSection from './components/Ui/ChatSection';
 import Profile from './components/Profile/Profile';
 import EditProfile from './components/EditProfile/EditProfile';
 import RouteOutlet from './components/RouteOutlet/RouteOutlet';
 import Users from './components/Users/Users';
 import AuthenticatedRoute from './components/hoc/AuthenticatedRoute';
+import Chat from './components/Chat/Chat';
 
 function App() {
   return (
@@ -47,7 +47,7 @@ function App() {
               />
               <Route
                 path="chat"
-                element={<ChatSection />}
+                element={<Chat />}
               />
               <Route
                 path="profile"

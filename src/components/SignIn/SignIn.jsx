@@ -1,29 +1,29 @@
-import { useState } from 'react';
-import { signIn } from '../../services/auth.service';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { toast } from 'react-toastify';
-import Button from '../Ui/Button';
-import InputSection from '../Ui/InputSection';
+import { useState } from "react";
+import { signIn } from "../../services/auth.service";
+import { Link, useNavigate } from "react-router-dom";
+// import { useAuth } from "../../context/AuthContext";
+import { toast } from "react-toastify";
+import Button from "../Ui/Button";
+import InputSection from "../Ui/InputSection";
 
 export default function SignIn() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const navigate = useNavigate();
 
-  const { login } = useAuth();
+  // const { login } = useAuth();
 
   const signInHandler = async (event) => {
     event.preventDefault();
 
     try {
-      const user = await signIn(email, password);
-      login(user);
-      toast.success('Login successful');
-      navigate('/');
+      await signIn(email, password);
+      // login(user);
+      toast.success("Login successful");
+      navigate("/");
     } catch (error) {
       console.error(error.message);
-      toast.error('Authentication failed');
+      toast.error("Authentication failed");
     }
   };
 

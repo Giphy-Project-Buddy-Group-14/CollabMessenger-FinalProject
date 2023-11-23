@@ -1,12 +1,13 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import PropTypes from 'prop-types';
+import { Navigate, useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
+import useFirebaseAuth from "../../hooks/useFirebaseAuth";
 
 export default function AuthenticatedRoute({ children }) {
-  const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
 
-  if (isLoading) {
+  const { isAuthenticated, loading } = useFirebaseAuth();
+
+  if (loading) {
     return;
   }
 

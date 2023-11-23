@@ -1,30 +1,23 @@
-import { useEffect, useState } from 'react';
-import InputSection from '../Ui/InputSection';
-import Button from '../Ui/Button';
-import { getUserById } from '../../services/user.service';
-import { useAuth } from '../../context/AuthContext';
-import LoadingIndicator from '../Ui/Loading';
-import { toast } from 'react-toastify';
-import { updateProfilePic } from '../../services/user.service';
-import { updateUser } from '../../services/user.service';
-import Avatar from '../Avatar/Avatar';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import InputSection from "../Ui/InputSection";
+import Button from "../Ui/Button";
+import LoadingIndicator from "../Ui/LoadingIndicator";
+import { toast } from "react-toastify";
+import { updateProfilePic } from "../../services/user.service";
+import { updateUser } from "../../services/user.service";
+import { useNavigate } from "react-router-dom";
+import ImageWithLoading from "../helper/ImageWithLoading";
+import useFirebaseAuth from "../../hooks/useFirebaseAuth";
 
 export default function EditProfile() {
-  const [phone, setPhone] = useState('');
-  const [username, setUsername] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [isPictureReady, setIsPictureReady] = useState(false);
+  const { userProfile, profileLoading } = useFirebaseAuth();
 
-  const navigate = useNavigate()
+  const [phone, setPhone] = useState("");
+  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
-  const [uploadedPictureUrl, setUploadedPictureUrl] = useState(
-    '/src/assets/empty_profile_pic.webp'
-  );
-
-  const { user, userData } = useAuth();
+  const navigate = useNavigate();
 
   const usernameChangeHandler = (event) => {
     setUsername(event.target.value);
@@ -45,43 +38,29 @@ export default function EditProfile() {
   const updateHandler = async (event) => {
     event.preventDefault();
 
-    setLoading(true);
-
     try {
       const content = {
         phone: phone,
         firstName: firstName,
         lastName: lastName,
       };
-      await updateUser(userData.username, content);
-      toast.success('Successfully updated profile!');
-      navigate('/profile');
+      await updateUser(userProfile.username, content);
+      toast.success("Successfully updated profile!");
+      navigate("/profile");
     } catch (error) {
       console.error(error.message);
       toast.error(error.message);
     }
-
-    // setIsPictureReady(false);
-    setLoading(false);
   };
 
   useEffect(() => {
-    setLoading(true);
+    if (!userProfile) return;
 
-    if (user) {
-      const fetchUser = async () => {
-        const fetchedUser = await getUserById(user.uid);
-        setPhone(fetchedUser.phone);
-        setUsername(fetchedUser.username);
-        setFirstName(fetchedUser.firstName);
-        setLastName(fetchedUser.lastName);
-        setUploadedPictureUrl(fetchedUser.profilePictureURL);
-      };
-      fetchUser();
-    }
-
-    setLoading(false);
-  }, []);
+    setPhone(userProfile.phone);
+    setUsername(userProfile.username);
+    setFirstName(userProfile.firstName);
+    setLastName(userProfile.lastName);
+  }, [profileLoading]);
 
   const updateImageHandler = async (event) => {
     setIsPictureReady(true);
@@ -90,9 +69,9 @@ export default function EditProfile() {
     const file = event.target.files[0];
 
     try {
-      const pictureUrl = await updateProfilePic(file, userData);
-      setUploadedPictureUrl(pictureUrl);
-      toast.success('Successfully uploaded profile picture!');
+      await updateProfilePic(file, userProfile);
+      // setUploadedPictureUrl(pictureUrl);
+      toast.success("Successfully uploaded profile picture!");
     } catch (error) {
       console.error(error.message);
       toast.error(error.message);
@@ -103,8 +82,8 @@ export default function EditProfile() {
 
   return (
     <>
-      {loading && <LoadingIndicator />}
-      {!loading && (
+      {profileLoading && <LoadingIndicator />}
+      {!profileLoading && (
         <div>
           <div className="w-full px-6 py-4 mt-6 overflow-hidden bg-gray-700 shadow-md sm:max-w-lg sm:rounded-lg">
             <form>
@@ -143,15 +122,26 @@ export default function EditProfile() {
 
               <div
                 style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <Avatar
+                {/* <Avatar
                   src={uploadedPictureUrl}
                   isLoading={isPictureReady}
+                /> */}
+                <ImageWithLoading
+                  className="w-24 h-24 mb-3 rounded-full shadow-lg"
+                  // src={uploadedPictureUrl}
+                  src={
+                    userProfile.profilePictureURL ||
+                    "/src/assets/empty_profile_pic.webp"
+                  }
+                  // isLoading={isPictureReady}
+                  width="6rem"
+                  height="6rem"
                 />
                 <div className="flex flex-col items-start">
                   <input
