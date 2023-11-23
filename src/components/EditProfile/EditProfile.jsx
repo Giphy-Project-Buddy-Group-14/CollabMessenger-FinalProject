@@ -8,31 +8,34 @@ import { updateUser } from "../../services/user.service";
 import { useNavigate } from "react-router-dom";
 import ImageWithLoading from "../helper/ImageWithLoading";
 import useFirebaseAuth from "../../hooks/useFirebaseAuth";
+import { useUserProfile } from "../../hooks/useUserProfile";
 
 export default function EditProfile() {
-  const { userProfile, profileLoading } = useFirebaseAuth();
+  const { user } = useFirebaseAuth();
+  const { phone, username, firstName, lastName, userProfile, profileLoading } =
+    useUserProfile(user);
 
-  const [phone, setPhone] = useState("");
-  const [username, setUsername] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [editedPhone, setEditedPhone] = useState("");
+  const [editedUsername, setEditedUsername] = useState("");
+  const [editedFirstName, setEditedFirstName] = useState("");
+  const [editedLastName, setEditedLastName] = useState("");
 
   const navigate = useNavigate();
 
   const usernameChangeHandler = (event) => {
-    setUsername(event.target.value);
+    setEditedUsername(event.target.value);
   };
 
   const phoneChangeHandler = (event) => {
-    setPhone(event.target.value);
+    setEditedPhone(event.target.value);
   };
 
   const firstNameChangeHandler = (event) => {
-    setFirstName(event.target.value);
+    setEditedFirstName(event.target.value);
   };
 
   const lastNameChangeHandler = (event) => {
-    setLastName(event.target.value);
+    setEditedLastName(event.target.value);
   };
 
   const updateHandler = async (event) => {
@@ -40,11 +43,11 @@ export default function EditProfile() {
 
     try {
       const content = {
-        phone: phone,
-        firstName: firstName,
-        lastName: lastName,
+        phone: editedPhone,
+        firstName: editedFirstName,
+        lastName: editedLastName,
       };
-      await updateUser(userProfile.username, content);
+      await updateUser(username, content);
       toast.success("Successfully updated profile!");
       navigate("/profile");
     } catch (error) {
@@ -56,28 +59,27 @@ export default function EditProfile() {
   useEffect(() => {
     if (!userProfile) return;
 
-    setPhone(userProfile.phone);
-    setUsername(userProfile.username);
-    setFirstName(userProfile.firstName);
-    setLastName(userProfile.lastName);
+    setEditedPhone(phone);
+    setEditedUsername(username);
+    setEditedFirstName(firstName);
+    setEditedLastName(lastName);
   }, [profileLoading]);
 
   const updateImageHandler = async (event) => {
-    setIsPictureReady(true);
-
     event.preventDefault();
+
+    // setIsPictureReady(true);
     const file = event.target.files[0];
 
     try {
       await updateProfilePic(file, userProfile);
-      // setUploadedPictureUrl(pictureUrl);
       toast.success("Successfully uploaded profile picture!");
     } catch (error) {
       console.error(error.message);
       toast.error(error.message);
     }
 
-    setIsPictureReady(false);
+    // setIsPictureReady(false);
   };
 
   return (
@@ -93,14 +95,14 @@ export default function EditProfile() {
                     onChange={firstNameChangeHandler}
                     label="First Name"
                     type="text"
-                    value={firstName}
+                    value={editedFirstName}
                   />
                 </div>
                 <InputSection
                   onChange={lastNameChangeHandler}
                   label="Last Name"
                   type="text"
-                  value={lastName}
+                  value={editedLastName}
                 />
               </div>
               <div>
@@ -108,7 +110,7 @@ export default function EditProfile() {
                   onChange={usernameChangeHandler}
                   label="Username"
                   type="text"
-                  value={username}
+                  value={editedUsername}
                 />
               </div>
               <div className="mb-4">
@@ -116,10 +118,9 @@ export default function EditProfile() {
                   onChange={phoneChangeHandler}
                   label="Phone"
                   type="text"
-                  value={phone}
+                  value={editedPhone}
                 />
               </div>
-
               <div
                 style={{
                   display: "flex",
@@ -128,18 +129,13 @@ export default function EditProfile() {
                   justifyContent: "center",
                 }}
               >
-                {/* <Avatar
-                  src={uploadedPictureUrl}
-                  isLoading={isPictureReady}
-                /> */}
                 <ImageWithLoading
+                  key={userProfile.profilePictureURL}
                   className="w-24 h-24 mb-3 rounded-full shadow-lg"
-                  // src={uploadedPictureUrl}
                   src={
                     userProfile.profilePictureURL ||
                     "/src/assets/empty_profile_pic.webp"
                   }
-                  // isLoading={isPictureReady}
                   width="6rem"
                   height="6rem"
                 />

@@ -1,9 +1,19 @@
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import useFirebaseAuth from '../../hooks/useFirebaseAuth';
-import ImageWithLoading from '../helper/ImageWithLoading';
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import useFirebaseAuth from "../../hooks/useFirebaseAuth";
+import ImageWithLoading from "../helper/ImageWithLoading";
+import { useUserProfile } from "../../hooks/useUserProfile";
 
 export default function Profile() {
-  const { userProfile, profileLoading } = useFirebaseAuth();
+  const { user } = useFirebaseAuth();
+  const {
+    email,
+    firstName,
+    lastName,
+    username,
+    phone,
+    profilePictureURL,
+    profileLoading,
+  } = useUserProfile(user);
 
   return (
     <>
@@ -15,19 +25,22 @@ export default function Profile() {
           <div className="flex flex-col items-center pb-10">
             <ImageWithLoading
               className="w-24 h-24 mb-3 rounded-full shadow-lg"
-              src={
-                userProfile.profilePictureURL ||
-                '/src/assets/empty_profile_pic.webp'
-              }
+              src={profilePictureURL || "/src/assets/empty_profile_pic.webp"}
               alt="Some image"
               width="6rem"
               height="6rem"
             />
             <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-              {userProfile.firstName} {userProfile.lastName}
+              {firstName} {lastName}
             </h5>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              {userProfile.username}
+              Username: {username}
+            </span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              Email: {email}
+            </span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              Phone: {phone}
             </span>
             <div className="flex mt-4 md:mt-6">
               <Link
