@@ -4,17 +4,13 @@ import { Outlet } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
 import { auth } from '../../../firebaseAppConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
-// import { logout } from "../../services/auth.service";
-
 import { useAuth } from '../../hooks/useAuth';
-
-import LoadingIndicator from '../Ui/LoadingIndicator';
 
 export default function Sidebar() {
   const navigate = useNavigate();
 
-  const { currrentUser, logout } = useAuth();
-  const [user, loading, error] = useAuthState(auth);
+  const { logout } = useAuth();
+  const [user, loading] = useAuthState(auth);
 
   console.log('Sidebar user -> ', user);
 
