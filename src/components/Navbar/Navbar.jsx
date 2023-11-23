@@ -1,25 +1,28 @@
-import { Fragment } from 'react';
-import { Disclosure, Menu, Transition } from '@headlessui/react';
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Link } from 'react-router-dom';
-import SearchBar from '../Ui/SearchBar';
-import useFirebaseAuth from '../../hooks/useFirebaseAuth';
-import ImageWithLoading from '../helper/ImageWithLoading';
-import { useAuth } from '../../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { Fragment } from "react";
+import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
+import SearchBar from "../Ui/SearchBar";
+import useFirebaseAuth from "../../hooks/useFirebaseAuth";
+import ImageWithLoading from "../helper/ImageWithLoading";
+import { useAuth } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { useUserProfile } from "../../hooks/useUserProfile";
+
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
+  return classes.filter(Boolean).join(" ");
 }
 
 export default function Navbar() {
   const { logout } = useAuth();
-  const { userProfile, profileLoading, isAuthenticated } = useFirebaseAuth();
+  const { user, isAuthenticated } = useFirebaseAuth();
+  const { profilePictureURL, profileLoading } = useUserProfile(user);
   const navigate = useNavigate();
 
   const logoutNavbar = (event) => {
     event.preventDefault();
     logout();
-    navigate('/signin');
+    navigate("/signin");
   };
 
   return (
@@ -88,8 +91,8 @@ export default function Navbar() {
                             <ImageWithLoading
                               className="w-24 h-24 mb-3 rounded-full shadow-lg"
                               src={
-                                userProfile?.profilePictureURL ||
-                                '/src/assets/empty_profile_pic.webp'
+                                profilePictureURL ||
+                                "/src/assets/empty_profile_pic.webp"
                               }
                               alt="Some image"
                               width="2rem"
@@ -117,8 +120,8 @@ export default function Navbar() {
                                 <Link
                                   to="/profile"
                                   className={classNames(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700'
+                                    active ? "bg-gray-100" : "",
+                                    "block px-4 py-2 text-sm text-gray-700"
                                   )}
                                 >
                                   Your Profile
@@ -130,8 +133,8 @@ export default function Navbar() {
                                 <Link
                                   to="#"
                                   className={classNames(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700'
+                                    active ? "bg-gray-100" : "",
+                                    "block px-4 py-2 text-sm text-gray-700"
                                   )}
                                 >
                                   Settings
@@ -144,8 +147,8 @@ export default function Navbar() {
                                   to="#"
                                   onClick={logoutNavbar}
                                   className={classNames(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700'
+                                    active ? "bg-gray-100" : "",
+                                    "block px-4 py-2 text-sm text-gray-700"
                                   )}
                                 >
                                   Logout

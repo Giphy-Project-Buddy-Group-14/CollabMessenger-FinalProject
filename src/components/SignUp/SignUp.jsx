@@ -89,7 +89,6 @@ export default function SignUp() {
                 type="text"
               />
             </div>
-
             <Button
               title="Sign Up"
               onClick={signUpHandler}
