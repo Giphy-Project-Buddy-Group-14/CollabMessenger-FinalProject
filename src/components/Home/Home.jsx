@@ -1,26 +1,28 @@
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import Button from '../Ui/Button';
+import { useNavigate } from "react-router-dom";
+// import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
+
+import Button from "../Ui/Button";
 export default function Home() {
   const navigate = useNavigate();
 
-  const { isAuthenticated, logout } = useAuth();
+  const { currentUser, logout } = useAuth();
 
   const signUpHandler = () => {
-    navigate('/signup');
+    navigate("/signup");
   };
   const signInHandler = () => {
-    navigate('/signin');
+    navigate("/signin");
   };
   const signOutHandler = () => {
     logout();
-    navigate('/');
+    navigate("/");
   };
 
   return (
     <>
       <h1>Home</h1>
-      {!isAuthenticated && (
+      {!currentUser && (
         <div>
           <Button
             title="Sign Up"
@@ -34,7 +36,7 @@ export default function Home() {
         </div>
       )}
 
-      {isAuthenticated && (
+      {currentUser && (
         <div>
           <h1>Logged In</h1>
           <Button
