@@ -16,8 +16,6 @@ const useFirebaseAuth = () => {
       if (user) {
         try {
           const profile = await fetchUserProfile(user.uid);
-          // console.log("profile --> ", profile);
-          // console.log("profile.username --> ", profile.username);
 
           if (profile && profile.username) {
             const dbRef = ref(getDatabase(), "users/" + profile.username);

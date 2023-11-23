@@ -40,11 +40,7 @@ export const signIn = async (email, password) => {
   }
 };
 
-// export const logoutUser = () => {
-//   return signOut(auth);
-// };
-
-export const callSignOut = async () => {
+export const logoutUser = async () => {
   try {
     await signOut(auth);
     // Handle successful logout, e.g., redirect or update state

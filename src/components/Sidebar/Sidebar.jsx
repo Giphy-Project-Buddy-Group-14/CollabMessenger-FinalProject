@@ -1,14 +1,14 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Outlet } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 // import { useAuth } from "../../context/AuthContext";
-import Navbar from "../Navbar/Navbar";
-import { auth } from "../../../firebaseAppConfig";
-import { useAuthState } from "react-firebase-hooks/auth";
+import Navbar from '../Navbar/Navbar';
+import { auth } from '../../../firebaseAppConfig';
+import { useAuthState } from 'react-firebase-hooks/auth';
 // import { logout } from "../../services/auth.service";
 
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from '../../hooks/useAuth';
 
-import LoadingIndicator from "../Ui/LoadingIndicator";
+import LoadingIndicator from '../Ui/LoadingIndicator';
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -16,13 +16,13 @@ export default function Sidebar() {
   const { currrentUser, logout } = useAuth();
   const [user, loading, error] = useAuthState(auth);
 
-  console.log("Sidebar user -> ", user);
+  console.log('Sidebar user -> ', user);
 
   const signOutHandler = (event) => {
     event.preventDefault();
 
     logout();
-    navigate("/signin");
+    navigate('/signin');
   };
 
   return (
@@ -74,13 +74,13 @@ export default function Sidebar() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     >
-                      {" "}
+                      {' '}
                       <path
                         stroke="none"
                         d="M0 0h24v24H0z"
-                      />{" "}
-                      <polyline points="5 12 3 12 12 3 21 12 19 12" />{" "}
-                      <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />{" "}
+                      />{' '}
+                      <polyline points="5 12 3 12 12 3 21 12 19 12" />{' '}
+                      <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />{' '}
                       <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
                     </svg>
                     <span className="ms-3">Home</span>
@@ -101,14 +101,14 @@ export default function Sidebar() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     >
-                      {" "}
-                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />{" "}
+                      {' '}
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />{' '}
                       <circle
                         cx="9"
                         cy="7"
                         r="4"
-                      />{" "}
-                      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />{" "}
+                      />{' '}
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />{' '}
                       <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                     </svg>
                     <span className="flex-1 ms-3 whitespace-nowrap">Users</span>
@@ -186,12 +186,12 @@ export default function Sidebar() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                       >
-                        {" "}
+                        {' '}
                         <path
                           stroke="none"
                           d="M0 0h24v24H0z"
-                        />{" "}
-                        <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />{" "}
+                        />{' '}
+                        <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />{' '}
                         <path d="M7 12h14l-3 -3m0 6l3 -3" />
                       </svg>
                       <span className="flex-1 ms-3 whitespace-nowrap">
@@ -246,12 +246,12 @@ export default function Sidebar() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                       >
-                        {" "}
+                        {' '}
                         <path
                           stroke="none"
                           d="M0 0h24v24H0z"
-                        />{" "}
-                        <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />{" "}
+                        />{' '}
+                        <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />{' '}
                         <path d="M20 12h-13l3 -3m0 6l-3 -3" />
                       </svg>
                       <span className="flex-1 ms-3 whitespace-nowrap">

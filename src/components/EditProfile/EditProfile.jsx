@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 import InputSection from "../Ui/InputSection";
 import Button from "../Ui/Button";
-import { fetchUserProfile } from "../../services/user.service";
-import { useAuth } from "../../hooks/useAuth";
 import LoadingIndicator from "../Ui/LoadingIndicator";
 import { toast } from "react-toastify";
 import { updateProfilePic } from "../../services/user.service";
 import { updateUser } from "../../services/user.service";
-import Avatar from "../Avatar/Avatar";
 import { useNavigate } from "react-router-dom";
 import ImageWithLoading from "../helper/ImageWithLoading";
 import useFirebaseAuth from "../../hooks/useFirebaseAuth";
@@ -17,10 +14,8 @@ export default function EditProfile() {
 
   const [phone, setPhone] = useState("");
   const [username, setUsername] = useState("");
-  // const [loading, setLoading] = useState(true);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [isPictureReady, setIsPictureReady] = useState(false);
 
   const navigate = useNavigate();
 
@@ -74,7 +69,7 @@ export default function EditProfile() {
     const file = event.target.files[0];
 
     try {
-      const pictureUrl = await updateProfilePic(file, userProfile);
+      await updateProfilePic(file, userProfile);
       // setUploadedPictureUrl(pictureUrl);
       toast.success("Successfully uploaded profile picture!");
     } catch (error) {

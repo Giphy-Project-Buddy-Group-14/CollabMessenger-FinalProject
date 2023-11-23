@@ -2,7 +2,6 @@ import { useState } from "react";
 import { signIn } from "../../services/auth.service";
 import { Link, useNavigate } from "react-router-dom";
 // import { useAuth } from "../../context/AuthContext";
-import { useAuth } from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 import Button from "../Ui/Button";
 import InputSection from "../Ui/InputSection";
@@ -18,7 +17,7 @@ export default function SignIn() {
     event.preventDefault();
 
     try {
-      const user = await signIn(email, password);
+      await signIn(email, password);
       // login(user);
       toast.success("Login successful");
       navigate("/");

@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
-import useFirebaseAuth from "../../hooks/useFirebaseAuth";
-import ImageWithLoading from "../helper/ImageWithLoading";
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import useFirebaseAuth from '../../hooks/useFirebaseAuth';
+import ImageWithLoading from '../helper/ImageWithLoading';
 
 export default function Profile() {
   const { userProfile, profileLoading } = useFirebaseAuth();
@@ -17,7 +17,7 @@ export default function Profile() {
               className="w-24 h-24 mb-3 rounded-full shadow-lg"
               src={
                 userProfile.profilePictureURL ||
-                "/src/assets/empty_profile_pic.webp"
+                '/src/assets/empty_profile_pic.webp'
               }
               alt="Some image"
               width="6rem"
