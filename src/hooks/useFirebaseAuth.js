@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../firebaseAppConfig";
-import { getDatabase, ref, onValue, off } from "firebase/database";
-import { fetchUserProfile } from "../services/user.service";
+import { useEffect, useState } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../../firebaseAppConfig';
+import { getDatabase, ref, onValue, off } from 'firebase/database';
+import { fetchUserProfile } from '../services/user.service';
 
-const useFirebaseAuth = () => {
+export default function useFirebaseAuth() {
   const [user, loading, error] = useAuthState(auth);
   const isAuthenticated = !!user; // true if user is not null
 
@@ -18,7 +18,7 @@ const useFirebaseAuth = () => {
           const profile = await fetchUserProfile(user.uid);
 
           if (profile && profile.username) {
-            const dbRef = ref(getDatabase(), "users/" + profile.username);
+            const dbRef = ref(getDatabase(), 'users/' + profile.username);
             onValue(
               dbRef,
               (snapshot) => {
@@ -28,7 +28,7 @@ const useFirebaseAuth = () => {
                 setProfileLoading(false);
               },
               (error) => {
-                console.error("Error fetching profile: ", error);
+                console.error('Error fetching profile: ', error);
                 setProfileLoading(false);
               }
             );
@@ -36,7 +36,7 @@ const useFirebaseAuth = () => {
             return () => off(dbRef);
           }
         } catch (error) {
-          console.error("Error: ", error);
+          console.error('Error: ', error);
           setProfileLoading(false);
         }
       } else {
@@ -48,6 +48,4 @@ const useFirebaseAuth = () => {
   }, [user]);
 
   return { user, loading, error, isAuthenticated, userProfile, profileLoading };
-};
-
-export default useFirebaseAuth;
+}
