@@ -12,8 +12,6 @@ export default function Sidebar() {
   const { logout } = useAuth();
   const [user, loading] = useAuthState(auth);
 
-  console.log('Sidebar user -> ', user);
-
   const signOutHandler = (event) => {
     event.preventDefault();
 
