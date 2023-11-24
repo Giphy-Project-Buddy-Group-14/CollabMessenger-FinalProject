@@ -63,7 +63,7 @@ export default function EditProfile() {
     setEditedUsername(username);
     setEditedFirstName(firstName);
     setEditedLastName(lastName);
-  }, [profileLoading]);
+  }, [firstName, lastName, phone, profileLoading, userProfile, username]);
 
   const updateImageHandler = async (event) => {
     event.preventDefault();
