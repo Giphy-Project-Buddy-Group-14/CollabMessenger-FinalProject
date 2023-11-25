@@ -10,8 +10,7 @@ import {
 } from 'firebase/database';
 import { db } from '../../firebaseAppConfig';
 import { setFileToStorage } from './storage.service';
-import { limitToFirst, limitToLast, startAfter, endBefore } from 'firebase/database';
-
+import { limitToLast } from 'firebase/database';
 export const createUser = (username, uid, email) => {
   return set(ref(db, `users/${username}`), {
     username,
@@ -41,7 +40,6 @@ function extractFirstKeyContent(data) {
 }
 
 export const fetchUserProfile = async (uid) => {
-  const usersRef = ref(db, 'users');
   const queryRef = query(usersRef, orderByChild('uid'), equalTo(uid));
 
   try {
@@ -60,62 +58,43 @@ export const fetchUserProfile = async (uid) => {
   }
 };
 
+export const usersRef = ref(db, 'users');
 
 export const fetchTotalUserCount = async () => {
-  const usersRef = ref(db, 'users');
-  const totalUsersSnapshot = await get(usersRef);
-
-  if (totalUsersSnapshot.exists()) {
-    const totalUserCount = totalUsersSnapshot.numChildren();
-    return totalUserCount;
-  } else {
-    return 0;
+  try {
+    const snapshot = await get(usersRef);
+    const totalCount = snapshot?.size || 0;
+    return totalCount;
+  } catch (error) {
+    console.log('fetchTotalUserCount error: ', error);
   }
 };
 
-
-export const fetchUsersWithPagination = async (pageSize, username = null, pageDirection = 'next') => {
-  const usersRef = ref(db, 'users');
-  let queryRef;
-
-  let orderByAsc
-  // orderByAsc ? endBefore(username) : startAfter(username)
-  if (pageDirection === 'next') {
-    orderByAsc = false
-  } else {
-    orderByAsc = true
-  }
-
-  if (username) {
-    queryRef = query(
-      usersRef,
-      orderByChild('username'),
-      orderByAsc ? endBefore(username) : startAfter(username),
-      limitToFirst(pageSize)
-    );
-  } else {
-    queryRef = query(
-      usersRef,
-      orderByChild('username'),
-      orderByAsc ? limitToLast(pageSize) : limitToFirst(pageSize)
-    );
-  }
-
+export async function fetchUsersWithPagination(currentPage, itemsPerPage) {
   try {
-    const snapshot = await get(queryRef);
+    const endIndex = currentPage * itemsPerPage;
+    // const startIndex = endIndex - itemsPerPage;
 
-    if (snapshot.exists()) {
-      const userData = snapshot.val();
-      const usersList = Object.values(userData);
-      return usersList;
-    } else {
-      return [];
+    const snapshot = await get(query(usersRef, limitToLast(endIndex)));
+
+    if (!snapshot.exists()) {
+      throw new Error('No data available');
     }
+
+    const users = [];
+    snapshot.forEach((childSnapshot) => {
+      users.push({
+        id: childSnapshot.key,
+        ...childSnapshot.val(),
+      });
+    });
+
+    return users;
   } catch (error) {
-    console.error('Error fetching user data:', error);
+    console.error('Error fetching users with pagination:', error);
     throw error;
   }
-};
+}
 
 export const getUserData = async (uid) => {
   try {
@@ -159,7 +138,6 @@ export const updateProfilePic = async (file, userData) => {
   const { username, uid } = userData;
 
   const url = await setFileToStorage(uid, file);
-  console.log('url---> ', url);
   const updateProfilePic = {};
   updateProfilePic[`/users/${username}/profilePictureURL`] = url;
 
@@ -169,7 +147,6 @@ export const updateProfilePic = async (file, userData) => {
 
 export const checkIfUsernameExists = async (username) => {
   try {
-    const usersRef = ref(db, 'users');
     const snapshot = await get(child(usersRef, username));
     return snapshot.exists();
   } catch (error) {
@@ -177,9 +154,6 @@ export const checkIfUsernameExists = async (username) => {
     throw new Error('Error checking if username exists');
   }
 };
-
-
-
 
 export const fromUsersDocument = (snapshot) => {
   const usersDocument = snapshot.val();
@@ -196,7 +170,7 @@ export const fromUsersDocument = (snapshot) => {
 
 export const getAllUsers = async () => {
   try {
-    const snapshot = await get(ref(db, "users"));
+    const snapshot = await get(ref(db, 'users'));
 
     if (!snapshot.exists()) {
       return [];
@@ -204,8 +178,7 @@ export const getAllUsers = async () => {
 
     return fromUsersDocument(snapshot);
   } catch (error) {
-    console.error("Error fetching users:", error);
-    throw error; 
+    console.error('Error fetching users:', error);
+    throw error;
   }
 };
-

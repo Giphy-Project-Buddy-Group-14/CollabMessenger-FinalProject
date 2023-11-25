@@ -2,76 +2,77 @@ import ImageWithLoading from '../helper/ImageWithLoading';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchUsersWithPagination } from '../../services/user.service';
-import { DEFAULT_FETCH_USERS_LIMIT } from '../../common/constants';
+import {
+  DEFAULT_FETCH_USERS_LIMIT,
+  DEFAULT_TIME_ZONE,
+} from '../../common/constants';
 import LoadingIndicator from '../Ui/LoadingIndicator';
 import Pagination from '../Pagination/Pagination';
-import convertDate from '../helper/convertDate';
+import { usersRef, fetchTotalUserCount } from '../../services/user.service';
+import { off } from 'firebase/database';
+import moment from 'moment-timezone';
+
 export default function Users() {
   const [users, setUsers] = useState([]);
-  const [isLoadingUsers, setIsLoadingUsers] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [username, setUsername] = useState(null);
-  const [pageDirection, setPageDirection] = useState('next');
+  const [totalItems, setTotalItems] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(DEFAULT_FETCH_USERS_LIMIT);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      setIsLoadingUsers(true);
-      try {
-        // const all = await fetchUsersWithPagination(10);
-        // console.log('all --> ', all);
-
-        console.log(
-          'DEFAULT_FETCH_USERS_LIMIT --> ',
-          DEFAULT_FETCH_USERS_LIMIT
-        );
-        // console.log('username --> ', username);
-
-        const fetchedUsers = await fetchUsersWithPagination(
-          DEFAULT_FETCH_USERS_LIMIT,
-          username,
-          pageDirection
-        );
-        console.log('fetchedUsers --> ', fetchedUsers);
-        setUsers(fetchedUsers);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      } finally {
-        setIsLoadingUsers(false);
-      }
+    fetchData();
+    return () => {
+      off(usersRef);
     };
+  }, [itemsPerPage, currentPage]);
 
-    fetchUsers();
-  }, [username, pageDirection]);
-
-  const firstUsername = () => users[0].username;
-  const lastUsername = () => users[users.length - 1].username;
-
-  const loadMoreUsers = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-    console.log('lastUsername -->', lastUsername);
-    setUsername(lastUsername);
+  const sortItems = (items) => {
+    return items
+      .slice(0, itemsPerPage)
+      .sort((a, b) => b.createdOn - a.createdOn)
+      .map((item) => ({
+        ...item,
+        createdOn: item?.createdOn
+          ? moment(item.createdOn)
+              .tz(DEFAULT_TIME_ZONE)
+              .format('MMM Do YYYY, h:mm:ss A')
+          : '',
+      }));
   };
+
+  async function fetchData() {
+    try {
+      setLoading(true);
+      const userCount = await fetchTotalUserCount();
+      setTotalItems(userCount);
+
+      const items = await fetchUsersWithPagination(currentPage, itemsPerPage);
+
+      const sortedItems = sortItems(items);
+      setUsers(sortedItems);
+    } catch (error) {
+      console.log('fetchData error: ', error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const nextPageHandler = (pageNumber) => {
     setCurrentPage(pageNumber);
-    console.log('nextPageHandler --> ', pageNumber);
-    console.log('lastUsername -->', lastUsername);
-    setUsername(lastUsername);
-    setPageDirection('next')
   };
 
   const previousPageHandler = (pageNumber) => {
     setCurrentPage(pageNumber);
-    console.log('onPreviousPageClick --> ', pageNumber);
-    console.log('firstUsername -->', firstUsername);
-    setUsername(firstUsername);
-    setPageDirection('previous')
+  };
+
+  const perPageHandler = (perPage) => {
+    setItemsPerPage(Number(perPage));
   };
 
   return (
     <>
-      {isLoadingUsers && <LoadingIndicator />}
-      {!isLoadingUsers && (
+      {loading && <LoadingIndicator />}
+      {!loading && (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
           <h1 className="text-4xl text-center mt-4 mb-4">Users</h1>
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -117,13 +118,7 @@ export default function Users() {
                   scope="col"
                   className="px-6 py-3"
                 >
-                  Created On
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3"
-                >
-                  Action
+                  Created At
                 </th>
               </tr>
             </thead>
@@ -150,37 +145,22 @@ export default function Users() {
                     />
                   </th>
                   <td className="px-6 py-4">{user.username}</td>
-                  <td className="px-6 py-4">{user.uid}</td>
+                  <td className="px-6 py-4">{user.firstName}</td>
                   <td className="px-6 py-4">{user.lastName}</td>
                   <td className="px-6 py-4">{user.phone}</td>
                   <td className="px-6 py-4">{user.email}</td>
-                  <td className="px-6 py-4">{convertDate(user.createdOn)}</td>
-                  <td className="px-6 py-4">
-                    <Link
-                      to="#"
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                    >
-                      Edit
-                    </Link>
-                  </td>
+                  <td className="px-6 py-4">{user.createdOn}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-          {isLoadingUsers ? (
-            <p>Loading...</p>
-          ) : (
-            <button
-              onClick={loadMoreUsers}
-              disabled={isLoadingUsers}
-            >
-              Load More
-            </button>
-          )}
           <Pagination
+            totalItems={totalItems}
             currentPage={currentPage}
+            itemsPerPage={itemsPerPage}
             onPreviousPageClick={previousPageHandler}
             onNextPageClick={nextPageHandler}
+            onPerPageClick={perPageHandler}
           />
         </div>
       )}
