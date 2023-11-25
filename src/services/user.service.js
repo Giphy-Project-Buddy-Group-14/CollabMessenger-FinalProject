@@ -10,7 +10,7 @@ import {
 } from 'firebase/database';
 import { db } from '../../firebaseAppConfig';
 import { setFileToStorage } from './storage.service';
-import { limitToFirst, limitToLast, startAt, startAfter, endBefore } from 'firebase/database';
+import { limitToFirst, limitToLast, startAfter, endBefore } from 'firebase/database';
 
 export const createUser = (username, uid, email) => {
   return set(ref(db, `users/${username}`), {
@@ -60,25 +60,6 @@ export const fetchUserProfile = async (uid) => {
   }
 };
 
-// export const fetchUsersWithLimit = async (limit) => {
-//   const usersRef = ref(db, 'users');
-//   const queryRef = query(usersRef, limitToFirst(limit));
-
-//   try {
-//     const snapshot = await get(queryRef);
-
-//     if (snapshot.exists()) {
-//       const userData = snapshot.val();
-//       const usersList = Object.values(userData);
-//       return usersList;
-//     } else {
-//       return [];
-//     }
-//   } catch (error) {
-//     console.error('Error fetching user data:', error);
-//     throw error;
-//   }
-// };
 
 export const fetchTotalUserCount = async () => {
   const usersRef = ref(db, 'users');
@@ -196,3 +177,35 @@ export const checkIfUsernameExists = async (username) => {
     throw new Error('Error checking if username exists');
   }
 };
+
+
+
+
+export const fromUsersDocument = (snapshot) => {
+  const usersDocument = snapshot.val();
+
+  return Object.keys(usersDocument).map((key) => {
+    const user = usersDocument[key];
+    return {
+      ...user,
+      username: key,
+      createdOn: new Date(user.createdOn),
+    };
+  });
+};
+
+export const getAllUsers = async () => {
+  try {
+    const snapshot = await get(ref(db, "users"));
+
+    if (!snapshot.exists()) {
+      return [];
+    }
+
+    return fromUsersDocument(snapshot);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw error; 
+  }
+};
+

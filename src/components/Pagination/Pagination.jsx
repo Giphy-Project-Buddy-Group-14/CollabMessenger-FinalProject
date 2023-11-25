@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
+  
 
 import { DEFAULT_FETCH_USERS_LIMIT } from '../../common/constants';
 export default function Pagination({ currentPage, onPreviousPageClick, onNextPageClick }) {
