@@ -1,6 +1,6 @@
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
 export default function Pagination({
   totalItems,
@@ -38,7 +38,7 @@ export default function Pagination({
   const perPageClickHandler = (event) => {
     event.preventDefault();
     const selectedValue = event.currentTarget.getAttribute(
-      "data-per-page-value"
+      'data-per-page-value'
     );
     onPerPageClick(selectedValue);
   };
@@ -142,7 +142,7 @@ export default function Pagination({
               <div
                 id="dropdown"
                 className={` z-10 ${
-                  isDropdownOpen ? "" : "hidden"
+                  isDropdownOpen ? '' : 'hidden'
                 } bg-white divide-y divide-gray-100 rounded-lg shadow w-16 dark:bg-gray-700`}
               >
                 <ul

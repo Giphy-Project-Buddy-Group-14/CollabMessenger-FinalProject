@@ -1,16 +1,16 @@
-import ImageWithLoading from "../helper/ImageWithLoading";
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { fetchUsersWithPagination } from "../../services/user.service";
+import ImageWithLoading from '../helper/ImageWithLoading';
+import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { fetchUsersWithPagination } from '../../services/user.service';
 import {
   DEFAULT_FETCH_USERS_LIMIT,
   DEFAULT_TIME_ZONE,
-} from "../../common/constants";
-import LoadingIndicator from "../Ui/LoadingIndicator";
-import Pagination from "../Pagination/Pagination";
-import { usersRef, fetchTotalUserCount } from "../../services/user.service";
-import { off } from "firebase/database";
-import moment from "moment-timezone";
+} from '../../common/constants';
+import LoadingIndicator from '../Ui/LoadingIndicator';
+import Pagination from '../Pagination/Pagination';
+import { usersRef, fetchTotalUserCount } from '../../services/user.service';
+import { off } from 'firebase/database';
+import moment from 'moment-timezone';
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -35,8 +35,8 @@ export default function Users() {
         createdOn: item?.createdOn
           ? moment(item.createdOn)
               .tz(DEFAULT_TIME_ZONE)
-              .format("MMM Do YYYY, h:mm:ss A")
-          : "",
+              .format('MMM Do YYYY, h:mm:ss A')
+          : '',
       }));
   };
 
@@ -51,7 +51,7 @@ export default function Users() {
       const sortedItems = sortItems(items);
       setUsers(sortedItems);
     } catch (error) {
-      console.log("fetchData error: ", error);
+      console.log('fetchData error: ', error);
     } finally {
       setLoading(false);
     }
@@ -134,8 +134,8 @@ export default function Users() {
                   key={index}
                   className={`${
                     index % 2 === 0
-                      ? "even:bg-gray-50 even:dark:bg-gray-800"
-                      : "odd:bg-white odd:dark:bg-gray-900"
+                      ? 'even:bg-gray-50 even:dark:bg-gray-800'
+                      : 'odd:bg-white odd:dark:bg-gray-900'
                   } border-b dark:border-gray-700`}
                 >
                   <th
