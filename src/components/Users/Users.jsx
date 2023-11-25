@@ -120,12 +120,6 @@ export default function Users() {
                 >
                   Created At
                 </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3"
-                >
-                  Action
-                </th>
               </tr>
             </thead>
             <tbody>
@@ -151,19 +145,11 @@ export default function Users() {
                     />
                   </th>
                   <td className="px-6 py-4">{user.username}</td>
-                  <td className="px-6 py-4">{user.uid}</td>
+                  <td className="px-6 py-4">{user.firstName}</td>
                   <td className="px-6 py-4">{user.lastName}</td>
                   <td className="px-6 py-4">{user.phone}</td>
                   <td className="px-6 py-4">{user.email}</td>
                   <td className="px-6 py-4">{user.createdOn}</td>
-                  <td className="px-6 py-4">
-                    <Link
-                      to="#"
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                    >
-                      Edit
-                    </Link>
-                  </td>
                 </tr>
               ))}
             </tbody>
