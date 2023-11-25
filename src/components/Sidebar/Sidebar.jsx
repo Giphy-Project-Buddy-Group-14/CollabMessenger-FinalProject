@@ -111,6 +111,34 @@ export default function Sidebar() {
                   </Link>
                 </li>
 
+                <li>
+                  <Link
+                    to="/teams"
+                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  >
+                    <svg
+                      className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      {' '}
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />{' '}
+                      <circle
+                        cx="9"
+                        cy="7"
+                        r="4"
+                      />{' '}
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />{' '}
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    <span className="flex-1 ms-3 whitespace-nowrap">Teams</span>
+                  </Link>
+                </li>
+
                 {user && (
                   <li>
                     <Link
