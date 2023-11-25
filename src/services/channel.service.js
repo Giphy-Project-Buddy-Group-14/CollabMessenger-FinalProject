@@ -53,8 +53,8 @@ export const getAllChannels = async () => {
  * @throws {Error} If required information is missing or validation fails.
  */
 export function createChannel(title, owner) {
-
   const uid = uuidv4();
+
   if (!title || typeof title !== 'string' ||
     !owner || typeof owner !== 'string') {
     throw new Error('Invalid or missing required channel information');
