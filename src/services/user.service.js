@@ -7,18 +7,19 @@ import {
   query,
   equalTo,
   orderByChild,
-} from "firebase/database";
-import { db } from "../../firebaseAppConfig";
-import { setFileToStorage } from "./storage.service";
+} from 'firebase/database';
+import { db } from '../../firebaseAppConfig';
+import { setFileToStorage } from './storage.service';
+import { limitToFirst, limitToLast, startAfter, endBefore } from 'firebase/database';
 
 export const createUser = (username, uid, email) => {
   return set(ref(db, `users/${username}`), {
     username,
     uid,
     email,
-    firstName: "",
-    lastName: "",
-    phone: "",
+    firstName: '',
+    lastName: '',
+    phone: '',
     createdOn: Date.now(),
   });
 };
@@ -28,7 +29,7 @@ export const getUserByUsername = (username) => {
 };
 
 function extractFirstKeyContent(data) {
-  if (data && typeof data === "object") {
+  if (data && typeof data === 'object') {
     const firstKey = Object.keys(data)[0];
 
     if (firstKey) {
@@ -40,8 +41,8 @@ function extractFirstKeyContent(data) {
 }
 
 export const fetchUserProfile = async (uid) => {
-  const usersRef = ref(db, "users");
-  const queryRef = query(usersRef, orderByChild("uid"), equalTo(uid));
+  const usersRef = ref(db, 'users');
+  const queryRef = query(usersRef, orderByChild('uid'), equalTo(uid));
 
   try {
     const snapshot = await get(queryRef);
@@ -49,13 +50,69 @@ export const fetchUserProfile = async (uid) => {
     if (snapshot.exists()) {
       const userData = snapshot.val();
       const user = extractFirstKeyContent(userData);
-      console.log("fetchUserProfile user---> ", user);
       return user;
     } else {
       return null;
     }
   } catch (error) {
-    console.error("Error fetching user data:", error);
+    console.error('Error fetching user data:', error);
+    throw error;
+  }
+};
+
+
+export const fetchTotalUserCount = async () => {
+  const usersRef = ref(db, 'users');
+  const totalUsersSnapshot = await get(usersRef);
+
+  if (totalUsersSnapshot.exists()) {
+    const totalUserCount = totalUsersSnapshot.numChildren();
+    return totalUserCount;
+  } else {
+    return 0;
+  }
+};
+
+
+export const fetchUsersWithPagination = async (pageSize, username = null, pageDirection = 'next') => {
+  const usersRef = ref(db, 'users');
+  let queryRef;
+
+  let orderByAsc
+  // orderByAsc ? endBefore(username) : startAfter(username)
+  if (pageDirection === 'next') {
+    orderByAsc = false
+  } else {
+    orderByAsc = true
+  }
+
+  if (username) {
+    queryRef = query(
+      usersRef,
+      orderByChild('username'),
+      orderByAsc ? endBefore(username) : startAfter(username),
+      limitToFirst(pageSize)
+    );
+  } else {
+    queryRef = query(
+      usersRef,
+      orderByChild('username'),
+      orderByAsc ? limitToLast(pageSize) : limitToFirst(pageSize)
+    );
+  }
+
+  try {
+    const snapshot = await get(queryRef);
+
+    if (snapshot.exists()) {
+      const userData = snapshot.val();
+      const usersList = Object.values(userData);
+      return usersList;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching user data:', error);
     throw error;
   }
 };
@@ -63,8 +120,8 @@ export const fetchUserProfile = async (uid) => {
 export const getUserData = async (uid) => {
   try {
     const userQuery = query(
-      ref(db, "users"),
-      orderByChild("uid"),
+      ref(db, 'users'),
+      orderByChild('uid'),
       equalTo(uid)
     );
     const userSnapshot = await get(userQuery);
@@ -76,7 +133,7 @@ export const getUserData = async (uid) => {
       return null;
     }
   } catch (error) {
-    console.error("Error getting user data:", error);
+    console.error('Error getting user data:', error);
     throw error;
   }
 };
@@ -84,7 +141,7 @@ export const getUserData = async (uid) => {
 export const updateUser = async (username, content) => {
   try {
     if (!username) {
-      throw new Error("Username is required for updates");
+      throw new Error('Username is required for updates');
     }
     const userRef = ref(db, `users/${username}`);
     await update(userRef, {
@@ -102,7 +159,7 @@ export const updateProfilePic = async (file, userData) => {
   const { username, uid } = userData;
 
   const url = await setFileToStorage(uid, file);
-  console.log("url---> ", url);
+  console.log('url---> ', url);
   const updateProfilePic = {};
   updateProfilePic[`/users/${username}/profilePictureURL`] = url;
 
@@ -112,11 +169,43 @@ export const updateProfilePic = async (file, userData) => {
 
 export const checkIfUsernameExists = async (username) => {
   try {
-    const usersRef = ref(db, "users");
+    const usersRef = ref(db, 'users');
     const snapshot = await get(child(usersRef, username));
     return snapshot.exists();
   } catch (error) {
-    console.error("Error checking if  username exists:", error.message);
-    throw new Error("Error checking if username exists");
+    console.error('Error checking if  username exists:', error.message);
+    throw new Error('Error checking if username exists');
   }
 };
+
+
+
+
+export const fromUsersDocument = (snapshot) => {
+  const usersDocument = snapshot.val();
+
+  return Object.keys(usersDocument).map((key) => {
+    const user = usersDocument[key];
+    return {
+      ...user,
+      username: key,
+      createdOn: new Date(user.createdOn),
+    };
+  });
+};
+
+export const getAllUsers = async () => {
+  try {
+    const snapshot = await get(ref(db, "users"));
+
+    if (!snapshot.exists()) {
+      return [];
+    }
+
+    return fromUsersDocument(snapshot);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw error; 
+  }
+};
+

@@ -98,11 +98,6 @@ export default function Navbar() {
                               width="2rem"
                               height="2rem"
                             />
-                            {/* <img
-                          className="h-8 w-8 rounded-full"
-                          src="/src/assets/empty_profile_pic.webp"
-                          alt=""
-                        /> */}
                           </Menu.Button>
                         </div>
                         <Transition
