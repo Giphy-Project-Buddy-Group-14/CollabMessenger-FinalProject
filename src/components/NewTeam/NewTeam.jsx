@@ -1,12 +1,12 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { toast } from "react-toastify";
-import Button from "../Ui/Button";
-import InputSection from "../Ui/InputSection";
-import { MIN_TEAM_NAME_LENGTH, MAX_TEAM_NAME_LENGTH } from "../../common/constants";
-import { addTeam, checkIfTeamNameExists } from "../../services/teams.service";
-import useFirebaseAuth from "../../hooks/useFirebaseAuth";
-import { useUserProfile } from "../../hooks/useUserProfile";
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import Button from '../Ui/Button';
+import InputSection from '../Ui/InputSection';
+import { MIN_TEAM_NAME_LENGTH, MAX_TEAM_NAME_LENGTH } from '../../common/constants';
+import { addTeam, checkIfTeamNameExists } from '../../services/teams.service';
+import useFirebaseAuth from '../../hooks/useFirebaseAuth';
+import { useUserProfile } from '../../hooks/useUserProfile';
 
 
 
@@ -39,8 +39,8 @@ export default function NewTeam() {
 
         try {
             await addTeam(username, teamName)
-            toast.success("New team was created");
-            navigate("/teams");
+            toast.success('New team was created');
+            navigate('/teams');
         } catch (error) {
             toast.error(error.message);
         }

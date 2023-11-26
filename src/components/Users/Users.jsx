@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
-import { DEFAULT_FETCH_USERS_LIMIT } from "../../common/constants";
-import LoadingIndicator from "../Ui/LoadingIndicator";
-import UsersList from "../UsersList/UsersList";
-import useUsersPagination from "../../hooks/useUsersPagination";
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { DEFAULT_FETCH_USERS_LIMIT } from '../../common/constants';
+import LoadingIndicator from '../Ui/LoadingIndicator';
+import UsersList from '../UsersList/UsersList';
+import useUsersPagination from '../../hooks/useUsersPagination';
 
 export default function Users() {
   const [usersPerPage, setUsersPerPage] = useState(DEFAULT_FETCH_USERS_LIMIT);
@@ -22,7 +22,7 @@ export default function Users() {
     event.preventDefault();
 
     const selectedValue = event.currentTarget.getAttribute(
-      "data-per-page-value"
+      'data-per-page-value'
     );
     setUsersPerPage(Number(selectedValue));
     setIsDropdownOpen(false);
@@ -132,7 +132,7 @@ export default function Users() {
                   <div
                     id="dropdown"
                     className={` z-10 ${
-                      isDropdownOpen ? "" : "hidden"
+                      isDropdownOpen ? '' : 'hidden'
                     } bg-white divide-y divide-gray-100 rounded-lg shadow w-16 dark:bg-gray-700`}
                   >
                     <ul
@@ -144,7 +144,7 @@ export default function Users() {
                           <Link
                             to="#"
                             className={`block px-4 py-2 ${
-                              option === usersPerPage ? "bg-gray-100" : ""
+                              option === usersPerPage ? 'bg-gray-100' : ''
                             } hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white`}
                             data-per-page-value={option}
                             onClick={perPageClickHandler}

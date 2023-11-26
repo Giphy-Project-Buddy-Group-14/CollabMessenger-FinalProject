@@ -1,6 +1,6 @@
-import { Navigate, useLocation } from "react-router-dom";
-import PropTypes from "prop-types";
-import useFirebaseAuth from "../../hooks/useFirebaseAuth";
+import { Navigate, useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 
 export default function AuthenticatedRoute({ children }) {
   const location = useLocation();
