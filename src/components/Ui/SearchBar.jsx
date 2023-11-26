@@ -1,23 +1,23 @@
-import { useEffect, useRef, useState } from 'react';
-import { getAllUsers } from '../../services/user.service';
+import { useEffect, useRef, useState } from "react";
+import { getAllUsers } from "../../services/user.service";
 
 export default function SearchBar() {
   const [users, setUsers] = useState([]);
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
   const initialUsers = useRef([]);
 
   const [search, setSearch] = useState();
 
   const inputSearchHandler = (event) => {
     setSearch(event.target.value);
-    console.log('Niki onchange -> ', event.target.value)
+    console.log("Niki onchange -> ", event.target.value);
   };
 
   const searchHandler = (event) => {
     event.preventDefault();
-    console.log('searchHandle -> ', 'test')
+    console.log("searchHandle -> ", "test");
     // history.pushState(`/search?name=${search}`)
-    setSearch('');
+    setSearch("");
   };
 
   useEffect(() => {
@@ -25,10 +25,9 @@ export default function SearchBar() {
       try {
         const data = await getAllUsers();
         setUsers(data);
-        console.log('Niki data -> ', users)
         initialUsers.current = data;
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
     })();
   }, []);
@@ -43,12 +42,11 @@ export default function SearchBar() {
         user.email.startsWith(searchValue) ||
         user.firstName.startsWith(searchValue) ||
         user.lastName.startsWith(searchValue) ||
-        (user.firstName + ' ' + user.lastName).startsWith(searchValue)
+        (user.firstName + " " + user.lastName).startsWith(searchValue)
       );
     });
     setUsers(updatedUsers);
   }, [searchValue]);
-  
 
   return (
     <form className="flex items-center">

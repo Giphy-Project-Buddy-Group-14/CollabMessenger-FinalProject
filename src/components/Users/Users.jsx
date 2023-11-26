@@ -1,168 +1,169 @@
-import ImageWithLoading from '../helper/ImageWithLoading';
-import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { fetchUsersWithPagination } from '../../services/user.service';
-import {
-  DEFAULT_FETCH_USERS_LIMIT,
-  DEFAULT_TIME_ZONE,
-} from '../../common/constants';
-import LoadingIndicator from '../Ui/LoadingIndicator';
-import Pagination from '../Pagination/Pagination';
-import { usersRef, fetchTotalUserCount } from '../../services/user.service';
-import { off } from 'firebase/database';
-import moment from 'moment-timezone';
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import { DEFAULT_FETCH_USERS_LIMIT } from "../../common/constants";
+import LoadingIndicator from "../Ui/LoadingIndicator";
+import UsersList from "../UsersList/UsersList";
+import useUsersPagination from "../../hooks/useUsersPagination";
 
 export default function Users() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(DEFAULT_FETCH_USERS_LIMIT);
+  const [usersPerPage, setUsersPerPage] = useState(DEFAULT_FETCH_USERS_LIMIT);
 
-  useEffect(() => {
-    fetchData();
-    return () => {
-      off(usersRef);
-    };
-  }, [itemsPerPage, currentPage]);
+  const { users, totalUsersCount, currentPage, next, previous, loading } =
+    useUsersPagination(usersPerPage);
 
-  const sortItems = (items) => {
-    return items
-      .slice(0, itemsPerPage)
-      .sort((a, b) => b.createdOn - a.createdOn)
-      .map((item) => ({
-        ...item,
-        createdOn: item?.createdOn
-          ? moment(item.createdOn)
-              .tz(DEFAULT_TIME_ZONE)
-              .format('MMM Do YYYY, h:mm:ss A')
-          : '',
-      }));
+  const perPageOptions = [3, 5, 10, 20];
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
-  async function fetchData() {
-    try {
-      setLoading(true);
-      const userCount = await fetchTotalUserCount();
-      setTotalItems(userCount);
+  const perPageClickHandler = (event) => {
+    event.preventDefault();
 
-      const items = await fetchUsersWithPagination(currentPage, itemsPerPage);
-
-      const sortedItems = sortItems(items);
-      setUsers(sortedItems);
-    } catch (error) {
-      console.log('fetchData error: ', error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const nextPageHandler = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const previousPageHandler = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const perPageHandler = (perPage) => {
-    setItemsPerPage(Number(perPage));
+    const selectedValue = event.currentTarget.getAttribute(
+      "data-per-page-value"
+    );
+    setUsersPerPage(Number(selectedValue));
+    setIsDropdownOpen(false);
   };
 
   return (
     <>
       {loading && <LoadingIndicator />}
       {!loading && (
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <h1 className="text-4xl text-center mt-4 mb-4">Users</h1>
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th
-                  scope="col"
-                  className="px-6 py-3"
-                >
-                  Profile picture
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3"
-                >
-                  Username
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3"
-                >
-                  First Name
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3"
-                >
-                  Last Name
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3"
-                >
-                  Phone
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3"
-                >
-                  Email
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3"
-                >
-                  Created At
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user, index) => (
-                <tr
-                  key={index}
-                  className={`${
-                    index % 2 === 0
-                      ? 'even:bg-gray-50 even:dark:bg-gray-800'
-                      : 'odd:bg-white odd:dark:bg-gray-900'
-                  } border-b dark:border-gray-700`}
-                >
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-gray"
-                  >
-                    <ImageWithLoading
-                      className="w-24 h-24 mb-3 rounded-full shadow-lg"
-                      src={user.profilePictureURL}
-                      alt="Some image"
-                      width="2rem"
-                      height="2rem"
-                    />
-                  </th>
-                  <td className="px-6 py-4">{user.username}</td>
-                  <td className="px-6 py-4">{user.firstName}</td>
-                  <td className="px-6 py-4">{user.lastName}</td>
-                  <td className="px-6 py-4">{user.phone}</td>
-                  <td className="px-6 py-4">{user.email}</td>
-                  <td className="px-6 py-4">{user.createdOn}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <Pagination
-            totalItems={totalItems}
-            currentPage={currentPage}
-            itemsPerPage={itemsPerPage}
-            onPreviousPageClick={previousPageHandler}
-            onNextPageClick={nextPageHandler}
-            onPerPageClick={perPageHandler}
+        <>
+          <UsersList
+            users={users}
+            totalUsersCount={totalUsersCount}
+            usersPerPage={usersPerPage}
           />
-        </div>
+          <div className="flex items-center justify-center w-full">
+            {/* Invisible Left Spacer (Same width as the 'Per Page' div) */}
+            <div className="flex-1">{/* Invisible Spacer */}</div>
+            <div className="flex justify-center">
+              <nav aria-label="Page navigation example">
+                <ul className="flex items-center -space-x-px h-20 text-sm">
+                  <li>
+                    <Link
+                      to="#"
+                      onClick={previous}
+                      className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    >
+                      <span className="sr-only">Previous</span>
+                      <svg
+                        className="w-2.5 h-2.5 rtl:rotate-180"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 6 10"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M5 1 1 5l4 4"
+                        />
+                      </svg>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="#"
+                      aria-current="page"
+                      className="z-10 flex items-center justify-center px-3 h-8 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+                    >
+                      {currentPage}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="#"
+                      onClick={next}
+                      className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    >
+                      <span className="sr-only">Next</span>
+                      <svg
+                        className="w-2.5 h-2.5 rtl:rotate-180"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 6 10"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="m1 9 4-4-4-4"
+                        />
+                      </svg>
+                    </Link>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+
+            {/* Dropdown */}
+            <div className="flex-1 flex justify-end">
+              <div>
+                <button
+                  id="dropdownDefaultButton"
+                  data-dropdown-toggle="dropdown"
+                  className="inline-flex items-center justify-center px-5 py-2.5 mb-2 me-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-4 focus:ring-gray-200 focus:z-10 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
+                  type="button"
+                  onClick={toggleDropdown}
+                >
+                  {usersPerPage}
+                  <svg
+                    className="w-2.5 h-2.5 ms-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 10 6"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="m1 1 4 4 4-4"
+                    />
+                  </svg>
+                </button>
+                <div className="relative">
+                  <div
+                    id="dropdown"
+                    className={` z-10 ${
+                      isDropdownOpen ? "" : "hidden"
+                    } bg-white divide-y divide-gray-100 rounded-lg shadow w-16 dark:bg-gray-700`}
+                  >
+                    <ul
+                      className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                      aria-labelledby="dropdownDefaultButton"
+                    >
+                      {perPageOptions.map((option) => (
+                        <li key={option}>
+                          <Link
+                            to="#"
+                            className={`block px-4 py-2 ${
+                              option === usersPerPage ? "bg-gray-100" : ""
+                            } hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white`}
+                            data-per-page-value={option}
+                            onClick={perPageClickHandler}
+                          >
+                            {option}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
       )}
     </>
   );
