@@ -30,19 +30,16 @@ export default function useUsersPagination(usersPerPage = 5) {
     setCurrentPage(Math.min(pageNumber, maxPage));
   }
 
-  // const sortUsers = (users) => {
-  //   return users
-  //     .slice(0, usersPerPage)
-  //     .sort((a, b) => b.createdOn - a.createdOn)
-  //     .map((user) => ({
-  //       ...user,
-  //       createdOn: user?.createdOn
-  //         ? moment(user.createdOn)
-  //             .tz(DEFAULT_TIME_ZONE)
-  //             .format("MMM Do YYYY, h:mm:ss A")
-  //         : "",
-  //     }));
-  // };
+  const formatUsers = (users) => {
+    return users.slice(0, usersPerPage).map((user) => ({
+      ...user,
+      createdOn: user?.createdOn
+        ? moment(user.createdOn)
+            .tz(DEFAULT_TIME_ZONE)
+            .format("MMM Do YYYY, h:mm:ss A")
+        : "",
+    }));
+  };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -57,9 +54,8 @@ export default function useUsersPagination(usersPerPage = 5) {
             currentPage,
             usersPerPage
           );
-          // const sortedUsers = sortUsers(fetchedUsers);
-          // setUsers(sortedUsers);
-          setUsers(fetchedUsers);
+          const usersList = formatUsers(fetchedUsers);
+          setUsers(usersList);
         } catch (error) {
           console.error("Error: ", error);
         } finally {

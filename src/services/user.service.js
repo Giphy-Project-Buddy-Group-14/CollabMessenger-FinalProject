@@ -11,7 +11,6 @@ import {
 } from "firebase/database";
 import { db } from "../../firebaseAppConfig";
 import { setFileToStorage } from "./storage.service";
-import { limitToLast } from "firebase/database";
 export const createUser = (username, uid, email) => {
   return set(ref(db, `users/${username}`), {
     username,
