@@ -1,5 +1,5 @@
-import PropTypes from "prop-types";
-import LoadingIndicator from "../Ui/LoadingIndicator";
+import PropTypes from 'prop-types';
+import LoadingIndicator from '../Ui/LoadingIndicator';
 
 export default function Avatar({ src, isLoading, alt }) {
   return (

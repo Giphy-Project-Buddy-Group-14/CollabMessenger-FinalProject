@@ -1,5 +1,5 @@
-import PropTypes from "prop-types";
-import ImageWithLoading from "../helper/ImageWithLoading";
+import PropTypes from 'prop-types';
+import ImageWithLoading from '../helper/ImageWithLoading';
 
 export default function UsersList({ users }) {
   return (
@@ -59,8 +59,8 @@ export default function UsersList({ users }) {
                 key={index}
                 className={`${
                   index % 2 === 0
-                    ? "even:bg-gray-50 even:dark:bg-gray-800"
-                    : "odd:bg-white odd:dark:bg-gray-900"
+                    ? 'even:bg-gray-50 even:dark:bg-gray-800'
+                    : 'odd:bg-white odd:dark:bg-gray-900'
                 } border-b dark:border-gray-700`}
               >
                 <th

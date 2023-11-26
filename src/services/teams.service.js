@@ -14,18 +14,18 @@ export const addTeam = async (username, name) => {
         await update(ref(db), {[`users/${username}/MyTeams/${name}`]: uid});
 
     } catch (error) {
-        console.error("Error adding team:", error);
+        console.error('Error adding team:', error);
         throw error;
     }
 };
 
 export const checkIfTeamNameExists = async (name) => {
     try {
-        const teamRef = ref(db, "teams");
+        const teamRef = ref(db, 'teams');
         const snapshot = await get(child(teamRef, name));
         return snapshot.exists();
     } catch (error) {
-        console.error("Error checking if  team name exists:", error.message);
-        throw new Error("Error checking if team name exists");
+        console.error('Error checking if  team name exists:', error.message);
+        throw new Error('Error checking if team name exists');
     }
 }

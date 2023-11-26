@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 import {
   fetchTotalUserCount,
   fetchUsersWithPagination,
-} from "../services/user.service";
+} from '../services/user.service';
 
-import { DEFAULT_TIME_ZONE } from "../common/constants";
-import moment from "moment-timezone";
+import { DEFAULT_TIME_ZONE } from '../common/constants';
+import moment from 'moment-timezone';
 
 export default function useUsersPagination(usersPerPage = 5) {
   const [users, setUsers] = useState([]);
@@ -36,8 +36,8 @@ export default function useUsersPagination(usersPerPage = 5) {
       createdOn: user?.createdOn
         ? moment(user.createdOn)
             .tz(DEFAULT_TIME_ZONE)
-            .format("MMM Do YYYY, h:mm:ss A")
-        : "",
+            .format('MMM Do YYYY, h:mm:ss A')
+        : '',
     }));
   };
 
@@ -57,7 +57,7 @@ export default function useUsersPagination(usersPerPage = 5) {
           const usersList = formatUsers(fetchedUsers);
           setUsers(usersList);
         } catch (error) {
-          console.error("Error: ", error);
+          console.error('Error: ', error);
         } finally {
           setLoading(false);
         }
