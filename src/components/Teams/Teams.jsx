@@ -1,4 +1,3 @@
-import newTeam from "../NewTeam/NewTeam";
 import Button from "../Ui/Button";
 import { useNavigate } from "react-router-dom";
 
