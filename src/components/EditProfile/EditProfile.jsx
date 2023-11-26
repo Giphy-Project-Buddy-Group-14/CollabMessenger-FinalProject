@@ -1,24 +1,24 @@
-import { useEffect, useState } from "react";
-import InputSection from "../Ui/InputSection";
-import Button from "../Ui/Button";
-import LoadingIndicator from "../Ui/LoadingIndicator";
-import { toast } from "react-toastify";
-import { updateProfilePic } from "../../services/user.service";
-import { updateUser } from "../../services/user.service";
-import { useNavigate } from "react-router-dom";
-import ImageWithLoading from "../helper/ImageWithLoading";
-import useFirebaseAuth from "../../hooks/useFirebaseAuth";
-import { useUserProfile } from "../../hooks/useUserProfile";
+import { useEffect, useState } from 'react';
+import InputSection from '../Ui/InputSection';
+import Button from '../Ui/Button';
+import LoadingIndicator from '../Ui/LoadingIndicator';
+import { toast } from 'react-toastify';
+import { updateProfilePic } from '../../services/user.service';
+import { updateUser } from '../../services/user.service';
+import { useNavigate } from 'react-router-dom';
+import ImageWithLoading from '../helper/ImageWithLoading';
+import useFirebaseAuth from '../../hooks/useFirebaseAuth';
+import { useUserProfile } from '../../hooks/useUserProfile';
 
 export default function EditProfile() {
   const { user } = useFirebaseAuth();
   const { phone, username, firstName, lastName, userProfile, profileLoading } =
     useUserProfile(user);
 
-  const [editedPhone, setEditedPhone] = useState("");
-  const [editedUsername, setEditedUsername] = useState("");
-  const [editedFirstName, setEditedFirstName] = useState("");
-  const [editedLastName, setEditedLastName] = useState("");
+  const [editedPhone, setEditedPhone] = useState('');
+  const [editedUsername, setEditedUsername] = useState('');
+  const [editedFirstName, setEditedFirstName] = useState('');
+  const [editedLastName, setEditedLastName] = useState('');
 
   const navigate = useNavigate();
 
@@ -48,8 +48,8 @@ export default function EditProfile() {
         lastName: editedLastName,
       };
       await updateUser(username, content);
-      toast.success("Successfully updated profile!");
-      navigate("/profile");
+      toast.success('Successfully updated profile!');
+      navigate('/profile');
     } catch (error) {
       console.error(error.message);
       toast.error(error.message);
@@ -63,7 +63,7 @@ export default function EditProfile() {
     setEditedUsername(username);
     setEditedFirstName(firstName);
     setEditedLastName(lastName);
-  }, [profileLoading]);
+  }, [firstName, lastName, phone, profileLoading, userProfile, username]);
 
   const updateImageHandler = async (event) => {
     event.preventDefault();
@@ -73,7 +73,7 @@ export default function EditProfile() {
 
     try {
       await updateProfilePic(file, userProfile);
-      toast.success("Successfully uploaded profile picture!");
+      toast.success('Successfully uploaded profile picture!');
     } catch (error) {
       console.error(error.message);
       toast.error(error.message);
@@ -123,10 +123,10 @@ export default function EditProfile() {
               </div>
               <div
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 <ImageWithLoading
@@ -134,7 +134,7 @@ export default function EditProfile() {
                   className="w-24 h-24 mb-3 rounded-full shadow-lg"
                   src={
                     userProfile.profilePictureURL ||
-                    "/src/assets/empty_profile_pic.webp"
+                    '/src/assets/empty_profile_pic.webp'
                   }
                   width="6rem"
                   height="6rem"

@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
-import { getDatabase, ref, onValue, off } from "firebase/database";
-import { fetchUserProfile } from "../services/user.service";
+import { useEffect, useState } from 'react';
+import { getDatabase, ref, onValue, off } from 'firebase/database';
+import { fetchUserProfile } from '../services/user.service';
 
 export function useUserProfile(user) {
   const [userProfile, setUserProfile] = useState(null);
   const [profileLoading, setProfileLoading] = useState(true);
+  // profileLoading - the user does not exist
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -13,18 +14,17 @@ export function useUserProfile(user) {
           const profile = await fetchUserProfile(user.uid);
 
           if (profile && profile.username) {
-            const dbRef = ref(getDatabase(), "users/" + profile.username);
+            const dbRef = ref(getDatabase(), 'users/' + profile.username);
             onValue(
               dbRef,
               (snapshot) => {
                 if (snapshot.exists()) {
-                  console.log("User profile: ", snapshot.val());
                   setUserProfile(snapshot.val());
                 }
                 setProfileLoading(false);
               },
               (error) => {
-                console.error("Error fetching profile: ", error);
+                console.error('Error fetching profile: ', error);
                 setProfileLoading(false);
               }
             );
@@ -32,7 +32,7 @@ export function useUserProfile(user) {
             return () => off(dbRef);
           }
         } catch (error) {
-          console.error("Error: ", error);
+          console.error('Error: ', error);
           setProfileLoading(false);
         }
       } else {

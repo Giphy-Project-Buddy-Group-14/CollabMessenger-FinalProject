@@ -1,20 +1,20 @@
-import PropTypes from "prop-types";
-import { useState } from "react";
-import LoadingIndicator from "../Ui/LoadingIndicator";
-
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import LoadingIndicator from '../Ui/LoadingIndicator';
+import { EMPTY_PROFILE_PICTURE } from '../../common/constants';
 export default function ImageWithLoading({
   src,
   alt,
   className,
   placeholder,
-  width = "auto",
-  height = "auto",
+  width = 'auto',
+  height = 'auto',
 }) {
   const [imageLoading, setImageLoading] = useState(true);
   const imageStyle = {
     width: width,
     height: height,
-    display: imageLoading ? "none" : "block",
+    display: imageLoading ? 'none' : 'block',
   };
 
   return (
@@ -23,7 +23,7 @@ export default function ImageWithLoading({
         {imageLoading && (placeholder || <LoadingIndicator />)}
         <img
           className={className}
-          src={src}
+          src={src || EMPTY_PROFILE_PICTURE}
           alt={alt}
           onLoad={() => setImageLoading(false)}
           style={imageStyle}
@@ -34,7 +34,7 @@ export default function ImageWithLoading({
 }
 
 ImageWithLoading.propTypes = {
-  src: PropTypes.string.isRequired,
+  src: PropTypes.string,
   alt: PropTypes.string,
   className: PropTypes.string,
   placeholder: PropTypes.node,
