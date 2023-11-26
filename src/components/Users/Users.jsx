@@ -4,11 +4,12 @@ import { DEFAULT_FETCH_USERS_LIMIT } from '../../common/constants';
 import LoadingIndicator from '../Ui/LoadingIndicator';
 import UsersList from '../UsersList/UsersList';
 import useUsersPagination from '../../hooks/useUsersPagination';
+import SearchBar from '../Ui/SearchBar';
 
 export default function Users() {
   const [usersPerPage, setUsersPerPage] = useState(DEFAULT_FETCH_USERS_LIMIT);
 
-  const { users, currentPage, next, previous, loading } =
+  const { users, currentPage, next, previous, setNewUsers, loading } =
     useUsersPagination(usersPerPage);
 
   const perPageOptions = [3, 5, 10, 20];
@@ -28,8 +29,13 @@ export default function Users() {
     setIsDropdownOpen(false);
   };
 
+  const searchHandler = (filteredUsers) => {
+    setNewUsers(filteredUsers);
+  };
+
   return (
     <>
+      <SearchBar onSearch={searchHandler} />
       {loading && <LoadingIndicator />}
       {!loading && (
         <>

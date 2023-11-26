@@ -2,7 +2,6 @@ import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
-import SearchBar from '../Ui/SearchBar';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import ImageWithLoading from '../helper/ImageWithLoading';
 import { useAuth } from '../../hooks/useAuth';
@@ -60,7 +59,6 @@ export default function Navbar() {
                     alt="Your Company"
                   />
                 </div>
-                <SearchBar />
               </div>
               {/* Profile dropdown */}
               {isAuthenticated && (

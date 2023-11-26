@@ -1,52 +1,61 @@
 import { useEffect, useRef, useState } from 'react';
 import { getAllUsers } from '../../services/user.service';
+import PropTypes from 'prop-types';
 
-export default function SearchBar() {
-  const [users, setUsers] = useState([]);
-  const [searchValue, setSearchValue] = useState('');
+export default function SearchBar({ onSearch }) {
+  const [users, setUsers] = useState('');
+  const [search, setSearch] = useState('');
   const initialUsers = useRef([]);
 
-  const [search, setSearch] = useState();
+  const updatedUsers = initialUsers.current.filter((user) => {
+    return (
+      user.username.startsWith(search) ||
+      user.email.startsWith(search) ||
+      user.firstName.startsWith(search) ||
+      user.lastName.startsWith(search) ||
+      user.phone.startsWith(search) ||
+      (user.firstName + ' ' + user.lastName).startsWith(search)
+    );
+  });
 
   const inputSearchHandler = (event) => {
     setSearch(event.target.value);
-    console.log('Niki onchange -> ', event.target.value);
+    onSearch(updatedUsers);
   };
 
   const searchHandler = (event) => {
     event.preventDefault();
-    console.log('searchHandle -> ', 'test');
     // history.pushState(`/search?name=${search}`)
-    setSearch('');
   };
 
-  useEffect(() => {
-    (async function () {
-      try {
-        const data = await getAllUsers();
-        setUsers(data);
-        initialUsers.current = data;
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async function () {
+  //     try {
+  //       const data = await getAllUsers();
+  //       setUsers(data);
+  //       initialUsers.current = data;
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   })();
+  //   onSearch(updatedUsers);
+  // }, [users]);
 
-  useEffect(() => {
-    if (!users) {
-      return;
-    }
-    const updatedUsers = initialUsers.current.filter((user) => {
-      return (
-        user.username.startsWith(searchValue) ||
-        user.email.startsWith(searchValue) ||
-        user.firstName.startsWith(searchValue) ||
-        user.lastName.startsWith(searchValue) ||
-        (user.firstName + ' ' + user.lastName).startsWith(searchValue)
-      );
-    });
-    setUsers(updatedUsers);
-  }, [searchValue]);
+  // useEffect(() => {
+  //   if (!users) {
+  //     return;
+  //   }
+  //   const updatedUsers = initialUsers.current.filter((user) => {
+  //     return (
+  //       user.username.startsWith(searchValue) ||
+  //       user.email.startsWith(searchValue) ||
+  //       user.firstName.startsWith(searchValue) ||
+  //       user.lastName.startsWith(searchValue) ||
+  //       (user.firstName + ' ' + user.lastName).startsWith(searchValue)
+  //     );
+  //   });
+  //   setUsers(updatedUsers);
+  // }, [searchValue]);
 
   return (
     <form className="flex items-center">
@@ -92,3 +101,7 @@ export default function SearchBar() {
     </form>
   );
 }
+
+SearchBar.propTypes = {
+  onSearch: PropTypes.func.isRequired,
+};

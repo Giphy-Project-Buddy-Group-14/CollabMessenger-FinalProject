@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
-
 import {
   fetchTotalUserCount,
   fetchUsersWithPagination,
 } from '../services/user.service';
-
 import { DEFAULT_TIME_ZONE } from '../common/constants';
 import moment from 'moment-timezone';
 
@@ -18,6 +16,8 @@ export default function useUsersPagination(usersPerPage = 5) {
   const maxPage = Math.ceil(totalUsersCount / usersPerPage);
 
   function next() {
+    console.log('users -->', users);
+    console.log('currentPage -->', currentPage);
     setCurrentPage((currentPage) => Math.min(currentPage + 1, maxPage));
   }
 
@@ -41,6 +41,16 @@ export default function useUsersPagination(usersPerPage = 5) {
     }));
   };
 
+  // function setNewUsers(newUsers) {
+  //   setLoading(true);
+
+  //   setUsers(formatUsers(newUsers));
+  //   setCurrentPage(1);
+  //   setTotalUsersCount(newUsers.length);
+
+  //   setLoading(false);
+  // }
+
   useEffect(() => {
     const fetchUsers = async () => {
       if (users) {
@@ -54,6 +64,7 @@ export default function useUsersPagination(usersPerPage = 5) {
             currentPage,
             usersPerPage
           );
+          console.log('fetchedUsers --> ', fetchedUsers);
           const usersList = formatUsers(fetchedUsers);
           setUsers(usersList);
         } catch (error) {
@@ -75,6 +86,7 @@ export default function useUsersPagination(usersPerPage = 5) {
     next,
     previous,
     jump,
+    // setNewUsers,
     loading,
   };
 }
