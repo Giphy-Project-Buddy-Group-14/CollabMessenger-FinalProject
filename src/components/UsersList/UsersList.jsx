@@ -1,9 +1,7 @@
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import useUsersPagination from "../../hooks/useUsersPagination";
 import ImageWithLoading from "../helper/ImageWithLoading";
 
-export default function UsersList({ users, totalUsersCount, usersPerPage }) {
+export default function UsersList({ users }) {
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -94,6 +92,4 @@ export default function UsersList({ users, totalUsersCount, usersPerPage }) {
 
 UsersList.propTypes = {
   users: PropTypes.array.isRequired,
-  totalUsersCount: PropTypes.number.isRequired,
-  usersPerPage: PropTypes.number.isRequired,
 };

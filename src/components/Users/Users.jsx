@@ -8,7 +8,7 @@ import useUsersPagination from "../../hooks/useUsersPagination";
 export default function Users() {
   const [usersPerPage, setUsersPerPage] = useState(DEFAULT_FETCH_USERS_LIMIT);
 
-  const { users, totalUsersCount, currentPage, next, previous, loading } =
+  const { users, currentPage, next, previous, loading } =
     useUsersPagination(usersPerPage);
 
   const perPageOptions = [3, 5, 10, 20];
@@ -33,11 +33,7 @@ export default function Users() {
       {loading && <LoadingIndicator />}
       {!loading && (
         <>
-          <UsersList
-            users={users}
-            totalUsersCount={totalUsersCount}
-            usersPerPage={usersPerPage}
-          />
+          <UsersList users={users} />
           <div className="flex items-center justify-center w-full">
             {/* Invisible Left Spacer (Same width as the 'Per Page' div) */}
             <div className="flex-1">{/* Invisible Spacer */}</div>
