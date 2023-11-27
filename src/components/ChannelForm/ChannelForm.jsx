@@ -3,7 +3,7 @@ import { createChannel } from '../../services/channel.service';
 import InputSection from '../Ui/InputSection';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 
-export function ChannelForm() {
+export function ChannelForm({ onCancel }) {
   const { user } = useFirebaseAuth();
   // State to store the form inputs
   const [title, setTitle] = useState('');
@@ -29,16 +29,20 @@ export function ChannelForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="mb-4">
+      <div className="mb-2">
         <InputSection
           onChange={(e) => setTitle(e.target.value)}
-          label="Title"
           type="text"
+          placeholder={'Channel Name'}
         />
       </div>
-      <button type="submit">Create Channel</button>
 
-      {error && <p>Error: {error}</p>}
+      <div className='gap-1 flex'>
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Create Channel</button>
+        <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" onClick={onCancel}>Cancel</button>
+      </div>
+
+      {error && <p className='text-red-600 mt-2'>Error: {error}</p>}
     </form>
   );
 }

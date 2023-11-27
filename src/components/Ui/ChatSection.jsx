@@ -1,6 +1,30 @@
-export default function ChatSection() {
+import { useState } from "react";
+import { addMessageToChannel } from "../../services/message.service";
+import { PropTypes } from "prop-types";
+
+export default function ChatSection({ selectedChannel }) {
+  const [text, setText] = useState('');
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!text.trim()) {
+      setError("Message cannot be empty");
+      return;
+    }
+
+    try {
+      await addMessageToChannel(selectedChannel.id, text);
+      console.log('Message sent successfully');
+      setText(''); // Reset text field after successful send
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <label
         htmlFor="chat"
         className="sr-only"
@@ -62,11 +86,18 @@ export default function ChatSection() {
           <span className="sr-only">Add emoji</span>
         </button>
         <textarea
+          disabled={!selectedChannel}
           id="chat"
           rows="1"
           className="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="Your message..."
-        ></textarea>
+          onChange={(e) => setText(e.target.value)}
+          value={text}
+        >
+        </textarea>
+
+        {error && <div className="bg-red-500 mt-2">Error: {error}</div>}
+
         <button
           type="submit"
           className="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
@@ -86,3 +117,9 @@ export default function ChatSection() {
     </form>
   );
 }
+
+ChatSection.propTypes = {
+  selectedChannel: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+  }),
+};
