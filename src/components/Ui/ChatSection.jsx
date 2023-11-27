@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { addMessageToChannel } from "../../services/message.service";
-import { PropTypes } from "prop-types";
+import { useState } from 'react';
+import { addMessageToChannel } from '../../services/message.service';
+import { PropTypes } from 'prop-types';
 
 export default function ChatSection({ selectedChannel }) {
   const [text, setText] = useState('');
@@ -10,7 +10,7 @@ export default function ChatSection({ selectedChannel }) {
     event.preventDefault();
 
     if (!text.trim()) {
-      setError("Message cannot be empty");
+      setError('Message cannot be empty');
       return;
     }
 
@@ -93,8 +93,7 @@ export default function ChatSection({ selectedChannel }) {
           placeholder="Your message..."
           onChange={(e) => setText(e.target.value)}
           value={text}
-        >
-        </textarea>
+        ></textarea>
 
         {error && <div className="bg-red-500 mt-2">Error: {error}</div>}
 

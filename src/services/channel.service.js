@@ -1,5 +1,5 @@
-import { get, ref, push, set } from "firebase/database";
-import { db } from "../../firebaseAppConfig";
+import { get, ref, push, set } from 'firebase/database';
+import { db } from '../../firebaseAppConfig';
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -34,11 +34,11 @@ export const getAllChannels = async () => {
         ...value
       }));
     } else {
-      console.log("No data available");
+      console.log('No data available');
       return [];
     }
   } catch (error) {
-    console.error("Error fetching channels:", error);
+    console.error('Error fetching channels:', error);
     throw error;
   }
 };
