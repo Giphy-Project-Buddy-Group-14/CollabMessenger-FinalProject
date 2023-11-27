@@ -15,7 +15,7 @@ export default function Chat() {
         const channelData = await getAllChannels();
         setChannels(channelData);
       } catch (error) {
-        console.error("Error fetching channels:", error);
+        console.error('Error fetching channels:', error);
         // Handle the error appropriately
       } finally {
         setLoading(false);
