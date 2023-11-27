@@ -1,61 +1,36 @@
-import { useEffect, useRef, useState } from 'react';
-import { getAllUsers } from '../../services/user.service';
 import PropTypes from 'prop-types';
 
-export default function SearchBar({ onSearch }) {
-  const [users, setUsers] = useState('');
-  const [search, setSearch] = useState('');
-  const initialUsers = useRef([]);
-
-  const updatedUsers = initialUsers.current.filter((user) => {
-    return (
-      user.username.startsWith(search) ||
-      user.email.startsWith(search) ||
-      user.firstName.startsWith(search) ||
-      user.lastName.startsWith(search) ||
-      user.phone.startsWith(search) ||
-      (user.firstName + ' ' + user.lastName).startsWith(search)
-    );
-  });
+export default function SearchBar({ allUsers, onSearch }) {
+  function filterUsersBySearch(search) {
+    return allUsers.filter((user) => {
+      return (
+        user.username.toLowerCase().startsWith(search) ||
+        user.email.toLowerCase().startsWith(search) ||
+        user.firstName.toLowerCase().startsWith(search) ||
+        user.lastName.toLowerCase().startsWith(search) ||
+        user.phone.toLowerCase().startsWith(search) ||
+        (user.firstName + ' ' + user.lastName).toLowerCase().startsWith(search)
+      );
+    });
+  }
 
   const inputSearchHandler = (event) => {
-    setSearch(event.target.value);
-    onSearch(updatedUsers);
+    const searchValue = event.target.value.toLowerCase();
+
+    (async function () {
+      try {
+        const filteredUsers = filterUsersBySearch(searchValue);
+        onSearch(filteredUsers, searchValue);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
   };
 
   const searchHandler = (event) => {
     event.preventDefault();
-    // history.pushState(`/search?name=${search}`)
+    // history.pushState(`/search?name=${search}`);
   };
-
-  // useEffect(() => {
-  //   (async function () {
-  //     try {
-  //       const data = await getAllUsers();
-  //       setUsers(data);
-  //       initialUsers.current = data;
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   })();
-  //   onSearch(updatedUsers);
-  // }, [users]);
-
-  // useEffect(() => {
-  //   if (!users) {
-  //     return;
-  //   }
-  //   const updatedUsers = initialUsers.current.filter((user) => {
-  //     return (
-  //       user.username.startsWith(searchValue) ||
-  //       user.email.startsWith(searchValue) ||
-  //       user.firstName.startsWith(searchValue) ||
-  //       user.lastName.startsWith(searchValue) ||
-  //       (user.firstName + ' ' + user.lastName).startsWith(searchValue)
-  //     );
-  //   });
-  //   setUsers(updatedUsers);
-  // }, [searchValue]);
 
   return (
     <form className="flex items-center">
@@ -103,5 +78,6 @@ export default function SearchBar({ onSearch }) {
 }
 
 SearchBar.propTypes = {
+  allUsers: PropTypes.array.isRequired,
   onSearch: PropTypes.func.isRequired,
 };

@@ -11,6 +11,9 @@ import {
 } from 'firebase/database';
 import { db } from '../../firebaseAppConfig';
 import { setFileToStorage } from './storage.service';
+import { DEFAULT_TIME_ZONE } from '../common/constants';
+import moment from 'moment-timezone';
+
 export const createUser = (username, uid, email) => {
   return set(ref(db, `users/${username}`), {
     username,
@@ -70,6 +73,13 @@ export const fetchTotalUserCount = async () => {
   }
 };
 
+const convertCreatedOn = (users) => {
+  return users.map((user) => ({
+    ...user,
+    createdOn: formatCreatedOn(user),
+  }));
+};
+
 export async function fetchUsersWithPagination(currentPage, usersPerPage) {
   try {
     const endIndex = currentPage * usersPerPage;
@@ -89,7 +99,8 @@ export async function fetchUsersWithPagination(currentPage, usersPerPage) {
       });
     });
 
-    return users.slice(startIndex, endIndex);
+    const usersList = convertCreatedOn(users);
+    return usersList.slice(startIndex, endIndex);
   } catch (error) {
     console.error('Error fetching users with pagination:', error);
     throw error;
@@ -155,15 +166,26 @@ export const checkIfUsernameExists = async (username) => {
   }
 };
 
+const formatCreatedOn = (user) => {
+  return user?.createdOn
+    ? moment(user.createdOn)
+        .tz(DEFAULT_TIME_ZONE)
+        .format('MMM Do YYYY, h:mm:ss A')
+    : '';
+};
+
 export const fromUsersDocument = (snapshot) => {
   const usersDocument = snapshot.val();
 
   return Object.keys(usersDocument).map((key) => {
     const user = usersDocument[key];
+
+    const createdOn = formatCreatedOn(user);
+
     return {
       ...user,
       username: key,
-      createdOn: new Date(user.createdOn),
+      createdOn: createdOn,
     };
   });
 };
