@@ -14,7 +14,7 @@ export const addMessageToChannel = async (channelId, text) => {
   const currentUser = auth.currentUser;
 
   if (!currentUser) {
-    throw new Error("User not authenticated");
+    throw new Error('User not authenticated');
   }
 
   const message = {
