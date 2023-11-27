@@ -1,15 +1,15 @@
-import { Link, useNavigate } from "react-router-dom";
-import { signUp } from "../../services/auth.service";
-import { useState } from "react";
-import { toast } from "react-toastify";
-import Button from "../Ui/Button";
-import InputSection from "../Ui/InputSection";
-import { createUser } from "../../services/user.service";
-import { checkIfUsernameExists } from "../../services/user.service";
+import { Link, useNavigate } from 'react-router-dom';
+import { signUp } from '../../services/auth.service';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import Button from '../Ui/Button';
+import InputSection from '../Ui/InputSection';
+import { createUser } from '../../services/user.service';
+import { checkIfUsernameExists } from '../../services/user.service';
 import {
   MIN_USERNAME_LENGTH,
   MAX_USERNAME_LENGTH,
-} from "../../common/constants";
+} from '../../common/constants';
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -36,22 +36,22 @@ export default function SignUp() {
       username.length < MIN_USERNAME_LENGTH ||
       username.length > MAX_USERNAME_LENGTH
     ) {
-      toast.error("Username must have between 5 and 35 symbols.");
+      toast.error('Username must have between 5 and 35 symbols.');
       return;
     }
 
     const usernameExists = await checkIfUsernameExists(username);
 
     if (usernameExists) {
-      toast.error("Username already exists.");
+      toast.error('Username already exists.');
       return;
     }
 
     try {
       const user = await signUp(email, password);
       await createUser(username, user.uid, email);
-      toast.success("Sign up successful");
-      navigate("/signin");
+      toast.success('Sign up successful');
+      navigate('/signin');
     } catch (error) {
       toast.error(error.message);
     }

@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { signIn } from "../../services/auth.service";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { signIn } from '../../services/auth.service';
+import { Link, useNavigate } from 'react-router-dom';
 // import { useAuth } from "../../context/AuthContext";
-import { toast } from "react-toastify";
-import Button from "../Ui/Button";
-import InputSection from "../Ui/InputSection";
+import { toast } from 'react-toastify';
+import Button from '../Ui/Button';
+import InputSection from '../Ui/InputSection';
 
 export default function SignIn() {
   const [email, setEmail] = useState();
@@ -19,11 +19,11 @@ export default function SignIn() {
     try {
       await signIn(email, password);
       // login(user);
-      toast.success("Login successful");
-      navigate("/");
+      toast.success('Login successful');
+      navigate('/');
     } catch (error) {
       console.error(error.message);
-      toast.error("Authentication failed");
+      toast.error('Authentication failed');
     }
   };
 

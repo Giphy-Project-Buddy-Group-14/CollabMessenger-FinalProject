@@ -1,7 +1,39 @@
-export default function SearchBar() {
+import PropTypes from 'prop-types';
+
+export default function SearchBar({ allUsers, onSearch }) {
+  function filterUsersBySearch(search) {
+    return allUsers.filter((user) => {
+      return (
+        user.username.toLowerCase().startsWith(search) ||
+        user.email.toLowerCase().startsWith(search) ||
+        user.firstName.toLowerCase().startsWith(search) ||
+        user.lastName.toLowerCase().startsWith(search) ||
+        user.phone.toLowerCase().startsWith(search) ||
+        (user.firstName + ' ' + user.lastName).toLowerCase().startsWith(search)
+      );
+    });
+  }
+
+  const inputSearchHandler = (event) => {
+    const searchValue = event.target.value.toLowerCase();
+
+    (async function () {
+      try {
+        const filteredUsers = filterUsersBySearch(searchValue);
+        onSearch(filteredUsers, searchValue);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  };
+
+  const searchHandler = (event) => {
+    event.preventDefault();
+    // history.pushState(`/search?name=${search}`);
+  };
+
   return (
     <form className="flex items-center">
-      
       <label
         htmlFor="simple-search"
         className="sr-only"
@@ -10,24 +42,8 @@ export default function SearchBar() {
       </label>
 
       <div className="relative w-full">
-        {/* <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-          <svg
-            className="w-4 h-4 text-gray-500 dark:text-gray-400"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 18 20"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M3 5v10M3 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 0V6a3 3 0 0 0-3-3H9m1.5-2-2 2 2 2"
-            />
-          </svg>
-        </div> */}
         <input
+          onChange={inputSearchHandler}
           type="text"
           id="simple-search"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -38,6 +54,7 @@ export default function SearchBar() {
       <button
         type="submit"
         className="p-2.5 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        onClick={searchHandler}
       >
         <svg
           className="w-4 h-4"
@@ -59,3 +76,8 @@ export default function SearchBar() {
     </form>
   );
 }
+
+SearchBar.propTypes = {
+  allUsers: PropTypes.array.isRequired,
+  onSearch: PropTypes.func.isRequired,
+};

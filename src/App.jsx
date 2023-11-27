@@ -13,6 +13,8 @@ import RouteOutlet from './components/RouteOutlet/RouteOutlet';
 import Users from './components/Users/Users';
 import AuthenticatedRoute from './components/hoc/AuthenticatedRoute';
 import Chat from './components/Chat/Chat';
+import Teams from './components/Teams/Teams';
+import NewTeam from './components/NewTeam/NewTeam';
 
 function App() {
   return (
@@ -46,6 +48,10 @@ function App() {
                 element={<Users />}
               />
               <Route
+                path="teams"
+                element={<Teams />}
+              />
+              <Route
                 path="chat"
                 element={<Chat />}
               />
@@ -77,6 +83,10 @@ function App() {
               <Route
                 path="signin"
                 element={<SignIn />}
+              />
+              <Route
+                path="new-team"
+                element={<NewTeam />}
               />
             </Route>
           </Routes>
