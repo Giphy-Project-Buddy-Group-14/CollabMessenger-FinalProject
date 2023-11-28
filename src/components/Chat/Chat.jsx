@@ -45,7 +45,7 @@ export default function Chat() {
             };
 
             return newChannel;
-          })
+          });
         }
       },
       (error) => {
@@ -53,8 +53,10 @@ export default function Chat() {
       }
     );
 
-    offPreviousChannel = () => { off(dbRef) }
-  }
+    offPreviousChannel = () => {
+      off(dbRef);
+    };
+  };
 
   if (loading) {
     return <div>Loading channels...</div>;
@@ -70,19 +72,25 @@ export default function Chat() {
               <div className="text-xs">
                 <span className="font-bold">Active channels</span>
                 <div>
-                  {channels.map(channel => (
-                    <div key={channel.id} className='cursor-pointer py-1 hover:text-cyan-500' onClick={() => selectChannel(channel)}>
-                      {!!selectedChannel && selectedChannel.id === channel.id && <span>⭐️</span>}
+                  {channels.map((channel) => (
+                    <div
+                      key={channel.id}
+                      className="cursor-pointer py-1 hover:text-cyan-500"
+                      onClick={() => selectChannel(channel)}
+                    >
+                      {!!selectedChannel &&
+                        selectedChannel.id === channel.id && <span>⭐️</span>}
                       {channel.title}
                     </div>
                   ))}
                 </div>
 
-                <div className='my-8'>
+                <div className="my-8">
                   {!isAddChannelFormVisible && (
                     <button
                       onClick={() => setIsAddChannelFormVisible(true)}
-                      className='py-2 cursor-pointer hover:text-cyan-500 opacity-50'>
+                      className="py-2 cursor-pointer hover:text-cyan-500 opacity-50"
+                    >
                       + add channel
                     </button>
                   )}
@@ -90,14 +98,13 @@ export default function Chat() {
                   {isAddChannelFormVisible && (
                     <div>
                       <h3 className="text-xs font-bold">Create a Channel</h3>
-                      <ChannelForm onCancel={() => setIsAddChannelFormVisible(false)} />
+                      <ChannelForm
+                        onCancel={() => setIsAddChannelFormVisible(false)}
+                      />
                     </div>
                   )}
                 </div>
               </div>
-
-
-
 
               <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
                 {/* ... Active Conversations Buttons ... */}
@@ -120,26 +127,31 @@ export default function Chat() {
               {/* ... Chat Messages ... */}
               {!!selectedChannel && (
                 <div>
-                  <h1 className="text-xl font-semibold mb-6">{selectedChannel.title}</h1>
+                  <h1 className="text-xl font-semibold mb-6">
+                    {selectedChannel.title}
+                  </h1>
                   <ul>
-                    {Object.keys(selectedChannel.messages || {}).map(messageKey => {
-
-                      const message = selectedChannel.messages[messageKey];
-                      return (
-                        <li key={messageKey} className='mb-4'>
-                          <div className="flex flex-row items-center justify-between">
-                            <div>
-                              <p className='text-s font-semibold'>{message.text}</p>
-                              <div className='text-xs'>{message.owner}</div>
+                    {Object.keys(selectedChannel.messages || {}).map(
+                      (messageKey) => {
+                        const message = selectedChannel.messages[messageKey];
+                        return (
+                          <li key={messageKey} className="mb-4">
+                            <div className="flex flex-row items-center justify-between">
+                              <div>
+                                <p className="text-s font-semibold">
+                                  {message.text}
+                                </p>
+                                <div className="text-xs">{message.owner}</div>
+                              </div>
+                              <span className="text-xs text-gray-500">
+                                {message.createdOn}
+                              </span>
                             </div>
-                            <span className="text-xs text-gray-500">{message.createdOn}</span>
-                          </div>
-
-                        </li>
-                      )
-                    })}
+                          </li>
+                        );
+                      }
+                    )}
                   </ul>
-
                 </div>
               )}
 

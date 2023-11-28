@@ -69,10 +69,7 @@ export default function Sidebar() {
                       strokeLinejoin="round"
                     >
                       {' '}
-                      <path
-                        stroke="none"
-                        d="M0 0h24v24H0z"
-                      />{' '}
+                      <path stroke="none" d="M0 0h24v24H0z" />{' '}
                       <polyline points="5 12 3 12 12 3 21 12 19 12" />{' '}
                       <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />{' '}
                       <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
@@ -123,11 +120,7 @@ export default function Sidebar() {
                     >
                       {' '}
                       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />{' '}
-                      <circle
-                        cx="9"
-                        cy="7"
-                        r="4"
-                      />{' '}
+                      <circle cx="9" cy="7" r="4" />{' '}
                       <path d="M23 21v-2a4 4 0 0 0-3-3.87" />{' '}
                       <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                     </svg>
@@ -203,10 +196,7 @@ export default function Sidebar() {
                         strokeLinejoin="round"
                       >
                         {' '}
-                        <path
-                          stroke="none"
-                          d="M0 0h24v24H0z"
-                        />{' '}
+                        <path stroke="none" d="M0 0h24v24H0z" />{' '}
                         <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />{' '}
                         <path d="M7 12h14l-3 -3m0 6l3 -3" />
                       </svg>
@@ -263,10 +253,7 @@ export default function Sidebar() {
                         strokeLinejoin="round"
                       >
                         {' '}
-                        <path
-                          stroke="none"
-                          d="M0 0h24v24H0z"
-                        />{' '}
+                        <path stroke="none" d="M0 0h24v24H0z" />{' '}
                         <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />{' '}
                         <path d="M20 12h-13l3 -3m0 6l-3 -3" />
                       </svg>

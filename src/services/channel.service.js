@@ -2,7 +2,6 @@ import { get, ref, push, set } from 'firebase/database';
 import { db } from '../../firebaseAppConfig';
 import { v4 as uuidv4 } from 'uuid';
 
-
 /**
  * @typedef {Object} Channel
  * @property {string} uid - The unique user ID associated with the channel.
@@ -31,7 +30,7 @@ export const getAllChannels = async () => {
     if (snapshot.exists()) {
       return Object.entries(snapshot.val()).map(([key, value]) => ({
         id: key,
-        ...value
+        ...value,
       }));
     } else {
       console.log('No data available');
@@ -55,8 +54,12 @@ export const getAllChannels = async () => {
 export function createChannel(title, owner) {
   const uid = uuidv4();
 
-  if (!title || typeof title !== 'string' ||
-    !owner || typeof owner !== 'string') {
+  if (
+    !title ||
+    typeof title !== 'string' ||
+    !owner ||
+    typeof owner !== 'string'
+  ) {
     throw new Error('Invalid or missing required channel information');
   }
 
@@ -75,10 +78,8 @@ export function createChannel(title, owner) {
       console.log('Channel created successfully');
       return { ...newChannel, id: newChannelRef.key };
     })
-    .catch(error => {
+    .catch((error) => {
       console.error('Error creating channel:', error);
       throw error;
     });
 }
-
-

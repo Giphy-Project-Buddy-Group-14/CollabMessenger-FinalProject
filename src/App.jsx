@@ -34,31 +34,12 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route
-              exact
-              path="/"
-              element={<Sidebar />}
-            >
-              <Route
-                index
-                element={<Home />}
-              />
-              <Route
-                path="users"
-                element={<Users />}
-              />
-              <Route
-                path="teams"
-                element={<Teams />}
-              />
-              <Route
-                path="chat"
-                element={<Chat />}
-              />
-              <Route
-                path="profile"
-                element={<RouteOutlet />}
-              >
+            <Route exact path="/" element={<Sidebar />}>
+              <Route index element={<Home />} />
+              <Route path="users" element={<Users />} />
+              <Route path="teams" element={<Teams />} />
+              <Route path="chat" element={<Chat />} />
+              <Route path="profile" element={<RouteOutlet />}>
                 <Route
                   index
                   element={
@@ -76,18 +57,9 @@ function App() {
                   }
                 />
               </Route>
-              <Route
-                path="signup"
-                element={<SignUp />}
-              />
-              <Route
-                path="signin"
-                element={<SignIn />}
-              />
-              <Route
-                path="new-team"
-                element={<NewTeam />}
-              />
+              <Route path="signup" element={<SignUp />} />
+              <Route path="signin" element={<SignIn />} />
+              <Route path="new-team" element={<NewTeam />} />
             </Route>
           </Routes>
         </BrowserRouter>

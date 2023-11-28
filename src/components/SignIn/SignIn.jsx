@@ -60,17 +60,11 @@ export default function SignIn() {
                 type="password"
               />
             </div>
-            <Link
-              to="#"
-              className="text-xs text-gray-50 hover:underline"
-            >
+            <Link to="#" className="text-xs text-gray-50 hover:underline">
               Forget Password?
             </Link>
             <div className="flex items-center mt-4">
-              <Button
-                title="Sign In"
-                onClick={signInHandler}
-              />
+              <Button title="Sign In" onClick={signInHandler} />
             </div>
           </form>
         </div>
