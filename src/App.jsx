@@ -88,6 +88,10 @@ function App() {
                 path="new-team"
                 element={<NewTeam />}
               />
+              <Route
+                path="teams/:teamName"
+                element={<Chat />}
+              />
             </Route>
           </Routes>
         </BrowserRouter>
