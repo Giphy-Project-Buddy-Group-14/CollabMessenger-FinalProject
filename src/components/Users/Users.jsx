@@ -99,10 +99,7 @@ export default function Users() {
     <>
       {loadingSearchBar}
       {!loadingSearchBar && (
-        <SearchBar
-          allUsers={allUsers}
-          onSearch={onSearchHandler}
-        />
+        <SearchBar allUsers={allUsers} onSearch={onSearchHandler} />
       )}
       {loading && <LoadingIndicator />}
       {!loading && (

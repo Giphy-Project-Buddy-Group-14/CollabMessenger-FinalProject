@@ -147,10 +147,7 @@ export default function EditProfile() {
                   />
                 </div>
               </div>
-              <Button
-                title="Update"
-                onClick={updateHandler}
-              />
+              <Button title="Update" onClick={updateHandler} />
             </form>
           </div>
         </div>
