@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { addMessageToChannel } from '../../services/message.service';
 import { PropTypes } from 'prop-types';
 
-export default function ChatSection({ selectedChannel, selectedChannelId }) {
+export default function ChatSection({ selectedChannel }) {
   const [text, setText] = useState('');
   const [error, setError] = useState(null);
 
