@@ -1,8 +1,8 @@
+import { getDatabase, ref, onValue, off } from 'firebase/database';
 import { getAllChannels } from '../../services/channel.service';
 import { ChannelForm } from '../ChannelForm/ChannelForm';
 import ChatSection from '../Ui/ChatSection';
 import { useEffect, useState } from 'react';
-
 
 export default function Chat() {
   const [channels, setChannels] = useState([]);
@@ -25,8 +25,35 @@ export default function Chat() {
     fetchChannels();
   }, []);
 
+  let offPreviousChannel;
+
   const selectChannel = (channel) => {
+    offPreviousChannel && offPreviousChannel();
+
     setSelectedChannel(channel);
+
+    const dbRef = ref(getDatabase(), 'channels/' + channel.id);
+
+    onValue(
+      dbRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          setSelectedChannel(() => {
+            const newChannel = {
+              ...snapshot.val(),
+              id: snapshot.key,
+            };
+
+            return newChannel;
+          })
+        }
+      },
+      (error) => {
+        console.error('Error fetching profile: ', error);
+      }
+    );
+
+    offPreviousChannel = () => { off(dbRef) }
   }
 
   if (loading) {
@@ -42,7 +69,6 @@ export default function Chat() {
               {/* ... Active Conversations ... */}
               <div className="text-xs">
                 <span className="font-bold">Active channels</span>
-
                 <div>
                   {channels.map(channel => (
                     <div key={channel.id} className='cursor-pointer py-1 hover:text-cyan-500' onClick={() => selectChannel(channel)}>
