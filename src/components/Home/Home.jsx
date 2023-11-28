@@ -24,25 +24,16 @@ export default function Home() {
       <h1>Home</h1>
       {!currentUser && (
         <div>
-          <Button
-            title="Sign Up"
-            onClick={signUpHandler}
-          />
+          <Button title="Sign Up" onClick={signUpHandler} />
           <br />
-          <Button
-            title="Sign In"
-            onClick={signInHandler}
-          />
+          <Button title="Sign In" onClick={signInHandler} />
         </div>
       )}
 
       {currentUser && (
         <div>
           <h1>Logged In</h1>
-          <Button
-            title="Sign Out"
-            onClick={signOutHandler}
-          />
+          <Button title="Sign Out" onClick={signOutHandler} />
         </div>
       )}
     </>

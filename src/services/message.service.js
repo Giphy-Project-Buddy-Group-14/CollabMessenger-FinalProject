@@ -21,7 +21,7 @@ export const addMessageToChannel = async (channelId, text) => {
     uid: currentUser.uid,
     owner: currentUser.displayName || 'Anonymous', // Default to 'Anonymous' if displayName is not set
     text,
-    createdOn: new Date().toISOString()
+    createdOn: new Date().toISOString(),
   };
 
   return push(ref(database, `channels/${channelId}/messages`), message);

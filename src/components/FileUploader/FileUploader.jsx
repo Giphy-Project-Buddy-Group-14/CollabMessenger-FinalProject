@@ -29,11 +29,7 @@ export default function FileUploader() {
             SVG, PNG, JPG or GIF (MAX. 400x400px)
           </p>
         </div>
-        <input
-          id="dropzone-file"
-          type="file"
-          className="hidden"
-        />
+        <input id="dropzone-file" type="file" className="hidden" />
       </label>
     </div>
   );
