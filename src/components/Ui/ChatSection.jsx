@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { addMessageToChannel } from '../../services/message.service';
 import { PropTypes } from 'prop-types';
 
-export default function ChatSection({ selectedChannel }) {
+export default function ChatSection({ selectedChannel, selectedChannelId }) {
   const [text, setText] = useState('');
   const [error, setError] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setError(null);
 
     if (!text.trim()) {
       setError('Message cannot be empty');
@@ -15,6 +16,7 @@ export default function ChatSection({ selectedChannel }) {
     }
 
     try {
+      console.log('selectedChannel message', selectedChannel);
       await addMessageToChannel(selectedChannel.id, text);
       console.log('Message sent successfully');
       setText(''); // Reset text field after successful send
