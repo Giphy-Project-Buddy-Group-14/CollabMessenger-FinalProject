@@ -5,63 +5,66 @@ import {
   child,
   update,
   query,
-  equalTo,
-  orderByChild,
   limitToFirst,
 } from 'firebase/database';
-import { db } from '../../firebaseAppConfig';
+import { db, auth } from '../../firebaseAppConfig';
 import { setFileToStorage } from './storage.service';
 import { DEFAULT_TIME_ZONE } from '../common/constants';
 import moment from 'moment-timezone';
 
-export const createUser = (username, uid, email) => {
-  return set(ref(db, `users/${username}`), {
-    username,
-    uid,
-    email,
-    firstName: '',
-    lastName: '',
-    phone: '',
-    createdOn: Date.now(),
-  });
-};
+export const usersRef = ref(db, 'users');
+export const userRef = (uid) => ref(db, `users/${uid}`);
 
-export const getUserByUsername = (username) => {
-  return get(ref(db, `users/${username}`));
-};
-
-function extractFirstKeyContent(data) {
-  if (data && typeof data === 'object') {
-    const firstKey = Object.keys(data)[0];
-
-    if (firstKey) {
-      return data[firstKey];
-    }
-  }
-
-  return null;
-}
-
-export const fetchUserProfile = async (uid) => {
-  const queryRef = query(usersRef, orderByChild('uid'), equalTo(uid));
-
+export const createUserProfile = (userData) => {
   try {
-    const snapshot = await get(queryRef);
+    const { currentUser } = auth;
 
-    if (snapshot.exists()) {
-      const userData = snapshot.val();
-      const user = extractFirstKeyContent(userData);
-      return user;
-    } else {
-      return null;
+    if (!currentUser) {
+      throw new Error('User not authenticated.');
     }
+
+    const { uid } = currentUser;
+
+    if (!userData || !userData.uid) {
+      throw new Error('Invalid user data');
+    }
+
+    if (userData.uid !== uid) {
+      throw new Error('User UID must match the authenticated user UID');
+    }
+
+    const mergedUserData = {
+      firstName: '',
+      lastName: '',
+      phone: '',
+      profilePictureURL: '',
+      createdOn: Date.now(),
+      ...userData,
+    };
+
+    const userUidRef = ref(db, `users/${uid}`);
+    return set(userUidRef, mergedUserData);
   } catch (error) {
     console.error('Error fetching user data:', error);
     throw error;
   }
 };
 
-export const usersRef = ref(db, 'users');
+export const getUserProfileByUID = async (uid) => {
+  try {
+    const snapshot = await get(userRef(uid));
+
+    if (snapshot.exists()) {
+      const userData = snapshot.val();
+      return { ...userData, uid };
+    } else {
+      throw new Error('User not found.');
+    }
+  } catch (error) {
+    console.error('Error fetching user profile data:', error);
+    throw error;
+  }
+};
 
 export const fetchTotalUserCount = async () => {
   try {
@@ -107,50 +110,28 @@ export async function fetchUsersWithPagination(currentPage, usersPerPage) {
   }
 }
 
-export const getUserData = async (uid) => {
+export const updateUserProfile = async (uid, userData) => {
   try {
-    const userQuery = query(
-      ref(db, 'users'),
-      orderByChild('uid'),
-      equalTo(uid)
-    );
-    const userSnapshot = await get(userQuery);
-
-    if (userSnapshot.exists()) {
-      const user = extractFirstKeyContent(userSnapshot.val());
-      return user;
-    } else {
-      return null;
+    if (!uid) {
+      throw new Error('User UID is required for updates');
     }
-  } catch (error) {
-    console.error('Error getting user data:', error);
-    throw error;
-  }
-};
-
-export const updateUser = async (username, content) => {
-  try {
-    if (!username) {
-      throw new Error('Username is required for updates');
-    }
-    const userRef = ref(db, `users/${username}`);
-    await update(userRef, {
-      ...content,
+    await update(userRef(uid), {
+      ...userData,
       updatedOn: Date.now(),
     });
-    const result = await fetchUserProfile(username);
-    return result;
+    const profile = await getUserProfileByUID(uid);
+    return profile;
   } catch (error) {
     console.error(error);
   }
 };
 
-export const updateProfilePic = async (file, userData) => {
-  const { username, uid } = userData;
+export const updateUserProfilePic = async (file, userData) => {
+  const { uid } = userData;
 
   const url = await setFileToStorage(uid, file);
   const updateProfilePic = {};
-  updateProfilePic[`/users/${username}/profilePictureURL`] = url;
+  updateProfilePic[`/users/${uid}/profilePictureURL`] = url;
 
   update(ref(db), updateProfilePic);
   return url;
@@ -175,32 +156,33 @@ const formatCreatedOn = (user) => {
 };
 
 export const fromUsersDocument = (snapshot) => {
-  const usersDocument = snapshot.val();
+  const userProfiles = snapshot.val();
 
-  return Object.keys(usersDocument).map((key) => {
-    const user = usersDocument[key];
+  return Object.keys(userProfiles).map((uid) => {
+    const userProfile = userProfiles[uid];
 
-    const createdOn = formatCreatedOn(user);
+    const createdOn = formatCreatedOn(userProfile);
 
     return {
-      ...user,
-      username: key,
-      createdOn: createdOn,
+      ...userProfile,
+      uid,
+      createdOn,
     };
   });
 };
 
-export const getAllUsers = async () => {
+export const getAllUserProfiles = async () => {
   try {
-    const snapshot = await get(ref(db, 'users'));
+    const snapshot = await get(usersRef);
 
-    if (!snapshot.exists()) {
-      return [];
+    if (snapshot.exists()) {
+      const userProfiles = fromUsersDocument(snapshot);
+      return userProfiles;
+    } else {
+      throw new Error('Snapshot data does not exist.');
     }
-
-    return fromUsersDocument(snapshot);
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('Error fetching all users:', error);
     throw error;
   }
 };

@@ -10,7 +10,7 @@ import {
   fetchUsersWithPagination,
 } from '../../services/user.service';
 
-import { getAllUsers } from '../../services/user.service';
+import { getAllUserProfiles } from '../../services/user.service';
 
 export default function Users() {
   const [loading, setLoading] = useState(true);
@@ -54,6 +54,7 @@ export default function Users() {
     }
 
     setTotalUsersCount(filteredUsers.length);
+    console.log('filteredUsers --> ', filteredUsers);
     // const filteredUsersPerPage = filteredUsers.slice(0, usersPerPage);
     setUsers(filteredUsers);
   };
@@ -62,8 +63,8 @@ export default function Users() {
     (async function () {
       try {
         setLoadingSearchBar(true);
-        const all = await getAllUsers();
-        setAllUsers(all);
+        const allUserProfiles = await getAllUserProfiles();
+        setAllUsers(allUserProfiles);
       } catch (error) {
         console.error(error);
       } finally {
@@ -84,7 +85,7 @@ export default function Users() {
           currentPage,
           usersPerPage
         );
-
+        console.log('fetchedUsers --> ', fetchedUsers);
         setUsers(fetchedUsers);
       } catch (error) {
         console.error('Error: ', error);

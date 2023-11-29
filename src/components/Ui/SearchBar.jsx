@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 
 export default function SearchBar({ allUsers, onSearch }) {
+  console.log('allUsers -->', allUsers);
+
   function filterUsersBySearch(search) {
     return allUsers.filter((user) => {
       return (
