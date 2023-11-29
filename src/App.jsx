@@ -18,7 +18,7 @@ import NewTeam from './components/NewTeam/NewTeam';
 
 function App() {
   return (
-    <>
+    <div className='flex h-screen'>
       <ToastContainer
         position="bottom-left"
         autoClose={2000}
@@ -65,7 +65,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </AuthProvider>
-    </>
+    </div>
   );
 }
 

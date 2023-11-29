@@ -35,6 +35,10 @@ export function ChannelForm({ onCancel }) {
           onChange={(e) => setTitle(e.target.value)}
           type="text"
           placeholder={'Channel Name'}
+          onSubmit={() => {
+            handleSubmit();
+            setTitle('');
+          }}
         />
       </div>
 

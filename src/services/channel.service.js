@@ -1,22 +1,11 @@
 import { get, ref, push, set } from 'firebase/database';
 import { db } from '../../firebaseAppConfig';
-import { v4 as uuidv4 } from 'uuid';
 
 /**
  * @typedef {Object} Channel
- * @property {string} uid - The unique user ID associated with the channel.
  * @property {string} owner - The owner of the channel.
  * @property {string} title - The title of the channel.
  * @property {string[]} participants - An array of user identifiers representing the participants in the channel.
- * @property {Message[]} messages - An array containing messages.
- */
-
-/**
- * @typedef {Object} Message
- * @property {string} uid - The unique user ID associated with the message.
- * @property {string} owner - The owner of the message.
- * @property {string} createdAt - The creation timestamp of the message.
- * @property {string} text - The text content of the message.
  */
 
 /**
@@ -52,8 +41,6 @@ export const getAllChannels = async () => {
  * @throws {Error} If required information is missing or validation fails.
  */
 export function createChannel(title, owner) {
-  const uid = uuidv4();
-
   if (
     !title ||
     typeof title !== 'string' ||
@@ -64,7 +51,6 @@ export function createChannel(title, owner) {
   }
 
   const newChannel = {
-    uid,
     title,
     owner,
     participants: [],
