@@ -42,7 +42,6 @@ export default function Users() {
       'data-per-page-value'
     );
     setUsersPerPage(Number(selectedValue));
-
     setIsDropdownOpen(false);
   };
 
@@ -54,8 +53,7 @@ export default function Users() {
     }
 
     setTotalUsersCount(filteredUsers.length);
-    console.log('filteredUsers --> ', filteredUsers);
-    // const filteredUsersPerPage = filteredUsers.slice(0, usersPerPage);
+
     setUsers(filteredUsers);
   };
 
@@ -85,7 +83,6 @@ export default function Users() {
           currentPage,
           usersPerPage
         );
-        console.log('fetchedUsers --> ', fetchedUsers);
         setUsers(fetchedUsers);
       } catch (error) {
         console.error('Error: ', error);
