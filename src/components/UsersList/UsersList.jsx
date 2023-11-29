@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import ImageWithLoading from '../helper/ImageWithLoading';
+import Button from '../Ui/Button';
 
 export default function UsersList({ users }) {
   return (
@@ -60,6 +61,9 @@ export default function UsersList({ users }) {
                 <td className="px-6 py-4">{user.phone}</td>
                 <td className="px-6 py-4">{user.email}</td>
                 <td className="px-6 py-4">{user.createdOn}</td>
+                <td className="px-6 py-4">
+                  <Button title="Message" />
+                </td>
               </tr>
             ))}
           </tbody>
