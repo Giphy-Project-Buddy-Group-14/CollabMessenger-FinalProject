@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import Button from '../Ui/Button';
 import InputSection from '../Ui/InputSection';
-import { createUser } from '../../services/user.service';
+import { createUserProfile } from '../../services/user.service';
 import { checkIfUsernameExists } from '../../services/user.service';
 import {
   MIN_USERNAME_LENGTH,
@@ -48,8 +48,13 @@ export default function SignUp() {
     }
 
     try {
-      const user = await signUp(email, password);
-      await createUser(username, user.uid, email);
+      const authenticatedUser = await signUp(email, password);
+      const userData = {
+        uid: authenticatedUser.uid,
+        email: email,
+        username: username,
+      };
+      await createUserProfile(userData);
       toast.success('Sign up successful');
       navigate('/signin');
     } catch (error) {

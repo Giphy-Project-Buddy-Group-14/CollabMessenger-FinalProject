@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getDatabase, ref, onValue, off } from 'firebase/database';
-import { fetchUserProfile } from '../services/user.service';
+import { getUserProfileByUID } from '../services/user.service';
 
 export function useUserProfile(user) {
   const [userProfile, setUserProfile] = useState(null);
@@ -10,10 +10,10 @@ export function useUserProfile(user) {
     const getUserProfile = async () => {
       if (user) {
         try {
-          const profile = await fetchUserProfile(user.uid);
+          const profile = await getUserProfileByUID(user.uid);
 
-          if (profile && profile.username) {
-            const dbRef = ref(getDatabase(), 'users/' + profile.username);
+          if (profile && profile.uid) {
+            const dbRef = ref(getDatabase(), 'users/' + profile.uid);
             onValue(
               dbRef,
               (snapshot) => {
