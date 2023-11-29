@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { addMessageToChannel } from '../../services/message.service';
 import { PropTypes } from 'prop-types';
 
-export default function ChatSection({ selectedChannel, selectedChannelId }) {
+export default function ChatSection({ selectedChannel }) {
   const [text, setText] = useState('');
   const [error, setError] = useState(null);
 
@@ -16,9 +16,7 @@ export default function ChatSection({ selectedChannel, selectedChannelId }) {
     }
 
     try {
-      console.log('selectedChannel message', selectedChannel);
       await addMessageToChannel(selectedChannel.id, text);
-      console.log('Message sent successfully');
       setText(''); // Reset text field after successful send
     } catch (err) {
       setError(err.message);
@@ -84,7 +82,7 @@ export default function ChatSection({ selectedChannel, selectedChannelId }) {
           </svg>
           <span className="sr-only">Add emoji</span>
         </button>
-        <textarea
+        <input
           disabled={!selectedChannel}
           id="chat"
           rows="1"
@@ -92,7 +90,11 @@ export default function ChatSection({ selectedChannel, selectedChannelId }) {
           placeholder="Your message..."
           onChange={(e) => setText(e.target.value)}
           value={text}
-        ></textarea>
+          onSubmit={() => {
+            handleSubmit();
+            setText('');
+          }}
+        />
 
         {error && <div className="bg-red-500 mt-2">Error: {error}</div>}
 
@@ -119,5 +121,5 @@ export default function ChatSection({ selectedChannel, selectedChannelId }) {
 ChatSection.propTypes = {
   selectedChannel: PropTypes.shape({
     id: PropTypes.string.isRequired,
-  }),
+  })
 };

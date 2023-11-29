@@ -49,10 +49,11 @@ export default function Sidebar() {
 
           <aside
             id="default-sidebar"
-            className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+            className="transition-transform -translate-x-full sm:translate-x-0 bg-gray-50 dark:bg-gray-800"
+            style={{ width: '18rem' }}
             aria-label="Sidebar"
           >
-            <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+            <div className="px-3 py-4 overflow-y-auto">
               <ul className="space-y-2 font-medium">
                 <li>
                   <Link
@@ -147,10 +148,26 @@ export default function Sidebar() {
                           d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                         />
                       </svg>
+                  <li>
+                    <Link
+                      to="/teams"
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                    >
+                      <svg
+                        className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1"
+                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                        />
+                      </svg>
 
-                      <span className="flex-1 ms-3 whitespace-nowrap">
-                        Teams
-                      </span>
+                      <span className="flex-1 ms-3 whitespace-nowrap">Teams</span>
                     </Link>
                   </li>
                 )}
@@ -271,14 +288,15 @@ export default function Sidebar() {
             </div>
           </aside>
 
-          <div className="sm:ml-64">
+          <div className="flex-1 flex flex-col dark:border-gray-500">
             <Navbar />
-            <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-500">
+            <div className="p-4 flex-1">
               <Outlet />
             </div>
           </div>
         </>
-      )}
+      )
+      }
     </>
   );
 }
