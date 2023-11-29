@@ -60,6 +60,7 @@ function App() {
               <Route path="signup" element={<SignUp />} />
               <Route path="signin" element={<SignIn />} />
               <Route path="new-team" element={<NewTeam />} />
+              <Route path="teams/:teamName" element={<Chat />} />
             </Route>
           </Routes>
         </BrowserRouter>

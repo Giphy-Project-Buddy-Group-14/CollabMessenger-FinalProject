@@ -3,11 +3,8 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import Button from '../Ui/Button';
 import InputSection from '../Ui/InputSection';
-import {
-  MIN_TEAM_NAME_LENGTH,
-  MAX_TEAM_NAME_LENGTH,
-} from '../../common/constants';
-import { addTeam, checkIfTeamNameExists } from '../../services/teams.service';
+import { MIN_TEAM_NAME_LENGTH, MAX_TEAM_NAME_LENGTH } from '../../common/constants';
+import { addTeam, checkIfTeamNameExists, createGeneralChanel } from '../../services/teams.service';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import { useUserProfile } from '../../hooks/useUserProfile';
 
@@ -39,14 +36,15 @@ export default function NewTeam() {
       return;
     }
 
-    try {
-      await addTeam(username, teamName);
-      toast.success('New team was created');
-      navigate('/teams');
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
+        try {
+            const teamUid = await addTeam(username, teamName);
+            await createGeneralChanel(teamUid);
+            toast.success('New team was created');
+            navigate('/teams');
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
 
   return (
     <>

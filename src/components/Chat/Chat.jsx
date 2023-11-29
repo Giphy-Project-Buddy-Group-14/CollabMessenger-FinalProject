@@ -31,6 +31,29 @@ export default function Chat() {
     offPreviousChannel && offPreviousChannel();
 
     setSelectedChannel(channel);
+
+    const dbRef = ref(getDatabase(), 'channels/' + channel.id);
+
+    onValue(
+      dbRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          setSelectedChannel(() => {
+            const newChannel = {
+              ...snapshot.val(),
+              id: snapshot.key,
+            };
+
+            return newChannel;
+          })
+        }
+      },
+      (error) => {
+        console.error('Error fetching profile: ', error);
+      }
+    );
+
+    offPreviousChannel = () => { off(dbRef) }
   }
 
   if (loading) {

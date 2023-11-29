@@ -128,6 +128,7 @@ export default function Sidebar() {
                   </Link>
                 </li>
 
+                {user && (
                 <li>
                   <Link
                     to="/teams"
@@ -150,6 +151,7 @@ export default function Sidebar() {
                     <span className="flex-1 ms-3 whitespace-nowrap">Teams</span>
                   </Link>
                 </li>
+                )}
 
                 {user && (
                   <li>
