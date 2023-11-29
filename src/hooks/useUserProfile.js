@@ -5,7 +5,6 @@ import { fetchUserProfile } from '../services/user.service';
 export function useUserProfile(user) {
   const [userProfile, setUserProfile] = useState(null);
   const [profileLoading, setProfileLoading] = useState(true);
-  // profileLoading - the user does not exist
 
   useEffect(() => {
     const getUserProfile = async () => {

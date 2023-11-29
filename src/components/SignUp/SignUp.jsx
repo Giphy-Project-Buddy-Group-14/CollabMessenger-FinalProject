@@ -89,10 +89,7 @@ export default function SignUp() {
                 type="text"
               />
             </div>
-            <Button
-              title="Sign Up"
-              onClick={signUpHandler}
-            />
+            <Button title="Sign Up" onClick={signUpHandler} />
           </form>
           <div className="flex items-center w-full my-4">
             <hr className="w-full" />

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { createChannel } from '../../services/channel.service';
 import InputSection from '../Ui/InputSection';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
+import PropTypes from 'prop-types';
 
 export function ChannelForm({ onCancel }) {
   const { user } = useFirebaseAuth();
@@ -37,14 +38,26 @@ export function ChannelForm({ onCancel }) {
         />
       </div>
 
-      <div className='gap-1 flex'>
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Create Channel</button>
-        <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" onClick={onCancel}>Cancel</button>
+      <div className="gap-1 flex">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          type="submit"
+        >
+          Create Channel
+        </button>
+        <button
+          className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+          onClick={onCancel}
+        >
+          Cancel
+        </button>
       </div>
 
-      {error && <p className='text-red-600 mt-2'>Error: {error}</p>}
+      {error && <p className="text-red-600 mt-2">Error: {error}</p>}
     </form>
   );
 }
 
-
+ChannelForm.propTypes = {
+  onCancel: PropTypes.func.isRequired,
+};

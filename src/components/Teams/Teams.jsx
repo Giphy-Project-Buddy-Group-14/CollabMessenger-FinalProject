@@ -1,51 +1,47 @@
 import Button from '../Ui/Button';
 import { useNavigate } from 'react-router-dom';
-import {  getTeamsByUserUids } from '../../services/teams.service';
+import { getTeamsByUserUids } from '../../services/teams.service';
 import { useState, useEffect } from 'react';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import { useUserProfile } from '../../hooks/useUserProfile';
 
-
-
 export default function Teams() {
-    const navigate = useNavigate();
-    const [teams, setTeams] = useState([]);
-    const { user } = useFirebaseAuth();
-    const { MyTeams } = useUserProfile(user);
-
+  const navigate = useNavigate();
+  const [teams, setTeams] = useState([]);
+  const { user } = useFirebaseAuth();
+  const { MyTeams } = useUserProfile(user);
 
     const handleTeamClick = (teamName) => {
         navigate(`/teams/${teamName}`);
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                if(MyTeams) {
-                const teamsData = await getTeamsByUserUids(Object.values(MyTeams));
-                setTeams(teamsData);
-                }
-            } catch (error) {
-                console.error('Error fetching teams:', error);
-            }
-        };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (MyTeams) {
+          const teamsData = await getTeamsByUserUids(Object.values(MyTeams));
+          setTeams(teamsData);
+        }
+      } catch (error) {
+        console.error('Error fetching teams:', error);
+      }
+    };
 
-        fetchData();
-    }, [MyTeams]);
+    fetchData();
+  }, [MyTeams]);
 
-    const newTeam = () => {
-        navigate('/new-team')
-    }
+  const newTeam = () => {
+    navigate('/new-team');
+  };
 
+  return (
+    <section className="bg-gray-100 py-8">
+      <div className="container mx-auto text-center px-4 pl-4">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Teams</h2>
 
-    return (
-        <section className="bg-gray-100 py-8">
-            <div className="container mx-auto text-center px-4 pl-4">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">Teams</h2>
-
-                <div className="flex justify-start items-center mb-4">
-                    <Button title="New team" onClick={newTeam} />
-                </div>
+        <div className="flex justify-start items-center mb-4">
+          <Button title="New team" onClick={newTeam} />
+        </div>
 
                 <div className="flex flex-wrap -mx-4">
                     {teams.map((team) => (

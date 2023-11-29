@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { addMessageToChannel } from '../../services/message.service';
 import { PropTypes } from 'prop-types';
 
-export default function ChatSection({ selectedChannel }) {
+export default function ChatSection({ selectedChannel, selectedChannelId }) {
   const [text, setText] = useState('');
   const [error, setError] = useState(null);
 
@@ -27,10 +27,7 @@ export default function ChatSection({ selectedChannel }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label
-        htmlFor="chat"
-        className="sr-only"
-      >
+      <label htmlFor="chat" className="sr-only">
         Your message
       </label>
       <div className="flex items-center px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-700">

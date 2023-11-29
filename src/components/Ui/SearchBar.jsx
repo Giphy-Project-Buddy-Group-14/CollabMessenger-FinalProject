@@ -34,10 +34,7 @@ export default function SearchBar({ allUsers, onSearch }) {
 
   return (
     <form className="flex items-center">
-      <label
-        htmlFor="simple-search"
-        className="sr-only"
-      >
+      <label htmlFor="simple-search" className="sr-only">
         Search
       </label>
 

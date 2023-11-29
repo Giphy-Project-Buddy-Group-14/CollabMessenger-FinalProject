@@ -12,12 +12,7 @@ export default function AuthenticatedRoute({ children }) {
   }
 
   if (!isAuthenticated) {
-    return (
-      <Navigate
-        to="/signin"
-        path={location.pathname}
-      ></Navigate>
-    );
+    return <Navigate to="/signin" path={location.pathname}></Navigate>;
   }
   return children;
 }
