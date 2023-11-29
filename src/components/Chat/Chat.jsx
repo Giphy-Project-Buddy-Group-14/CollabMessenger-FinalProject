@@ -45,7 +45,7 @@ export default function Chat() {
             };
 
             return newChannel;
-          })
+          });
         }
       },
       (error) => {
@@ -53,8 +53,10 @@ export default function Chat() {
       }
     );
 
-    offPreviousChannel = () => { off(dbRef) }
-  }
+    offPreviousChannel = () => {
+      off(dbRef);
+    };
+  };
 
   if (loading) {
     return <div>Loading channels...</div>;
