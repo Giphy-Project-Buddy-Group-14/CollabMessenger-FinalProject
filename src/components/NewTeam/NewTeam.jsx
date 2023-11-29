@@ -19,7 +19,7 @@ export default function NewTeam() {
   const navigate = useNavigate();
   const [teamName, setTeamName] = useState();
   const { user } = useFirebaseAuth();
-  const { username } = useUserProfile(user);
+  const { uid: userUid } = useUserProfile(user);
 
   const teamNameChangeHandler = (event) => {
     setTeamName(event.target.value);
@@ -44,7 +44,7 @@ export default function NewTeam() {
     }
 
     try {
-      const teamUid = await addTeam(username, teamName);
+      const teamUid = await addTeam(userUid, teamName);
       await createGeneralChanel(teamUid);
       toast.success('New team was created');
       navigate('/teams');
