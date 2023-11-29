@@ -10,13 +10,24 @@ export const addTeam = async (username, name) => {
     const members = {};
     members[username] = true;
 
-    await set(ref(db, `teams/${uid}`), { name, owner, members, channels, uid });
-    await update(ref(db), { [`users/${username}/MyTeams/${name}`]: uid });
-  } catch (error) {
-    console.error('Error adding team:', error);
-    throw error;
-  }
+        await set(ref(db, `teams/${uid}`), { name, owner, members, channels, uid });
+        await update(ref(db), { [`users/${username}/MyTeams/${name}`]: uid });
+        return uid
+    } catch (error) {
+        console.error('Error adding team:', error);
+        throw error;
+    }
 };
+
+export const createGeneralChanel = async (teamUid) => {
+    try {
+        const result = await push(ref(db,`teams/${teamUid}/chanels/`),{});
+        await set(ref(db,`teams/${teamUid}/chanels/${result.key}/`), {channelName:'General', uid:result.key})
+    }catch (error) {
+        console.error('Error adding team:', error);
+        throw error;
+    }
+}
 
 export const checkIfTeamNameExists = async (name) => {
   try {
