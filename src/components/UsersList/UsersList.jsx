@@ -3,6 +3,9 @@ import ImageWithLoading from '../helper/ImageWithLoading';
 import Button from '../Ui/Button';
 
 export default function UsersList({ users }) {
+  const messageUserHandler = (event) => {
+    event.preventDefault();
+  };
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -62,7 +65,7 @@ export default function UsersList({ users }) {
                 <td className="px-6 py-4">{user.email}</td>
                 <td className="px-6 py-4">{user.createdOn}</td>
                 <td className="px-6 py-4">
-                  <Button title="Message" />
+                  <Button title="Message" onClick={messageUserHandler} />
                 </td>
               </tr>
             ))}
