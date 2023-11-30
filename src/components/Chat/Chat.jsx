@@ -1,4 +1,4 @@
-import { getDatabase, ref, onValue, off, set } from 'firebase/database';
+import { getDatabase, ref, onValue, off } from 'firebase/database';
 import { getAllChannels } from '../../services/channel.service';
 import { ChannelForm } from '../ChannelForm/ChannelForm';
 import ChatSection from '../Ui/ChatSection';
@@ -71,8 +71,10 @@ export default function Chat() {
       }
     );
 
-    offPreviousChannel = () => { off(dbRef) }
-  }
+    offPreviousChannel = () => {
+      off(dbRef);
+    };
+  };
 
   useEffect(() => {
     const dbRef = ref(getDatabase(), 'channels/');
@@ -91,7 +93,7 @@ export default function Chat() {
 
           setChannels(() => {
             return newChannels;
-          })
+          });
         }
       },
       (error) => {
@@ -118,8 +120,9 @@ export default function Chat() {
                   className="cursor-pointer py-1 hover:text-cyan-500"
                   onClick={() => selectChannel(channel)}
                 >
-                  {!!selectedChannel &&
-                    selectedChannel.id === channel.id && <span>⭐️</span>}
+                  {!!selectedChannel && selectedChannel.id === channel.id && (
+                    <span>⭐️</span>
+                  )}
                   {channel.title}
                 </div>
               ))}
