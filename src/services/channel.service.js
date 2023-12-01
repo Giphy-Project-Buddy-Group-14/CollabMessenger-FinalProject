@@ -61,8 +61,9 @@ export function createChannel(title, owner) {
   const newChannelRef = push(channelsRef);
   return set(newChannelRef, newChannel)
     .then(() => {
-      console.log('Channel created successfully');
-      return { ...newChannel, id: newChannelRef.key };
+      const newChannelObj = { ...newChannel, id: newChannelRef.key }
+      console.log('Channel created successfully: ', newChannelObj);
+      return newChannelObj;
     })
     .catch((error) => {
       console.error('Error creating channel:', error);

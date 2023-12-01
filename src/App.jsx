@@ -15,7 +15,7 @@ import AuthenticatedRoute from './components/hoc/AuthenticatedRoute';
 import Chat from './components/Chat/Chat';
 import Teams from './components/Teams/Teams';
 import NewTeam from './components/NewTeam/NewTeam';
-import PrivateMessages from './components/PrivateMessages/PrivateMessages';
+// import PrivateMessages from './components/PrivateMessages/PrivateMessages';
 
 function App() {
   return (
@@ -37,7 +37,8 @@ function App() {
           <Routes>
             <Route exact path="/" element={<Sidebar />}>
               <Route index element={<Home />} />
-              <Route path="private_messages" element={<PrivateMessages />} />
+              {/* <Route path="private-messages" element={<PrivateMessages />} /> */}
+              <Route path="private-messages" element={<Chat />} />
               <Route path="users" element={<Users />} />
               <Route path="teams" element={<Teams />} />
               <Route path="chat" element={<Chat />} />
