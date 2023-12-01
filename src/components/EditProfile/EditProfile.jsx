@@ -3,8 +3,8 @@ import InputSection from '../Ui/InputSection';
 import Button from '../Ui/Button';
 import LoadingIndicator from '../Ui/LoadingIndicator';
 import { toast } from 'react-toastify';
-import { updateProfilePic } from '../../services/user.service';
-import { updateUser } from '../../services/user.service';
+import { updateUserProfilePic } from '../../services/user.service';
+import { updateUserProfile } from '../../services/user.service';
 import { useNavigate } from 'react-router-dom';
 import ImageWithLoading from '../helper/ImageWithLoading';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
@@ -12,8 +12,16 @@ import { useUserProfile } from '../../hooks/useUserProfile';
 
 export default function EditProfile() {
   const { user } = useFirebaseAuth();
-  const { phone, username, firstName, lastName, userProfile, profileLoading } =
-    useUserProfile(user);
+  const {
+    uid,
+    phone,
+    profilePictureURL,
+    username,
+    firstName,
+    lastName,
+    userProfile,
+    profileLoading,
+  } = useUserProfile(user);
 
   const [editedPhone, setEditedPhone] = useState('');
   const [editedUsername, setEditedUsername] = useState('');
@@ -42,13 +50,13 @@ export default function EditProfile() {
     event.preventDefault();
 
     try {
-      const content = {
-        phone: editedPhone,
+      const userData = {
         firstName: editedFirstName,
         lastName: editedLastName,
+        phone: editedPhone,
       };
-      await updateUser(username, content);
-      toast.success('Successfully updated profile!');
+      await updateUserProfile(uid, userData);
+      toast.success('Successfully updated profile');
       navigate('/profile');
     } catch (error) {
       console.error(error.message);
@@ -72,7 +80,7 @@ export default function EditProfile() {
     const file = event.target.files[0];
 
     try {
-      await updateProfilePic(file, userProfile);
+      await updateUserProfilePic(file, userProfile);
       toast.success('Successfully uploaded profile picture!');
     } catch (error) {
       console.error(error.message);
@@ -130,12 +138,9 @@ export default function EditProfile() {
                 }}
               >
                 <ImageWithLoading
-                  key={userProfile.profilePictureURL}
+                  key={profilePictureURL}
                   className="w-24 h-24 mb-3 rounded-full shadow-lg"
-                  src={
-                    userProfile.profilePictureURL ||
-                    '/src/assets/empty_profile_pic.webp'
-                  }
+                  src={profilePictureURL}
                   width="6rem"
                   height="6rem"
                 />

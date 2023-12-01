@@ -1,17 +1,17 @@
 import { get, set, ref, update, push } from 'firebase/database';
 import { db } from '../../firebaseAppConfig';
 
-export const addTeam = async (username, name) => {
+export const addTeam = async (userUid, name) => {
   try {
     const result = await push(ref(db, 'teams'), {});
     const uid = result.key;
-    const owner = username;
+    const owner = userUid;
     const channels = {};
     const members = {};
-    members[username] = true;
+    members[userUid] = true;
 
     await set(ref(db, `teams/${uid}`), { name, owner, members, channels, uid });
-    await update(ref(db), { [`users/${username}/MyTeams/${name}`]: uid });
+    await update(ref(db), { [`users/${userUid}/MyTeams/${name}`]: uid });
     return uid;
   } catch (error) {
     console.error('Error adding team:', error);
@@ -21,8 +21,8 @@ export const addTeam = async (username, name) => {
 
 export const createGeneralChanel = async (teamUid) => {
   try {
-    const result = await push(ref(db, `teams/${teamUid}/chanels/`), {});
-    await set(ref(db, `teams/${teamUid}/chanels/${result.key}/`), {
+    const result = await push(ref(db, `teamChannels/${teamUid}`), {});
+    await set(ref(db, `teamChannels/${teamUid}/${result.key}/`), {
       channelName: 'General',
       uid: result.key,
     });
