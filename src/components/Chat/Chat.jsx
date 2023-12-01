@@ -4,18 +4,22 @@ import { ChannelForm } from '../ChannelForm/ChannelForm';
 import ChatSection from '../Ui/ChatSection';
 import { useEffect, useState } from 'react';
 import { getChannelMessages } from '../../services/message.service';
+import { useLocation, useParams } from 'react-router-dom';
 
 export default function Chat() {
+  const params = useParams();
   const [channels, setChannels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedChannel, setSelectedChannel] = useState(null);
   const [isAddChannelFormVisible, setIsAddChannelFormVisible] = useState(false);
   const [selectedChannelMessages, setSelectedChannelMessages] = useState({});
 
+  const teamId = params.teamId;
+
   useEffect(() => {
     const fetchChannels = async () => {
       try {
-        const channelData = await getAllChannels();
+        const channelData = await getAllChannels(teamId);
         setChannels(channelData);
       } catch (error) {
         console.error('Error fetching channels:', error);
@@ -75,7 +79,7 @@ export default function Chat() {
   }
 
   useEffect(() => {
-    const dbRef = ref(getDatabase(), 'channels/');
+    const dbRef = ref(getDatabase(), 'teamChannels/' + teamId + '/');
 
     onValue(
       dbRef,
@@ -137,8 +141,9 @@ export default function Chat() {
 
               {isAddChannelFormVisible && (
                 <div>
-                  <h3 className="text-xs font-bold">Create a Channel</h3>
+                  <h3 className="text-xs font-bold">Create a Chanel</h3>
                   <ChannelForm
+                    teamId={teamId}
                     onCancel={() => setIsAddChannelFormVisible(false)}
                   />
                 </div>
