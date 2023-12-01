@@ -58,32 +58,56 @@ export default function Chat() {
     };
   };
 
+  useEffect(() => {
+    const dbRef = ref(getDatabase(), 'channels/');
+
+    onValue(
+      dbRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const channelsObj = snapshot.val();
+          const newChannels = Object.keys(channelsObj).map((key) => {
+            return {
+              ...channelsObj[key],
+              id: key,
+            };
+          });
+
+          setChannels(() => {
+            return newChannels;
+          });
+        }
+      },
+      (error) => {
+        console.error('Error fetching profile: ', error);
+      }
+    );
+  }, []);
+
   if (loading) {
     return <div>Loading channels...</div>;
   }
   return (
-    <>
-      <div className="flex h-screen antialiased text-gray-800 overflow-y-hidden">
-        <div className="flex flex-row h-full w-full overflow-x-hidden">
-          <div className="flex flex-col py-8 pl-6 pr-2 w-64 bg-white flex-shrink-0">
-            {/* ... Sidebar Content ... */}
-            <div className="my-8">
-              {/* ... Active Conversations ... */}
-              <div className="text-xs">
-                <span className="font-bold">Active channels</span>
-                <div>
-                  {channels.map((channel) => (
-                    <div
-                      key={channel.id}
-                      className="cursor-pointer py-1 hover:text-cyan-500"
-                      onClick={() => selectChannel(channel)}
-                    >
-                      {!!selectedChannel &&
-                        selectedChannel.id === channel.id && <span>⭐️</span>}
-                      {channel.title}
-                    </div>
-                  ))}
+    <div className="flex flex-row h-full w-full overflow-x-hidden">
+      <div className="flex flex-col pb-8 pl-2 pr-2 w-56 bg-white flex-shrink-0">
+        {/* ... Sidebar Content ... */}
+        <div className="my-8">
+          {/* ... Active Conversations ... */}
+          <div className="text-xs">
+            <span className="font-bold">Active channels</span>
+            <div>
+              {channels.map((channel) => (
+                <div
+                  key={channel.id}
+                  className="cursor-pointer py-1 hover:text-cyan-500"
+                  onClick={() => selectChannel(channel)}
+                >
+                  {!!selectedChannel &&
+                    selectedChannel.id === channel.id && <span>⭐️</span>}
+                  {channel.title}
                 </div>
+              ))}
+            </div>
 
                 <div className="my-8">
                   {!isAddChannelFormVisible && (
@@ -161,7 +185,5 @@ export default function Chat() {
             </div>
           </div>
         </div>
-      </div>
-    </>
   );
 }

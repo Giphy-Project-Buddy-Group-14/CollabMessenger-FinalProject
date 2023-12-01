@@ -149,7 +149,9 @@ export default function Sidebar() {
                         />
                       </svg>
 
-                      <span className="flex-1 ms-3 whitespace-nowrap">Teams</span>
+                      <span className="flex-1 ms-3 whitespace-nowrap">
+                        Teams
+                      </span>
                     </Link>
                   </li>
                 )}
@@ -277,8 +279,7 @@ export default function Sidebar() {
             </div>
           </div>
         </>
-      )
-      }
+      )}
     </>
   );
 }
