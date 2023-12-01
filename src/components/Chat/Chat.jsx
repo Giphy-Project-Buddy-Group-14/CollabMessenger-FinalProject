@@ -141,7 +141,7 @@ export default function Chat() {
 
               {isAddChannelFormVisible && (
                 <div>
-                  <h3 className="text-xs font-bold">Create a Chanel</h3>
+                  <h3 className="text-xs font-bold">Create a Channel</h3>
                   <ChannelForm
                     teamId={teamId}
                     onCancel={() => setIsAddChannelFormVisible(false)}
