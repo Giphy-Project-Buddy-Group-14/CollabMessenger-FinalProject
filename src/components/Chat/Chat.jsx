@@ -4,7 +4,7 @@ import { ChannelForm } from '../ChannelForm/ChannelForm';
 import ChatSection from '../Ui/ChatSection';
 import { useEffect, useState } from 'react';
 import { getChannelMessages } from '../../services/message.service';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 export default function Chat() {
   const params = useParams();
@@ -33,6 +33,7 @@ export default function Chat() {
   }, []);
 
   let offPreviousChannel;
+  let offPreviousMessages;
 
   const selectChannel = (channel) => {
     offPreviousChannel && offPreviousChannel();
@@ -41,7 +42,7 @@ export default function Chat() {
 
     const dbRef = ref(getDatabase(), 'channels/' + channel.id);
 
-    onValue(
+    const off = onValue(
       dbRef,
       (snapshot) => {
         if (snapshot.exists()) {
@@ -62,6 +63,52 @@ export default function Chat() {
 
     offPreviousChannel = () => {
       off(dbRef);
+    };
+
+    //
+    // Fetch messages for the selected channel
+    // 
+
+    offPreviousMessages && offPreviousMessages();
+
+    const fetchMessages = async () => {
+      try {
+        const messages = await getChannelMessages(channel.id);
+        setSelectedChannelMessages((prevChannel) => ({
+          ...prevChannel,
+          messages,
+        }));
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+        // Handle the error appropriately
+      }
+    };
+
+    setSelectedChannelMessages({});
+    fetchMessages(channel);
+
+    const dbMessagesRef = ref(getDatabase(), 'channelMessages/' + channel.id + '/');
+
+    const offMessages = onValue(
+      dbMessagesRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          setSelectedChannelMessages(() => {
+            const newChannel = {
+              ...snapshot.val(),
+              id: snapshot.key,
+            };
+            return newChannel;
+          });
+        }
+      },
+      (error) => {
+        console.error('Error fetching profile: ', error);
+      }
+    );
+
+    offPreviousMessages = () => {
+      offMessages(dbMessagesRef);
     };
   };
 
@@ -163,9 +210,9 @@ export default function Chat() {
                 {selectedChannel.title}
               </h1>
               <ul>
-                {Object.keys(selectedChannel.messages || {}).map(
+                {Object.keys(selectedChannelMessages || {}).map(
                   (messageKey) => {
-                    const message = selectedChannel.messages[messageKey];
+                    const message = selectedChannelMessages[messageKey];
                     return (
                       <li key={messageKey} className="mb-4">
                         <div className="flex flex-row items-center justify-between">
