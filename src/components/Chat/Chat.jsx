@@ -15,7 +15,7 @@ export default function Chat() {
   const [selectedChannelMessages, setSelectedChannelMessages] = useState({});
 
   const teamId = params.teamId;
-  
+
   useEffect(() => {
     const fetchChannels = async () => {
       try {
@@ -134,7 +134,7 @@ export default function Chat() {
                     onCancel={() => setIsAddChannelFormVisible(false)}
                   />
                 </div>
-              </div>
+              )}
 
               <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
                 {/* ... Active Conversations Buttons ... */}
@@ -191,5 +191,5 @@ export default function Chat() {
             </div>
           </div>
         </div>
-  );
+        );
 }
