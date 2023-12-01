@@ -5,19 +5,21 @@ import ChatSection from '../Ui/ChatSection';
 import { useEffect, useState } from 'react';
 import { getChannelMessages } from '../../services/message.service';
 import { createChannel } from '../../services/channel.service';
-
-import { useLocation } from 'react-router-dom';
 import ChatList from './ChatList/ChatList';
 import LoadingIndicator from '../Ui/LoadingIndicator';
+import { useLocation, useParams } from 'react-router-dom';
 
 export default function Chat() {
   const location = useLocation();
+  const params = useParams();
   const [isOnPrivateMessages, setIsOnPrivateMessages] = useState(false);
   const [channels, setChannels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedChannel, setSelectedChannel] = useState(null);
   const [isAddChannelFormVisible, setIsAddChannelFormVisible] = useState(false);
   const [selectedChannelMessages, setSelectedChannelMessages] = useState({});
+
+  const teamId = params.teamId;
 
   useEffect(() => {
     setIsOnPrivateMessages(location.pathname === '/private-messages');
@@ -26,7 +28,7 @@ export default function Chat() {
   useEffect(() => {
     const fetchChannels = async () => {
       try {
-        const channelData = await getAllChannels();
+        const channelData = await getAllChannels(teamId);
         setChannels(channelData);
       } catch (error) {
         console.error('Error fetching channels:', error);
@@ -43,31 +45,16 @@ export default function Chat() {
 
   const selectChannel = (channel) => {
     offPreviousChannel && offPreviousChannel();
-    setSelectedChannelMessages({});
 
     setSelectedChannel(channel);
-    const fetchMessages = async () => {
-      try {
-        const messages = await getChannelMessages(channel.id);
-        setSelectedChannelMessages((prevChannel) => ({
-          ...prevChannel,
-          messages,
-        }));
-      } catch (error) {
-        console.error('Error fetching messages:', error);
-        // Handle the error appropriately
-      }
-    };
 
-    fetchMessages(channel);
-
-    const dbRef = ref(getDatabase(), 'channelMessages/' + channel.id + '/');
+    const dbRef = ref(getDatabase(), 'channels/' + channel.id);
 
     onValue(
       dbRef,
       (snapshot) => {
         if (snapshot.exists()) {
-          setSelectedChannelMessages(() => {
+          setSelectedChannel(() => {
             const newChannel = {
               ...snapshot.val(),
               id: snapshot.key,
@@ -88,7 +75,7 @@ export default function Chat() {
   };
 
   useEffect(() => {
-    const dbRef = ref(getDatabase(), 'channels/');
+    const dbRef = ref(getDatabase(), 'teamChannels/' + teamId + '/');
 
     onValue(
       dbRef,
@@ -113,49 +100,56 @@ export default function Chat() {
     );
   }, []);
 
-  const createChannelHandler = async (title, userId) => {
-    const newChannel = await createChannel(title, userId);
+  const createChannelHandler = async (teamId, title, userId) => {
+    const newChannel = await createChannel(teamId, title, userId);
     return newChannel;
   };
 
+  if (loading) {
+    return <div>Loading channels...</div>;
+  }
   return (
-    <>
-      {loading && <LoadingIndicator />}
-      {!loading && (
-        <div className="flex flex-row h-full w-full overflow-x-hidden">
-          <div className="flex flex-col pb-8 pl-2 pr-2 w-56 bg-white flex-shrink-0">
-            {/* ... Sidebar Content ... */}
-            <div className="my-8">
-              {/* ... Active Conversations ... */}
-              <div className="text-xs">
-                <span className="font-bold">Active channels</span>
-                <ChatList
-                  channels={channels}
-                  onClick={(channel) => selectChannel(channel)}
-                  selectedChannel={selectedChannel}
-                />
-
-                <div className="my-8">
-                  {!isAddChannelFormVisible && (
-                    <button
-                      onClick={() => setIsAddChannelFormVisible(true)}
-                      className="py-2 cursor-pointer hover:text-cyan-500 opacity-50"
-                    >
-                      + add channel
-                    </button>
+    <div className="flex flex-row h-full w-full overflow-x-hidden">
+      <div className="flex flex-col pb-8 pl-2 pr-2 w-56 bg-white flex-shrink-0">
+        {/* ... Sidebar Content ... */}
+        <div className="my-8">
+          {/* ... Active Conversations ... */}
+          <div className="text-xs">
+            <span className="font-bold">Active channels</span>
+            <div>
+              {channels.map((channel) => (
+                <div
+                  key={channel.id}
+                  className="cursor-pointer py-1 hover:text-cyan-500"
+                  onClick={() => selectChannel(channel)}
+                >
+                  {!!selectedChannel && selectedChannel.id === channel.id && (
+                    <span>⭐️</span>
                   )}
-
-                  {isAddChannelFormVisible && (
-                    <div>
-                      <h3 className="text-xs font-bold">Create a Channel</h3>
-                      <ChannelForm
-                        onSubmit={createChannelHandler}
-                        onCancel={() => setIsAddChannelFormVisible(false)}
-                      />
-                    </div>
-                  )}
+                  {channel.title}
                 </div>
-              </div>
+              ))}
+            </div>
+
+            <div className="my-8">
+              {!isAddChannelFormVisible && (
+                <button
+                  onClick={() => setIsAddChannelFormVisible(true)}
+                  className="py-2 cursor-pointer hover:text-cyan-500 opacity-50"
+                >
+                  + add channel
+                </button>
+              )}
+
+              {isAddChannelFormVisible && (
+                <div>
+                  <h3 className="text-xs font-bold">Create a Channel</h3>
+                  <ChannelForm
+                    teamId={teamId}
+                    onCancel={() => setIsAddChannelFormVisible(false)}
+                  />
+                </div>
+              )}
 
               <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
                 {/* ... Active Conversations Buttons ... */}
@@ -172,47 +166,47 @@ export default function Chat() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          <div className="flex flex-col flex-auto h-full">
-            <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 p-4">
-              {/* ... Chat Messages ... */}
-              {!!selectedChannel && (
-                <div>
-                  <h1 className="text-xl font-semibold mb-6">
-                    {selectedChannel.title}
-                  </h1>
-                  <ul>
-                    {Object.keys(selectedChannelMessages || {}).map(
-                      (messageKey) => {
-                        const message = selectedChannelMessages[messageKey];
-                        return (
-                          <li key={messageKey} className="mb-4">
-                            <div className="flex flex-row items-center justify-between">
-                              <div>
-                                <p className="text-s font-semibold">
-                                  {message.text}
-                                </p>
-                                <div className="text-xs">{message.owner}</div>
-                              </div>
-                              <span className="text-xs text-gray-500">
-                                {message.createdOn}
-                              </span>
-                            </div>
-                          </li>
-                        );
-                      }
-                    )}
-                  </ul>
-                </div>
-              )}
-
-              <div className="flex flex-col justify-end mt-auto">
-                <ChatSection selectedChannel={selectedChannel} />
-              </div>
+      <div className="flex flex-col flex-auto h-full p-6">
+        <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
+          {/* ... Chat Messages ... */}
+          {!!selectedChannel && (
+            <div>
+              <h1 className="text-xl font-semibold mb-6">
+                {selectedChannel.title}
+              </h1>
+              <ul>
+                {Object.keys(selectedChannel.messages || {}).map(
+                  (messageKey) => {
+                    const message = selectedChannel.messages[messageKey];
+                    return (
+                      <li key={messageKey} className="mb-4">
+                        <div className="flex flex-row items-center justify-between">
+                          <div>
+                            <p className="text-s font-semibold">
+                              {message.text}
+                            </p>
+                            <div className="text-xs">{message.owner}</div>
+                          </div>
+                          <span className="text-xs text-gray-500">
+                            {message.createdOn}
+                          </span>
+                        </div>
+                      </li>
+                    );
+                  }
+                )}
+              </ul>
             </div>
+          )}
+
+          <div className="flex flex-col justify-end mt-auto">
+            <ChatSection selectedChannel={selectedChannel} />
           </div>
         </div>
-      )}
-    </>
+      </div>
+    </div>
   );
 }

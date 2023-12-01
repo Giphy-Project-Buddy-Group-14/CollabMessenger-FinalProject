@@ -11,8 +11,8 @@ export default function Teams() {
   const { user } = useFirebaseAuth();
   const { MyTeams } = useUserProfile(user);
 
-  const handleTeamClick = (teamName) => {
-    navigate(`/teams/${teamName}`);
+  const handleTeamClick = (team) => {
+    navigate(`/teams/${team.uid}`);
   };
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export default function Teams() {
             <div
               key={team.uid}
               className="w-full md:w-1/2 lg:w-1/4 px-4 mb-8 hover:cursor-pointer"
-              onClick={() => handleTeamClick(team.name)}
+              onClick={() => handleTeamClick(team)}
             >
               <div className="block p-6 mb-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:hover:bg-gray-700 hover:bg-gray-100 dark:border-gray-700 lg:mb-0">
                 <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">

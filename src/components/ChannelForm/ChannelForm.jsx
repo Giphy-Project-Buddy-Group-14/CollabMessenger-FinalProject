@@ -3,7 +3,7 @@ import InputSection from '../Ui/InputSection';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import PropTypes from 'prop-types';
 
-export function ChannelForm({ onSubmit, onCancel }) {
+export function ChannelForm({ onSubmit, onCancel, teamId }) {
   const { user } = useFirebaseAuth();
   // State to store the form inputs
   const [title, setTitle] = useState('');
@@ -15,7 +15,7 @@ export function ChannelForm({ onSubmit, onCancel }) {
     setError(null); // Reset error state
 
     try {
-      onSubmit(title, user.uid);
+      onSubmit(teamId, title, user.uid);
       setTitle('');
     } catch (err) {
       // Handle errors (e.g., validation errors)
@@ -56,4 +56,5 @@ export function ChannelForm({ onSubmit, onCancel }) {
 ChannelForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
+  teamId: PropTypes.string,
 };

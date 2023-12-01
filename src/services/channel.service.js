@@ -12,8 +12,9 @@ import { db } from '../../firebaseAppConfig';
  * Fetches all channels from the Firebase Realtime Database.
  * @returns {Promise<Channel[]>} A promise that resolves to an array of channel objects.
  */
-export const getAllChannels = async () => {
-  const channelsRef = ref(db, 'channels');
+export const getAllChannels = async (teamId) => {
+  const channelsRef = ref(db, 'teamChannels/' + teamId + '/');
+
   try {
     const snapshot = await get(channelsRef);
     if (snapshot.exists()) {
@@ -40,7 +41,7 @@ export const getAllChannels = async () => {
  * @returns {Promise<Channel>} A promise that resolves with the created channel object.
  * @throws {Error} If required information is missing or validation fails.
  */
-export function createChannel(title, owner) {
+export function createChannel(teamId, title, owner) {
   if (
     !title ||
     typeof title !== 'string' ||
@@ -57,7 +58,7 @@ export function createChannel(title, owner) {
     messages: [],
   };
 
-  const channelsRef = ref(db, 'channels');
+  const channelsRef = ref(db, 'teamChannels/' + teamId + '/');
   const newChannelRef = push(channelsRef);
   return set(newChannelRef, newChannel)
     .then(() => {
