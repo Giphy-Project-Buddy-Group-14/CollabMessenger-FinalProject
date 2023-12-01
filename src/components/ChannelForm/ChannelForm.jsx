@@ -4,7 +4,7 @@ import InputSection from '../Ui/InputSection';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import PropTypes from 'prop-types';
 
-export function ChannelForm({ onCancel }) {
+export function ChannelForm({ onCancel, teamId }) {
   const { user } = useFirebaseAuth();
   // State to store the form inputs
   const [title, setTitle] = useState('');
@@ -17,7 +17,7 @@ export function ChannelForm({ onCancel }) {
 
     try {
       // Call createChannel service function with the form inputs
-      const newChannel = await createChannel(title, user.uid);
+      const newChannel = await createChannel(teamId, title, user.uid);
       console.log('Channel Created:', newChannel);
 
       // Reset form fields after successful creation
@@ -64,4 +64,5 @@ export function ChannelForm({ onCancel }) {
 
 ChannelForm.propTypes = {
   onCancel: PropTypes.func.isRequired,
+  teamId: PropTypes.string,
 };

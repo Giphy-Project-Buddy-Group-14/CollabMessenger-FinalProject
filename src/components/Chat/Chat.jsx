@@ -3,16 +3,23 @@ import { getAllChannels } from '../../services/channel.service';
 import { ChannelForm } from '../ChannelForm/ChannelForm';
 import ChatSection from '../Ui/ChatSection';
 import { useEffect, useState } from 'react';
+import { getChannelMessages } from '../../services/message.service';
+import { useLocation, useParams } from 'react-router-dom';
 
 export default function Chat() {
+  const params = useParams();
   const [channels, setChannels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedChannel, setSelectedChannel] = useState(null);
   const [isAddChannelFormVisible, setIsAddChannelFormVisible] = useState(false);
+  const [selectedChannelMessages, setSelectedChannelMessages] = useState({});
+
+  const teamId = params.teamId;
+  
   useEffect(() => {
     const fetchChannels = async () => {
       try {
-        const channelData = await getAllChannels();
+        const channelData = await getAllChannels(teamId);
         setChannels(channelData);
       } catch (error) {
         console.error('Error fetching channels:', error);
@@ -59,7 +66,7 @@ export default function Chat() {
   };
 
   useEffect(() => {
-    const dbRef = ref(getDatabase(), 'channels/');
+    const dbRef = ref(getDatabase(), 'teamChannels/' + teamId + '/');
 
     onValue(
       dbRef,
@@ -109,24 +116,23 @@ export default function Chat() {
               ))}
             </div>
 
-                <div className="my-8">
-                  {!isAddChannelFormVisible && (
-                    <button
-                      onClick={() => setIsAddChannelFormVisible(true)}
-                      className="py-2 cursor-pointer hover:text-cyan-500 opacity-50"
-                    >
-                      + add channel
-                    </button>
-                  )}
+            <div className="my-8">
+              {!isAddChannelFormVisible && (
+                <button
+                  onClick={() => setIsAddChannelFormVisible(true)}
+                  className="py-2 cursor-pointer hover:text-cyan-500 opacity-50"
+                >
+                  + add channel
+                </button>
+              )}
 
-                  {isAddChannelFormVisible && (
-                    <div>
-                      <h3 className="text-xs font-bold">Create a Channel</h3>
-                      <ChannelForm
-                        onCancel={() => setIsAddChannelFormVisible(false)}
-                      />
-                    </div>
-                  )}
+              {isAddChannelFormVisible && (
+                <div>
+                  <h3 className="text-xs font-bold">Create a Channel</h3>
+                  <ChannelForm
+                    teamId={teamId}
+                    onCancel={() => setIsAddChannelFormVisible(false)}
+                  />
                 </div>
               </div>
 
