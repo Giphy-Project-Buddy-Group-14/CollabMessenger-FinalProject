@@ -21,8 +21,8 @@ export const addTeam = async (userUid, name) => {
 
 export const createGeneralChanel = async (teamUid) => {
   try {
-    const result = await push(ref(db, `teamChanels/${teamUid}/chanels/`), {});
-    await set(ref(db, `teamChanels/${teamUid}/chanels/${result.key}/`), {
+    const result = await push(ref(db, `teamChannels/${teamUid}`), {});
+    await set(ref(db, `teamChannels/${teamUid}/${result.key}/`), {
       channelName: 'General',
       uid: result.key,
     });
