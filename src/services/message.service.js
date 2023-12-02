@@ -29,7 +29,7 @@ export const addMessageToChannel = async (channelId, text) => {
 };
 
 export const getChannelMessages = async (channelId) => {
-  const channelsRef = ref(db, 'channelMessages/' + channelId);
+  const channelsRef = ref(db, 'channelMessages/' + channelId + '/');
   try {
     const snapshot = await get(channelsRef);
     if (snapshot.exists()) {

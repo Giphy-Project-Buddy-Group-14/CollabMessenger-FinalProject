@@ -37,6 +37,7 @@ export default function Chat() {
   }, []);
 
   let offPreviousChannel;
+  let offPreviousMessages;
 
   const selectChannel = (channel) => {
     offPreviousChannel && offPreviousChannel();
@@ -45,7 +46,7 @@ export default function Chat() {
 
     const dbRef = ref(getDatabase(), 'channels/' + channel.id);
 
-    onValue(
+    const off = onValue(
       dbRef,
       (snapshot) => {
         if (snapshot.exists()) {
@@ -66,6 +67,55 @@ export default function Chat() {
 
     offPreviousChannel = () => {
       off(dbRef);
+    };
+
+    //
+    // Fetch messages for the selected channel
+    //
+
+    offPreviousMessages && offPreviousMessages();
+
+    const fetchMessages = async () => {
+      try {
+        const messages = await getChannelMessages(channel.id);
+        setSelectedChannelMessages((prevChannel) => ({
+          ...prevChannel,
+          messages,
+        }));
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+        // Handle the error appropriately
+      }
+    };
+
+    setSelectedChannelMessages({});
+    fetchMessages(channel);
+
+    const dbMessagesRef = ref(
+      getDatabase(),
+      'channelMessages/' + channel.id + '/'
+    );
+
+    const offMessages = onValue(
+      dbMessagesRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          setSelectedChannelMessages(() => {
+            const newChannel = {
+              ...snapshot.val(),
+              id: snapshot.key,
+            };
+            return newChannel;
+          });
+        }
+      },
+      (error) => {
+        console.error('Error fetching profile: ', error);
+      }
+    );
+
+    offPreviousMessages = () => {
+      offMessages(dbMessagesRef);
     };
   };
 
@@ -158,7 +208,33 @@ export default function Chat() {
             <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
               {/* ... Chat Messages ... */}
               {!!selectedChannel && (
-                <ChatPanel selectedChannel={selectedChannel} />
+                <div>
+                  <h1 className="text-xl font-semibold mb-6">
+                    {selectedChannel.title}
+                  </h1>
+                  <ul>
+                    {Object.keys(selectedChannelMessages || {}).map(
+                      (messageKey) => {
+                        const message = selectedChannelMessages[messageKey];
+                        return (
+                          <li key={messageKey} className="mb-4">
+                            <div className="flex flex-row items-center justify-between">
+                              <div>
+                                <p className="text-s font-semibold">
+                                  {message.text}
+                                </p>
+                                <div className="text-xs">{message.owner}</div>
+                              </div>
+                              <span className="text-xs text-gray-500">
+                                {message.createdOn}
+                              </span>
+                            </div>
+                          </li>
+                        );
+                      }
+                    )}
+                  </ul>
+                </div>
               )}
 
               <div className="flex flex-col justify-end mt-auto">
