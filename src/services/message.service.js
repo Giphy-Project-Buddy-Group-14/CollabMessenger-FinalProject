@@ -1,6 +1,6 @@
-import { getDatabase, ref, push, get, set } from 'firebase/database';
+import { getDatabase, ref, push, get } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
-import { db, auth } from '../../firebaseAppConfig';
+import { db } from '../../firebaseAppConfig';
 
 /**
  * Sends a message to a specified channel in Firebase Realtime Database.
@@ -43,44 +43,6 @@ export const getChannelMessages = async (channelId) => {
     }
   } catch (error) {
     console.error('Error fetching channels:', error);
-    throw error;
-  }
-};
-
-export const messageRef = ref(db, 'privateMessage');
-
-export const createPrivateMessage = async (messageData) => {
-  try {
-    const { currentUser } = auth;
-    console.log('createPrivateMessage --->');
-
-    if (!currentUser) {
-      throw new Error('User not authenticated.');
-    }
-
-    const { uid, displayName } = currentUser;
-
-    if (!messageData || !messageData.id || !messageData.type) {
-      throw new Error('Invalid message data');
-    }
-
-    const createdOn = Date.now();
-
-    const mergedMessageData = {
-      createdOn,
-      username: displayName || '',
-      uid,
-      ...messageData,
-    };
-
-    const messageId = messageData.id;
-
-    const userMessageRef = ref(db, `privateMessage/${messageId}`);
-    await set(userMessageRef, mergedMessageData);
-
-    return { messageId, ...mergedMessageData };
-  } catch (error) {
-    console.error('Error creating private message:', error);
     throw error;
   }
 };
