@@ -15,10 +15,11 @@ import AuthenticatedRoute from './components/hoc/AuthenticatedRoute';
 import Chat from './components/Chat/Chat';
 import Teams from './components/Teams/Teams';
 import NewTeam from './components/NewTeam/NewTeam';
+import PrivateMessages from './components/Chat/PrivateMessages/PrivateMessages';
 
 function App() {
   return (
-    <div className='flex h-screen'>
+    <div className="flex h-screen">
       <ToastContainer
         position="bottom-left"
         autoClose={2000}
@@ -39,6 +40,7 @@ function App() {
               <Route path="users" element={<Users />} />
               <Route path="teams" element={<Teams />} />
               <Route path="chat" element={<Chat />} />
+              <Route path="private-messages" element={<PrivateMessages />} />
               <Route path="profile" element={<RouteOutlet />}>
                 <Route
                   index

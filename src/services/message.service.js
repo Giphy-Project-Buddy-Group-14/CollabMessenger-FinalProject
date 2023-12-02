@@ -28,7 +28,6 @@ export const addMessageToChannel = async (channelId, text) => {
   return push(ref(database, `channelMessages/${channelId}/`), message);
 };
 
-
 export const getChannelMessages = async (channelId) => {
   const channelsRef = ref(db, 'channelMessages/' + channelId + '/');
   try {

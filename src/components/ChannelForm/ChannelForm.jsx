@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { createChannel } from '../../services/channel.service';
 import InputSection from '../Ui/InputSection';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import PropTypes from 'prop-types';
 
-export function ChannelForm({ onCancel, teamId }) {
+export function ChannelForm({ onSubmit, onCancel, teamId }) {
   const { user } = useFirebaseAuth();
   // State to store the form inputs
   const [title, setTitle] = useState('');
@@ -16,11 +15,7 @@ export function ChannelForm({ onCancel, teamId }) {
     setError(null); // Reset error state
 
     try {
-      // Call createChannel service function with the form inputs
-      const newChannel = await createChannel(teamId, title, user.uid);
-      console.log('Channel Created:', newChannel);
-
-      // Reset form fields after successful creation
+      onSubmit(teamId, title, user.uid);
       setTitle('');
     } catch (err) {
       // Handle errors (e.g., validation errors)
@@ -28,17 +23,17 @@ export function ChannelForm({ onCancel, teamId }) {
     }
   };
 
+  const inputChangeHandler = (event) => {
+    setTitle(event.target.value);
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="mb-2">
         <InputSection
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={inputChangeHandler}
           type="text"
           placeholder={'Channel Name'}
-          onSubmit={() => {
-            handleSubmit();
-            setTitle('');
-          }}
         />
       </div>
 
@@ -63,6 +58,7 @@ export function ChannelForm({ onCancel, teamId }) {
 }
 
 ChannelForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   teamId: PropTypes.string,
 };
