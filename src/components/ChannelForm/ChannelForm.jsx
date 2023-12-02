@@ -23,11 +23,15 @@ export function ChannelForm({ onSubmit, onCancel, teamId }) {
     }
   };
 
+  const inputChangeHandler = (event) => {
+    setTitle(event.target.value);
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="mb-2">
         <InputSection
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={inputChangeHandler}
           type="text"
           placeholder={'Channel Name'}
         />
