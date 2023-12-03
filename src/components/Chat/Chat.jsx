@@ -9,6 +9,7 @@ import ChatList from './ChatList/ChatList';
 import LoadingIndicator from '../Ui/LoadingIndicator';
 import { useParams } from 'react-router-dom';
 import ChatPanel from './ChatPanel/ChatPanel';
+import TeamMembers from '../TeamForm/TeamForm';
 
 export default function Chat() {
   const params = useParams();
@@ -242,8 +243,11 @@ export default function Chat() {
               </div>
             </div>
           </div>
-        </div>
+          <div className="flex flex-col pb-8 pl-2 pr-2 w-56 bg-white flex-shrink-0">
+        <TeamMembers teamId={teamId} />
+      </div>
+    </div>
       )}
     </>
-  );
+  );;
 }

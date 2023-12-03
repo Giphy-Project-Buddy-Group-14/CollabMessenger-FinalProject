@@ -82,3 +82,19 @@ export const getAllTeams = async () => {
     throw error;
   }
 };
+
+export const getTeamMembers = async (teamUid) => {
+  try {
+    const snapshot = await get(ref(db, `teams/${teamUid}/members/`));
+    if (!snapshot.exists()) {
+      return [];
+    }
+    const membersArray = Object.keys(snapshot.val()).filter(
+      (memberId) => snapshot.val()[memberId] === true
+    );
+    return membersArray;
+  } catch (error) {
+    console.error('Error fetching members:', error);
+    throw error;
+  }
+};
