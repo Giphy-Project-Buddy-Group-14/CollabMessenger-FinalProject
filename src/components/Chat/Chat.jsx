@@ -5,6 +5,7 @@ import ChatSection from '../Ui/ChatSection';
 import { useEffect, useState } from 'react';
 import { getChannelMessages } from '../../services/message.service';
 import { useLocation, useParams } from 'react-router-dom';
+import TeamMembers from '../TeamForm/TeamForm';
 
 export default function Chat() {
   const params = useParams();
@@ -109,8 +110,9 @@ export default function Chat() {
                   className="cursor-pointer py-1 hover:text-cyan-500"
                   onClick={() => selectChannel(channel)}
                 >
-                  {!!selectedChannel &&
-                    selectedChannel.id === channel.id && <span>⭐️</span>}
+                  {!!selectedChannel && selectedChannel.id === channel.id && (
+                    <span>⭐️</span>
+                  )}
                   {channel.title}
                 </div>
               ))}
@@ -192,6 +194,9 @@ export default function Chat() {
           </div>
         </div>
       </div>
+      <div className="flex flex-col pb-8 pl-2 pr-2 w-56 bg-white flex-shrink-0">
+        <TeamMembers teamId={teamId} />
+      </div>
     </div>
-  )
+  );
 }
