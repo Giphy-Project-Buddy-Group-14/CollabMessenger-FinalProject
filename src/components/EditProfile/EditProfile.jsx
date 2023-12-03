@@ -7,11 +7,9 @@ import { updateUserProfilePic } from '../../services/user.service';
 import { updateUserProfile } from '../../services/user.service';
 import { useNavigate } from 'react-router-dom';
 import ImageWithLoading from '../helper/ImageWithLoading';
-import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import { useUserProfile } from '../../hooks/useUserProfile';
 
 export default function EditProfile() {
-  const { user } = useFirebaseAuth();
   const {
     uid,
     phone,
@@ -21,7 +19,7 @@ export default function EditProfile() {
     lastName,
     userProfile,
     profileLoading,
-  } = useUserProfile(user);
+  } = useUserProfile();
 
   const [editedPhone, setEditedPhone] = useState('');
   const [editedUsername, setEditedUsername] = useState('');

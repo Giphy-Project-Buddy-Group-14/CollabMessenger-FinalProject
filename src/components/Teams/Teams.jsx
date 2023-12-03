@@ -2,14 +2,12 @@ import Button from '../Ui/Button';
 import { useNavigate } from 'react-router-dom';
 import { getTeamsByUserUids } from '../../services/teams.service';
 import { useState, useEffect } from 'react';
-import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import { useUserProfile } from '../../hooks/useUserProfile';
 
 export default function Teams() {
   const navigate = useNavigate();
   const [teams, setTeams] = useState([]);
-  const { user } = useFirebaseAuth();
-  const { MyTeams } = useUserProfile(user);
+  const { MyTeams } = useUserProfile();
 
   const handleTeamClick = (team) => {
     navigate(`/teams/${team.uid}`);
