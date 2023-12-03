@@ -1,5 +1,5 @@
 import Button from '../Ui/Button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getTeamsByUserUids } from '../../services/teams.service';
 import { useState, useEffect } from 'react';
 import { useUserProfile } from '../../hooks/useUserProfile';
@@ -8,7 +8,6 @@ export default function Teams() {
   const navigate = useNavigate();
   const [teams, setTeams] = useState([]);
   const { MyTeams } = useUserProfile();
-
   const handleTeamClick = (team) => {
     navigate(`/teams/${team.uid}`);
   };
@@ -52,6 +51,11 @@ export default function Teams() {
                 <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                   {team.name}
                 </h3>
+                <p className="text-base text-gray-700 dark:text-gray-400 mb-2">
+                  {`${Object.keys(team.members).length} member${
+                    Object.keys(team.members).length !== 1 ? 's' : ''
+                  } `}
+                </p>
                 <p className="font-normal text-gray-700 dark:text-gray-400">
                   {team.description}
                 </p>
