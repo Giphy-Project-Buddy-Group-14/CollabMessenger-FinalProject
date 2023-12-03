@@ -1,4 +1,4 @@
-import { getDatabase, ref, onValue, off } from 'firebase/database';
+import { getDatabase, ref, onValue } from 'firebase/database';
 import { getAllChannels } from '../../services/channel.service';
 import { ChannelForm } from '../ChannelForm/ChannelForm';
 import ChatForm from '../Ui/ChatForm';
@@ -8,7 +8,7 @@ import { createChannel } from '../../services/channel.service';
 import ChatList from './ChatList/ChatList';
 import LoadingIndicator from '../Ui/LoadingIndicator';
 import { useParams } from 'react-router-dom';
-import ChatPanel from './ChatPanel/ChatPanel';
+import { ChannelUsers } from './ChannelUsers/ChannelUsers';
 
 export default function Chat() {
   const params = useParams();
@@ -41,39 +41,9 @@ export default function Chat() {
 
   const selectChannel = (channel) => {
     offPreviousChannel && offPreviousChannel();
+    offPreviousMessages && offPreviousMessages();
 
     setSelectedChannel(channel);
-
-    const dbRef = ref(getDatabase(), 'channels/' + channel.id);
-
-    const off = onValue(
-      dbRef,
-      (snapshot) => {
-        if (snapshot.exists()) {
-          setSelectedChannel(() => {
-            const newChannel = {
-              ...snapshot.val(),
-              id: snapshot.key,
-            };
-
-            return newChannel;
-          });
-        }
-      },
-      (error) => {
-        console.error('Error fetching profile: ', error);
-      }
-    );
-
-    offPreviousChannel = () => {
-      off(dbRef);
-    };
-
-    //
-    // Fetch messages for the selected channel
-    //
-
-    offPreviousMessages && offPreviousMessages();
 
     const fetchMessages = async () => {
       try {
@@ -117,12 +87,46 @@ export default function Chat() {
     offPreviousMessages = () => {
       offMessages(dbMessagesRef);
     };
+
+    // Listen for members changes
+
+    const dbSelectedChannelRef = ref(getDatabase(), 'teamChannels/' + teamId + '/' + channel.id);
+
+    onValue(
+      dbSelectedChannelRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const channelsObj = snapshot.val();
+
+          const newChannels = Object.keys(channelsObj).map((key) => {
+            return {
+              ...channelsObj[key],
+              id: key,
+            };
+          });
+
+          setSelectedChannel((selectedChannel) => {
+            return {
+              ...selectedChannel,
+              members: channelsObj.members
+            };
+          });
+        }
+      },
+      (error) => {
+        console.error('Error fetching profile: ', error);
+      }
+    );
+
+    // offPreviousChannel = () => {
+    //   off(dbSelectedChannelRef);
+    // }
   };
 
   useEffect(() => {
     const dbRef = ref(getDatabase(), 'teamChannels/' + teamId + '/');
 
-    onValue(
+    const off = onValue(
       dbRef,
       (snapshot) => {
         if (snapshot.exists()) {
@@ -143,6 +147,8 @@ export default function Chat() {
         console.error('Error fetching profile: ', error);
       }
     );
+
+    return off;
   }, []);
 
   const createChannelHandler = async (teamId, title, userId) => {
@@ -190,11 +196,11 @@ export default function Chat() {
                     {/* ... Active Conversations Buttons ... */}
                   </div>
 
-                  <div className="flex flex-row items-center justify-between text-xs mt-6">
-                    <span className="font-bold">Users</span>
-                    <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">
-                      7
-                    </span>
+                  <div className="flex flex-col justify-between text-xs mt-6">
+                    <ChannelUsers
+                      teamId={teamId}
+                      channel={selectedChannel}
+                    />
                   </div>
                   <div className="flex flex-col space-y-1 mt-4 -mx-2">
                     {/* ... Archived Conversations Buttons ... */}

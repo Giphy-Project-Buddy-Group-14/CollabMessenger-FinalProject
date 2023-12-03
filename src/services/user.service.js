@@ -150,8 +150,8 @@ export const checkIfUsernameExists = async (username) => {
 const formatCreatedOn = (user) => {
   return user?.createdOn
     ? moment(user.createdOn)
-        .tz(DEFAULT_TIME_ZONE)
-        .format('MMM Do YYYY, h:mm:ss A')
+      .tz(DEFAULT_TIME_ZONE)
+      .format('MMM Do YYYY, h:mm:ss A')
     : '';
 };
 
@@ -178,6 +178,26 @@ export const getAllUserProfiles = async () => {
     if (snapshot.exists()) {
       const userProfiles = fromUsersDocument(snapshot);
       return userProfiles;
+    } else {
+      throw new Error('Snapshot data does not exist.');
+    }
+  } catch (error) {
+    console.error('Error fetching all users:', error);
+    throw error;
+  }
+};
+
+// get all users matching a username search
+export const searchUsers = async (search) => {
+  try {
+    const snapshot = await get(usersRef);
+
+    if (snapshot.exists()) {
+      const userProfiles = fromUsersDocument(snapshot);
+      const filteredUserProfiles = userProfiles.filter((user) => {
+        return user.username.toLowerCase().includes(search.toLowerCase());
+      });
+      return filteredUserProfiles;
     } else {
       throw new Error('Snapshot data does not exist.');
     }

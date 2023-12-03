@@ -1,4 +1,4 @@
-import { get, ref, push, set } from 'firebase/database';
+import { get, ref, push, set, update, child } from 'firebase/database';
 import { db } from '../../firebaseAppConfig';
 
 /**
@@ -59,6 +59,7 @@ export function createChannel(teamId, title, owner) {
   };
 
   const channelsRef = ref(db, 'teamChannels/' + teamId + '/');
+
   const newChannelRef = push(channelsRef);
   return set(newChannelRef, newChannel)
     .then(() => {
@@ -70,4 +71,73 @@ export function createChannel(teamId, title, owner) {
       console.error('Error creating channel:', error);
       throw error;
     });
+}
+
+export function addChannelMember(teamId, channelId, user) {
+  if (!user) {
+    throw new Error('User must be provided');
+  }
+
+  const channelRef = ref(db, `teamChannels/${teamId}/${channelId}`);
+
+  // Fetch current members
+  return get(child(channelRef, 'members'))
+    .then(async (snapshot) => {
+      if (snapshot.exists()) {
+        const currentMembers = snapshot.val() || {};
+        // Add new member
+        currentMembers[user.uid] = memberFromUser(user);
+        await update(channelRef, { members: currentMembers });
+      } else {
+        // If no members exist, just add the new member
+        await update(channelRef, { members: { [user.uid]: memberFromUser(user) } });
+      }
+
+      return get(child(channelRef, 'members'));
+    })
+    .then(() => {
+      console.log(`Channel ${channelId} member added successfully.`);
+    })
+    .catch((error) => {
+      console.error('Error adding channel member:', error);
+      throw error;
+    });
+}
+
+export function removeChannelMember(teamId, channelId, user) {
+  if (!user) {
+    throw new Error('User must be provided');
+  }
+
+  const channelRef = ref(db, `teamChannels/${teamId}/${channelId}`);
+
+  // Fetch current members
+  return get(child(channelRef, 'members'))
+    .then(async (snapshot) => {
+      if (snapshot.exists()) {
+        const currentMembers = snapshot.val() || {};
+
+        currentMembers[user.uid] = undefined;
+        delete currentMembers[user.uid];
+
+        await update(channelRef, { members: currentMembers });
+      }
+
+      return get(child(channelRef, 'members'));
+    })
+    .then(() => {
+      console.log(`Channel ${channelId} member added successfully.`);
+    })
+    .catch((error) => {
+      console.error('Error adding channel member:', error);
+      throw error;
+    });
+}
+
+export const memberFromUser = (user) => {
+  return {
+    username: user.username,
+    photoURL: user.profilePictureURL || '',
+    uid: user.uid,
+  };
 }
