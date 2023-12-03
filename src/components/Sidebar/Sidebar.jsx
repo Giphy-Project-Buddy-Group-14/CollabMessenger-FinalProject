@@ -80,30 +80,32 @@ export default function Sidebar() {
                 </li>
 
                 {user && (
-                  <li>
-                    <Link
-                      to="/profile"
-                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                    >
-                      <svg
-                        className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+                  <>
+                    <li>
+                      <Link
+                        to="/profile"
+                        className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="1"
-                          d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
+                        <svg
+                          className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1"
+                            d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
 
-                      <span className="flex-1 ms-3 whitespace-nowrap">
-                        Profile
-                      </span>
-                    </Link>
-                  </li>
+                        <span className="flex-1 ms-3 whitespace-nowrap">
+                          Profile
+                        </span>
+                      </Link>
+                    </li>
+                  </>
                 )}
                 <li>
                   <Link
@@ -157,30 +159,61 @@ export default function Sidebar() {
                 )}
 
                 {user && (
-                  <li>
-                    <Link
-                      to="/chat"
-                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                    >
-                      <svg
-                        className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+                  <>
+                    <li>
+                      <Link
+                        to="/chat"
+                        className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                       >
-                        <path
+                        <svg
+                          className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1"
+                            d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+                          />
+                        </svg>
+
+                        <span className="flex-1 ms-3 whitespace-nowrap">
+                          Chat
+                        </span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/private-messages"
+                        className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                      >
+                        <svg
+                          className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1"
+                          stroke="currentColor"
+                          fill="none"
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          strokeWidth="1"
-                          d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
-                        />
-                      </svg>
+                        >
+                          {' '}
+                          <path stroke="none" d="M0 0h24v24H0z" />{' '}
+                          <path d="M4 21v-13a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v6a3 3 0 0 1 -3 3h-9l-4 4" />{' '}
+                          <line x1="12" y1="11" x2="12" y2="11.01" />{' '}
+                          <line x1="8" y1="11" x2="8" y2="11.01" />{' '}
+                          <line x1="16" y1="11" x2="16" y2="11.01" />
+                        </svg>
 
-                      <span className="flex-1 ms-3 whitespace-nowrap">
-                        Chat
-                      </span>
-                    </Link>
-                  </li>
+                        <span className="flex-1 ms-3 whitespace-nowrap">
+                          Private Messages
+                        </span>
+                      </Link>
+                    </li>
+                  </>
                 )}
 
                 {!user && (

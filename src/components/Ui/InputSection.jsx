@@ -2,21 +2,24 @@ import PropTypes from 'prop-types';
 
 export default function InputSection({
   onChange,
-  label,
   type,
   placeholder,
   value,
+  label,
 }) {
   const randomId = Math.random();
+
   return (
     <>
       <div className="mt-4">
-        <label
-          htmlFor={randomId}
-          className="block text-sm font-medium text-gray-50 undefined"
-        >
-          {label}
-        </label>
+        {label && (
+          <label
+            htmlFor={randomId}
+            className="block text-sm font-medium text-gray-50 undefined"
+          >
+            {label}
+          </label>
+        )}
         <div className="flex flex-col items-start">
           <input
             id={randomId}
@@ -36,8 +39,8 @@ export default function InputSection({
 
 InputSection.propTypes = {
   onChange: PropTypes.func.isRequired,
-  label: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  label: PropTypes.string,
 };

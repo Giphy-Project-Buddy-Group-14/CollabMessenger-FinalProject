@@ -1,10 +1,14 @@
 import { getDatabase, ref, onValue, off } from 'firebase/database';
 import { getAllChannels } from '../../services/channel.service';
 import { ChannelForm } from '../ChannelForm/ChannelForm';
-import ChatSection from '../Ui/ChatSection';
+import ChatForm from '../Ui/ChatForm';
 import { useEffect, useState } from 'react';
 import { getChannelMessages } from '../../services/message.service';
-import { useLocation, useParams } from 'react-router-dom';
+import { createChannel } from '../../services/channel.service';
+import ChatList from './ChatList/ChatList';
+import LoadingIndicator from '../Ui/LoadingIndicator';
+import { useParams } from 'react-router-dom';
+import ChatPanel from './ChatPanel/ChatPanel';
 import TeamMembers from '../TeamForm/TeamForm';
 
 export default function Chat() {
@@ -34,6 +38,7 @@ export default function Chat() {
   }, []);
 
   let offPreviousChannel;
+  let offPreviousMessages;
 
   const selectChannel = (channel) => {
     offPreviousChannel && offPreviousChannel();
@@ -42,7 +47,7 @@ export default function Chat() {
 
     const dbRef = ref(getDatabase(), 'channels/' + channel.id);
 
-    onValue(
+    const off = onValue(
       dbRef,
       (snapshot) => {
         if (snapshot.exists()) {
@@ -63,6 +68,55 @@ export default function Chat() {
 
     offPreviousChannel = () => {
       off(dbRef);
+    };
+
+    //
+    // Fetch messages for the selected channel
+    //
+
+    offPreviousMessages && offPreviousMessages();
+
+    const fetchMessages = async () => {
+      try {
+        const messages = await getChannelMessages(channel.id);
+        setSelectedChannelMessages((prevChannel) => ({
+          ...prevChannel,
+          messages,
+        }));
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+        // Handle the error appropriately
+      }
+    };
+
+    setSelectedChannelMessages({});
+    fetchMessages(channel);
+
+    const dbMessagesRef = ref(
+      getDatabase(),
+      'channelMessages/' + channel.id + '/'
+    );
+
+    const offMessages = onValue(
+      dbMessagesRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          setSelectedChannelMessages(() => {
+            const newChannel = {
+              ...snapshot.val(),
+              id: snapshot.key,
+            };
+            return newChannel;
+          });
+        }
+      },
+      (error) => {
+        console.error('Error fetching profile: ', error);
+      }
+    );
+
+    offPreviousMessages = () => {
+      offMessages(dbMessagesRef);
     };
   };
 
@@ -92,111 +146,108 @@ export default function Chat() {
     );
   }, []);
 
-  if (loading) {
-    return <div>Loading channels...</div>;
-  }
+  const createChannelHandler = async (teamId, title, userId) => {
+    const newChannel = await createChannel(teamId, title, userId);
+    return newChannel;
+  };
+
   return (
-    <div className="flex flex-row h-full w-full overflow-x-hidden">
-      <div className="flex flex-col pb-8 pl-2 pr-2 w-56 bg-white flex-shrink-0">
-        {/* ... Sidebar Content ... */}
-        <div className="my-8">
-          {/* ... Active Conversations ... */}
-          <div className="text-xs">
-            <span className="font-bold">Active channels</span>
-            <div>
-              {channels.map((channel) => (
-                <div
-                  key={channel.id}
-                  className="cursor-pointer py-1 hover:text-cyan-500"
-                  onClick={() => selectChannel(channel)}
-                >
-                  {!!selectedChannel && selectedChannel.id === channel.id && (
-                    <span>⭐️</span>
-                  )}
-                  {channel.title}
-                </div>
-              ))}
-            </div>
-
+    <>
+      {loading && <LoadingIndicator />}
+      {!loading && (
+        <div className="flex flex-row h-full w-full overflow-x-hidden">
+          <div className="flex flex-col pb-8 pl-2 pr-2 w-56 bg-white flex-shrink-0">
+            {/* ... Sidebar Content ... */}
             <div className="my-8">
-              {!isAddChannelFormVisible && (
-                <button
-                  onClick={() => setIsAddChannelFormVisible(true)}
-                  className="py-2 cursor-pointer hover:text-cyan-500 opacity-50"
-                >
-                  + add channel
-                </button>
-              )}
+              {/* ... Active Conversations ... */}
+              <div className="text-xs">
+                <span className="font-bold">Active channels</span>{' '}
+                <ChatList
+                  channels={channels}
+                  onClick={(channel) => selectChannel(channel)}
+                  selectedChannel={selectedChannel}
+                />
+                <div className="my-8">
+                  {!isAddChannelFormVisible && (
+                    <button
+                      onClick={() => setIsAddChannelFormVisible(true)}
+                      className="py-2 cursor-pointer hover:text-cyan-500 opacity-50"
+                    >
+                      + add channel
+                    </button>
+                  )}
+                  {isAddChannelFormVisible && (
+                    <div>
+                      <h3 className="text-xs font-bold">Create a Channel</h3>
+                      <ChannelForm
+                        onSubmit={createChannelHandler}
+                        onCancel={() => setIsAddChannelFormVisible(false)}
+                        teamId={teamId}
+                      />
+                    </div>
+                  )}
 
-              {isAddChannelFormVisible && (
+                  <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
+                    {/* ... Active Conversations Buttons ... */}
+                  </div>
+
+                  <div className="flex flex-row items-center justify-between text-xs mt-6">
+                    <span className="font-bold">Users</span>
+                    <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">
+                      7
+                    </span>
+                  </div>
+                  <div className="flex flex-col space-y-1 mt-4 -mx-2">
+                    {/* ... Archived Conversations Buttons ... */}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col flex-auto h-full p-6">
+            <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
+              {/* ... Chat Messages ... */}
+              {!!selectedChannel && (
                 <div>
-                  <h3 className="text-xs font-bold">Create a Channel</h3>
-                  <ChannelForm
-                    teamId={teamId}
-                    onCancel={() => setIsAddChannelFormVisible(false)}
-                  />
+                  <h1 className="text-xl font-semibold mb-6">
+                    {selectedChannel.title}
+                  </h1>
+                  <ul>
+                    {Object.keys(selectedChannelMessages || {}).map(
+                      (messageKey) => {
+                        const message = selectedChannelMessages[messageKey];
+                        return (
+                          <li key={messageKey} className="mb-4">
+                            <div className="flex flex-row items-center justify-between">
+                              <div>
+                                <p className="text-s font-semibold">
+                                  {message.text}
+                                </p>
+                                <div className="text-xs">{message.owner}</div>
+                              </div>
+                              <span className="text-xs text-gray-500">
+                                {message.createdOn}
+                              </span>
+                            </div>
+                          </li>
+                        );
+                      }
+                    )}
+                  </ul>
                 </div>
               )}
 
-              <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
-                {/* ... Active Conversations Buttons ... */}
-              </div>
-
-              <div className="flex flex-row items-center justify-between text-xs mt-6">
-                <span className="font-bold">Users</span>
-                <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">
-                  7
-                </span>
-              </div>
-              <div className="flex flex-col space-y-1 mt-4 -mx-2">
-                {/* ... Archived Conversations Buttons ... */}
+              <div className="flex flex-col justify-end mt-auto">
+                <ChatForm selectedChannel={selectedChannel} />
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div className="flex flex-col flex-auto h-full p-6">
-        <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
-          {/* ... Chat Messages ... */}
-          {!!selectedChannel && (
-            <div>
-              <h1 className="text-xl font-semibold mb-6">
-                {selectedChannel.title}
-              </h1>
-              <ul>
-                {Object.keys(selectedChannel.messages || {}).map(
-                  (messageKey) => {
-                    const message = selectedChannel.messages[messageKey];
-                    return (
-                      <li key={messageKey} className="mb-4">
-                        <div className="flex flex-row items-center justify-between">
-                          <div>
-                            <p className="text-s font-semibold">
-                              {message.text}
-                            </p>
-                            <div className="text-xs">{message.owner}</div>
-                          </div>
-                          <span className="text-xs text-gray-500">
-                            {message.createdOn}
-                          </span>
-                        </div>
-                      </li>
-                    );
-                  }
-                )}
-              </ul>
-            </div>
-          )}
-
-          <div className="flex flex-col justify-end mt-auto">
-            <ChatSection selectedChannel={selectedChannel} />
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col pb-8 pl-2 pr-2 w-56 bg-white flex-shrink-0">
+          <div className="flex flex-col pb-8 pl-2 pr-2 w-56 bg-white flex-shrink-0">
         <TeamMembers teamId={teamId} />
       </div>
     </div>
-  );
+      )}
+    </>
+  );;
 }
