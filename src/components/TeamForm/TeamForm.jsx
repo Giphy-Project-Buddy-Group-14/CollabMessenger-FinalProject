@@ -126,7 +126,7 @@ const TeamMembers = ({ teamId }) => {
               <div className="flex-1">
                 <div className=" text-gray-800 text-sm">
                   {member.userInfo.firstName} {member.userInfo.lastName}
-                  {member.userInfo.uid === loggedUser.uid && (
+                  {member.userInfo.uid === team.owner && (
                     <span className="text-xs text-gray-500 ml-2">(owner)</span>
                   )}
                 </div>

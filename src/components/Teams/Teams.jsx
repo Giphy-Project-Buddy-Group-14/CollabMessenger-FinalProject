@@ -3,8 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getTeamsByUserUids } from '../../services/teams.service';
 import { useState, useEffect } from 'react';
 import { useUserProfile } from '../../hooks/useUserProfile';
+import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 
 export default function Teams() {
+  const { user } = useFirebaseAuth();
   const navigate = useNavigate();
   const [teams, setTeams] = useState([]);
   const { MyTeams } = useUserProfile();

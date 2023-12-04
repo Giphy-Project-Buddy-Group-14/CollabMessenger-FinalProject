@@ -54,9 +54,10 @@ export const getTeamsByUserUids = async (userUids) => {
     const snapshot = await get(ref(db, 'teams'));
 
     if (snapshot.exists()) {
-      const teamsData = Object.values(snapshot.val()).filter((team) =>
-        userUids.includes(team.uid)
-      );
+      const teamsData = Object.values(snapshot.val());
+      // .filter((team) =>
+      //   userUids.includes(team.uid)
+      // );
       return teamsData;
     }
 
