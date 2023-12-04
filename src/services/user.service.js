@@ -150,8 +150,8 @@ export const checkIfUsernameExists = async (username) => {
 const formatCreatedOn = (user) => {
   return user?.createdOn
     ? moment(user.createdOn)
-        .tz(DEFAULT_TIME_ZONE)
-        .format('MMM Do YYYY, h:mm:ss A')
+      .tz(DEFAULT_TIME_ZONE)
+      .format('MMM Do YYYY, h:mm:ss A')
     : '';
 };
 
@@ -178,6 +178,80 @@ export const getAllUserProfiles = async () => {
     if (snapshot.exists()) {
       const userProfiles = fromUsersDocument(snapshot);
       return userProfiles;
+    } else {
+      throw new Error('Snapshot data does not exist.');
+    }
+  } catch (error) {
+    console.error('Error fetching all users:', error);
+    throw error;
+  }
+};
+
+export function addTeamMember(teamId, user) {
+  if (!user) {
+    throw new Error('User must be provided');
+  }
+
+  const teamRef = ref(db, `teams/${teamId}/`);
+
+  // Fetch current members
+  return get(child(teamRef, 'members'))
+    .then(async (snapshot) => {
+      const currentMembers = snapshot.val() || {};
+      // Add new member
+      currentMembers[user.uid] = true;
+      await set(child(teamRef, 'members'), currentMembers);
+
+      return get(teamRef);
+    })
+    .then(() => {
+      console.log(`Team ${teamId} member added successfully.`);
+    })
+    .catch((error) => {
+      console.error('Error adding channel member:', error);
+      throw error;
+    });
+}
+
+export function removeChannelMember(teamId, user) {
+  if (!user) {
+    throw new Error('User must be provided');
+  }
+
+  const teamRef = ref(db, `teams/${teamId}/`);
+
+  // Fetch current members
+  return get(child(teamRef, 'members'))
+    .then(async (snapshot) => {
+      const currentMembers = snapshot.val() || {};
+
+      currentMembers[user.uid] = undefined;
+      delete currentMembers[user.uid];
+
+      await set(child(teamRef, 'members'), currentMembers);
+      return get(child(teamRef, 'members'));
+    })
+    .then(() => {
+      console.log(`Team ${teamId} member added successfully.`);
+    })
+    .catch((error) => {
+      console.error('Error adding channel member:', error);
+      throw error;
+    });
+};
+
+
+// get all users matching a username search
+export const searchUsers = async (search) => {
+  try {
+    const snapshot = await get(usersRef);
+
+    if (snapshot.exists()) {
+      const userProfiles = fromUsersDocument(snapshot);
+      const filteredUserProfiles = userProfiles.filter((user) => {
+        return user.username.toLowerCase().includes(search.toLowerCase());
+      });
+      return filteredUserProfiles;
     } else {
       throw new Error('Snapshot data does not exist.');
     }

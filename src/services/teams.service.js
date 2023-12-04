@@ -83,6 +83,22 @@ export const getAllTeams = async () => {
   }
 };
 
+export const getTeamsByUid = async (uuid) => {
+  try {
+    const snapshot = await get(ref(db, 'teams/' + uuid));
+
+    if (!snapshot.exists()) {
+      return [];
+    }
+    const team = snapshot.val();
+    console.log(team);
+    return team;
+  } catch (error) {
+    console.error('Error fetching teams:', error);
+    throw error;
+  }
+};
+
 export const getTeamMembers = async (teamUid) => {
   try {
     const snapshot = await get(ref(db, `teams/${teamUid}/members/`));
