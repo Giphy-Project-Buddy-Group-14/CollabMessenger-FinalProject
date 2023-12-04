@@ -1,4 +1,4 @@
-import { getDatabase, ref, onValue, off } from 'firebase/database';
+import { getDatabase, ref, onValue } from 'firebase/database';
 import { getAllChannels } from '../../services/channel.service';
 import { ChannelForm } from '../ChannelForm/ChannelForm';
 import ChatForm from '../Ui/ChatForm';
@@ -8,7 +8,6 @@ import { createChannel } from '../../services/channel.service';
 import ChatList from './ChatList/ChatList';
 import LoadingIndicator from '../Ui/LoadingIndicator';
 import { useParams } from 'react-router-dom';
-import ChatPanel from './ChatPanel/ChatPanel';
 import TeamMembers from '../TeamForm/TeamForm';
 
 export default function Chat() {
@@ -35,46 +34,45 @@ export default function Chat() {
     };
 
     fetchChannels();
-  }, []);
+  }, [teamId]);
 
   let offPreviousChannel;
-  let offPreviousMessages;
 
   const selectChannel = (channel) => {
     offPreviousChannel && offPreviousChannel();
 
     setSelectedChannel(channel);
 
-    const dbRef = ref(getDatabase(), 'channels/' + channel.id);
+    // const dbRef = ref(getDatabase(), 'channels/' + channel.id);
 
-    const off = onValue(
-      dbRef,
-      (snapshot) => {
-        if (snapshot.exists()) {
-          setSelectedChannel(() => {
-            const newChannel = {
-              ...snapshot.val(),
-              id: snapshot.key,
-            };
+    // const off = onValue(
+    //   dbRef,
+    //   (snapshot) => {
+    //     if (snapshot.exists()) {
+    //       setSelectedChannel(() => {
+    //         const newChannel = {
+    //           ...snapshot.val(),
+    //           id: snapshot.key,
+    //         };
 
-            return newChannel;
-          });
-        }
-      },
-      (error) => {
-        console.error('Error fetching profile: ', error);
-      }
-    );
+    //         return newChannel;
+    //       });
+    //     }
+    //   },
+    //   (error) => {
+    //     console.error('Error fetching profile: ', error);
+    //   }
+    // );
 
-    offPreviousChannel = () => {
-      off(dbRef);
-    };
+    // offPreviousChannel = () => {
+    //   off(dbRef);
+    // };
 
     //
     // Fetch messages for the selected channel
     //
 
-    offPreviousMessages && offPreviousMessages();
+    // offPreviousMessages && offPreviousMessages();
 
     const fetchMessages = async () => {
       try {
@@ -187,19 +185,6 @@ export default function Chat() {
                     </div>
                   )}
 
-                  <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
-                    {/* ... Active Conversations Buttons ... */}
-                  </div>
-
-                  <div className="flex flex-row items-center justify-between text-xs mt-6">
-                    <span className="font-bold">Users</span>
-                    <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">
-                      7
-                    </span>
-                  </div>
-                  <div className="flex flex-col space-y-1 mt-4 -mx-2">
-                    {/* ... Archived Conversations Buttons ... */}
-                  </div>
                 </div>
               </div>
             </div>
@@ -244,10 +229,10 @@ export default function Chat() {
             </div>
           </div>
           <div className="flex flex-col pb-8 pl-2 pr-2 w-56 bg-white flex-shrink-0">
-        <TeamMembers teamId={teamId} />
-      </div>
-    </div>
+            <TeamMembers teamId={teamId} />
+          </div>
+        </div>
       )}
     </>
-  );;
+  );
 }
