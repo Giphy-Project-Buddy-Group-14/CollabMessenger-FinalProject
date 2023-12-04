@@ -1,10 +1,8 @@
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import ImageWithLoading from '../helper/ImageWithLoading';
 import { useUserProfile } from '../../hooks/useUserProfile';
 
 export default function Profile() {
-  const { user } = useFirebaseAuth();
   const {
     email,
     firstName,
@@ -13,7 +11,7 @@ export default function Profile() {
     phone,
     profilePictureURL,
     profileLoading,
-  } = useUserProfile(user);
+  } = useUserProfile();
 
   return (
     <>

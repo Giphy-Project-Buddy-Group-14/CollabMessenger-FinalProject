@@ -41,9 +41,10 @@ export const getTeamsByUserUids = async (userUids) => {
     const snapshot = await get(ref(db, 'teams'));
 
     if (snapshot.exists()) {
-      const teamsData = Object.values(snapshot.val()).filter((team) =>
-        userUids.includes(team.uid)
-      );
+      const teamsData = Object.values(snapshot.val());
+      // .filter((team) =>
+      //   userUids.includes(team.uid)
+      // );
       return teamsData;
     }
 
@@ -64,6 +65,22 @@ export const getAllTeams = async () => {
     const teamsArray = Object.values(snapshot.val());
 
     return teamsArray;
+  } catch (error) {
+    console.error('Error fetching teams:', error);
+    throw error;
+  }
+};
+
+export const getTeamsByUid = async (uuid) => {
+  try {
+    const snapshot = await get(ref(db, 'teams/' + uuid));
+
+    if (!snapshot.exists()) {
+      return [];
+    }
+    const team = snapshot.val();
+    console.log(team);
+    return team;
   } catch (error) {
     console.error('Error fetching teams:', error);
     throw error;

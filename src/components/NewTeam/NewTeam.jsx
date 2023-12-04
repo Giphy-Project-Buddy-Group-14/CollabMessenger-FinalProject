@@ -19,7 +19,7 @@ export default function NewTeam() {
   const navigate = useNavigate();
   const [teamName, setTeamName] = useState();
   const { user } = useFirebaseAuth();
-  const { uid: userUid } = useUserProfile(user);
+  const { uid: userUid } = useUserProfile();
 
   const teamNameChangeHandler = (event) => {
     setTeamName(event.target.value);

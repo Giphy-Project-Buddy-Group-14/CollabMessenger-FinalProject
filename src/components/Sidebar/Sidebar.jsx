@@ -307,9 +307,7 @@ export default function Sidebar() {
 
           <div className="flex-1 flex flex-col dark:border-gray-500">
             <Navbar />
-            <div className="p-4 flex-1">
-              <Outlet />
-            </div>
+            <Outlet />
           </div>
         </>
       )}
