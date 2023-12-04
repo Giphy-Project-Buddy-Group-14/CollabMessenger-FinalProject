@@ -14,8 +14,8 @@ function classNames(...classes) {
 
 export default function Navbar() {
   const { logout } = useAuth();
-  const { user, isAuthenticated } = useFirebaseAuth();
-  const { profilePictureURL, profileLoading } = useUserProfile(user);
+  const { isAuthenticated } = useFirebaseAuth();
+  const { profilePictureURL, profileLoading } = useUserProfile();
   const navigate = useNavigate();
 
   const logoutNavbar = (event) => {

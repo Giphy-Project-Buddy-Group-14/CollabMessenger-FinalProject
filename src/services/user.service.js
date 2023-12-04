@@ -55,8 +55,13 @@ export const getUserProfileByUID = async (uid) => {
     const snapshot = await get(userRef(uid));
 
     if (snapshot.exists()) {
-      const userData = snapshot.val();
-      return { ...userData, uid };
+      const userProfile = snapshot.val();
+      return {
+        ...userProfile,
+        displayName: displayName(userProfile),
+        id: uid,
+        uid,
+      };
     } else {
       throw new Error('User not found.');
     }
@@ -165,6 +170,8 @@ export const fromUsersDocument = (snapshot) => {
 
     return {
       ...userProfile,
+      displayName: displayName(userProfile),
+      id: uid,
       uid,
       createdOn,
     };
@@ -185,4 +192,11 @@ export const getAllUserProfiles = async () => {
     console.error('Error fetching all users:', error);
     throw error;
   }
+};
+
+const displayName = (userProfile) => {
+  if (!userProfile.firstName || !userProfile.lastName)
+    return userProfile.username;
+
+  return `${userProfile.firstName} ${userProfile.lastName}`;
 };

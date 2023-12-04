@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { getDatabase, ref, onValue, off } from 'firebase/database';
 import { getUserProfileByUID } from '../services/user.service';
+import useFirebaseAuth from './useFirebaseAuth';
 
-export function useUserProfile(user) {
+export function useUserProfile() {
+  const { user } = useFirebaseAuth();
   const [userProfile, setUserProfile] = useState(null);
   const [profileLoading, setProfileLoading] = useState(true);
 
@@ -12,13 +14,17 @@ export function useUserProfile(user) {
         try {
           const profile = await getUserProfileByUID(user.uid);
 
-          if (profile && profile.uid) {
-            const dbRef = ref(getDatabase(), 'users/' + profile.uid);
+          if (profile && profile.id) {
+            const dbRef = ref(getDatabase(), 'users/' + profile.id);
             onValue(
               dbRef,
               (snapshot) => {
                 if (snapshot.exists()) {
-                  setUserProfile(snapshot.val());
+                  const userProfileData = snapshot.val();
+                  setUserProfile({
+                    ...userProfileData,
+                    id: userProfileData.uid,
+                  });
                 }
                 setProfileLoading(false);
               },
