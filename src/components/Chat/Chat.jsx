@@ -37,6 +37,7 @@ export default function Chat() {
   }, [teamId]);
 
   let offPreviousChannel;
+  let offPreviousMessages;
 
   const selectChannel = (channel) => {
     offPreviousChannel && offPreviousChannel();
@@ -72,7 +73,9 @@ export default function Chat() {
     // Fetch messages for the selected channel
     //
 
-    // offPreviousMessages && offPreviousMessages();
+    if (offPreviousMessages) {
+      offPreviousMessages();
+    }
 
     const fetchMessages = async () => {
       try {
@@ -142,7 +145,7 @@ export default function Chat() {
         console.error('Error fetching profile: ', error);
       }
     );
-  }, []);
+  }, [teamId]);
 
   const createChannelHandler = async (teamId, title, userId) => {
     const newChannel = await createChannel(teamId, title, userId);
@@ -184,7 +187,6 @@ export default function Chat() {
                       />
                     </div>
                   )}
-
                 </div>
               </div>
             </div>
