@@ -10,7 +10,6 @@ import {
 import {
   addTeam,
   checkIfTeamNameExists,
-  createGeneralChanel,
 } from '../../services/teams.service';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import { useUserProfile } from '../../hooks/useUserProfile';
@@ -46,10 +45,8 @@ export default function NewTeam() {
 
     try {
       const teamUid = await addTeam(userUid, teamName);
-      await createGeneralChanel(teamUid);
-      toast.success('New team was created');
-
       await createChannel(teamUid, 'general', user.uid);
+      toast.success('New team was created');
       navigate('/teams');
     } catch (error) {
       toast.error(error.message);

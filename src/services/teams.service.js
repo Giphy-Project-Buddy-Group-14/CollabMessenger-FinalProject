@@ -1,4 +1,4 @@
-import { get, set, ref, update, push } from 'firebase/database';
+import { get, set, ref, update, push, remove } from 'firebase/database';
 import { db } from '../../firebaseAppConfig';
 
 export const addTeam = async (userUid, name) => {
@@ -13,19 +13,6 @@ export const addTeam = async (userUid, name) => {
     await set(ref(db, `teams/${uid}`), { name, owner, members, channels, uid });
     await update(ref(db), { [`users/${userUid}/MyTeams/${name}`]: uid });
     return uid;
-  } catch (error) {
-    console.error('Error adding team:', error);
-    throw error;
-  }
-};
-
-export const createGeneralChanel = async (teamUid) => {
-  try {
-    const result = await push(ref(db, `teamChannels/${teamUid}`), {});
-    await set(ref(db, `teamChannels/${teamUid}/${result.key}/`), {
-      channelName: 'General',
-      uid: result.key,
-    });
   } catch (error) {
     console.error('Error adding team:', error);
     throw error;
@@ -54,9 +41,10 @@ export const getTeamsByUserUids = async (userUids) => {
     const snapshot = await get(ref(db, 'teams'));
 
     if (snapshot.exists()) {
-      const teamsData = Object.values(snapshot.val()).filter((team) =>
-        userUids.includes(team.uid)
-      );
+      const teamsData = Object.values(snapshot.val());
+      // .filter((team) =>
+      //   userUids.includes(team.uid)
+      // );
       return teamsData;
     }
 
@@ -77,6 +65,22 @@ export const getAllTeams = async () => {
     const teamsArray = Object.values(snapshot.val());
 
     return teamsArray;
+  } catch (error) {
+    console.error('Error fetching teams:', error);
+    throw error;
+  }
+};
+
+export const getTeamsByUid = async (uuid) => {
+  try {
+    const snapshot = await get(ref(db, 'teams/' + uuid));
+
+    if (!snapshot.exists()) {
+      return [];
+    }
+    const team = snapshot.val();
+    console.log(team);
+    return team;
   } catch (error) {
     console.error('Error fetching teams:', error);
     throw error;
