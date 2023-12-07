@@ -13,19 +13,7 @@ import { getTeamsByUid } from '../../services/teams.service';
 const TeamMembers = ({ teamId }) => {
   const { user: loggedUser } = useFirebaseAuth();
   const [teamMembers, setTeamMembers] = useState([]);
-  const [search, setSearch] = useState('');
-  const [isAddMembersFormVisible, setIsAddMembersFormVisible] = useState(false);
-  const [filteredUsers, setFilteredUsers] = useState([]);
-  const [memberUUIDs, setMemberUUIDs] = useState([]);
-  const [team, setTeam] = useState({});
-
-  const onSelectUserToAdd = (user) => {
-    addTeamMember(teamId, user);
-  };
-
-  const onRemoveUserFromTeam = (user) => {
-    removeChannelMember(teamId, user.userInfo);
-  };
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTeamMembers = async () => {
@@ -54,55 +42,8 @@ const TeamMembers = ({ teamId }) => {
   }, [memberUUIDs]);
 
   const handleAddMembers = () => {
-    setIsAddMembersFormVisible(true);
+    console.log('Add Members button clicked!');
   };
-
-  useEffect(() => {
-    const fetchTeam = async () => {
-      const team = await getTeamsByUid(teamId);
-      setTeam(team);
-    };
-
-    fetchTeam();
-  }, [teamId]);
-
-  useEffect(() => {
-    const dbSelectedChannelRef = ref(getDatabase(), 'teams/' + teamId + '/');
-
-    const off = onValue(
-      dbSelectedChannelRef,
-      (snapshot) => {
-        if (snapshot.exists()) {
-          const channelsObj = snapshot.val();
-          setMemberUUIDs(Object.keys(channelsObj.members || []));
-        }
-      },
-      (error) => {
-        console.error('Error fetching profile: ', error);
-      }
-    );
-
-    return off;
-  }, [teamId]);
-
-  useEffect(() => {
-    // fetch users by search
-    const getUsers = async () => {
-      const foundUsers = await searchUsers(search);
-      const filteredUsers = foundUsers.filter(
-        (user) => !memberUUIDs.includes(user.uid)
-      );
-
-      setFilteredUsers(filteredUsers);
-      return null;
-    };
-
-    if (search.length) {
-      getUsers();
-    } else {
-      setFilteredUsers([]);
-    }
-  }, [memberUUIDs, search]);
 
   return (
     <div className="flex flex-col space-y-1 mt-2 -mx-2">

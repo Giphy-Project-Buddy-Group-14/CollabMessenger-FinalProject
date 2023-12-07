@@ -37,7 +37,6 @@ export default function Chat() {
   }, [teamId]);
 
   let offPreviousChannel;
-  let offPreviousMessages;
 
   const selectChannel = (channel) => {
     offPreviousChannel && offPreviousChannel();
@@ -73,9 +72,7 @@ export default function Chat() {
     // Fetch messages for the selected channel
     //
 
-    if (offPreviousMessages) {
-      offPreviousMessages();
-    }
+    offPreviousMessages && offPreviousMessages();
 
     const fetchMessages = async () => {
       try {
@@ -187,6 +184,20 @@ export default function Chat() {
                       />
                     </div>
                   )}
+
+                  <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
+                    {/* ... Active Conversations Buttons ... */}
+                  </div>
+
+                  <div className="flex flex-row items-center justify-between text-xs mt-6">
+                    <span className="font-bold">Users</span>
+                    <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">
+                      7
+                    </span>
+                  </div>
+                  <div className="flex flex-col space-y-1 mt-4 -mx-2">
+                    {/* ... Archived Conversations Buttons ... */}
+                  </div>
                 </div>
               </div>
             </div>
