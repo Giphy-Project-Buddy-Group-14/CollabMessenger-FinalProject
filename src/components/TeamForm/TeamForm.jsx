@@ -9,6 +9,7 @@ import {
 import PropTypes from 'prop-types';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import { getTeamsByUid } from '../../services/teams.service';
+import { useNavigate } from 'react-router';
 
 const TeamMembers = ({ teamId }) => {
   const { user: loggedUser } = useFirebaseAuth();
@@ -18,6 +19,7 @@ const TeamMembers = ({ teamId }) => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [memberUUIDs, setMemberUUIDs] = useState([]);
   const [team, setTeam] = useState({});
+  const navigate = useNavigate();
 
   const onSelectUserToAdd = (user) => {
     void addTeamMember(teamId, user);
@@ -25,6 +27,11 @@ const TeamMembers = ({ teamId }) => {
 
   const onRemoveUserFromTeam = (user) => {
     void removeChannelMember(teamId, user.userInfo);
+  };
+
+  const onLeaveTeam = (user) => {
+    removeChannelMember(teamId, user.userInfo);
+    navigate(`/teams/`);
   };
 
   useEffect(() => {
@@ -143,6 +150,25 @@ const TeamMembers = ({ teamId }) => {
                     x
                   </div>
                 )}
+              {member.userInfo.uid === loggedUser.uid && (
+                <div
+                  onClick={() => onLeaveTeam(member)}
+                >
+                  <svg
+                    className="cursor-pointer h-4 w-4 text-red-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                    />
+                  </svg>
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -220,7 +246,7 @@ const TeamMembers = ({ teamId }) => {
           </div>
         )}
       </div>
-    </div >
+    </div>
   );
 };
 
