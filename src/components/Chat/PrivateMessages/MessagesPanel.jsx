@@ -34,6 +34,7 @@ export default function MessagesPanel({ conversationId, messagesEndRef }) {
                         key={message.id}
                         userProfile={userProfile}
                         message={message}
+                        conversationId={conversationId}
                       />
                     );
                   })}
