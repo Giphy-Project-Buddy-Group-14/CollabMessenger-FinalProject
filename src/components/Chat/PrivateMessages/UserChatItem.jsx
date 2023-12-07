@@ -8,9 +8,9 @@ export default function UserChatItem({ user, onClick, isSelected }) {
       <li>
         <Link
           to="#"
-          className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white ${
+          className={`flex items-center p-2 text-gray-900 rounded-lg border border-transparent dark:text-white ${
             isSelected
-              ? 'bg-gray-100'
+              ? 'bg-gray-100 border-blue-500 ring-blue-500'
               : 'hover:bg-gray-100 dark:hover:bg-gray-700'
           } group`}
           onClick={onClick}

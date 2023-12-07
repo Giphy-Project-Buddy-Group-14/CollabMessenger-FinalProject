@@ -155,8 +155,8 @@ export const checkIfUsernameExists = async (username) => {
 const formatCreatedOn = (user) => {
   return user?.createdOn
     ? moment(user.createdOn)
-      .tz(DEFAULT_TIME_ZONE)
-      .format('MMM Do YYYY, h:mm:ss A')
+        .tz(DEFAULT_TIME_ZONE)
+        .format('MMM Do YYYY, h:mm:ss A')
     : '';
 };
 
@@ -245,8 +245,7 @@ export function removeChannelMember(teamId, user) {
       console.error('Error adding channel member:', error);
       throw error;
     });
-};
-
+}
 
 // get all users matching a username search
 export const searchUsers = async (search) => {
