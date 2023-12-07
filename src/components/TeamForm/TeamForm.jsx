@@ -1,4 +1,4 @@
-import { getDatabase, ref, onValue, off } from 'firebase/database';
+import { getDatabase, ref, onValue } from 'firebase/database';
 import { useEffect, useState } from 'react';
 import {
   addTeamMember,
@@ -20,11 +20,11 @@ const TeamMembers = ({ teamId }) => {
   const [team, setTeam] = useState({});
 
   const onSelectUserToAdd = (user) => {
-    void addTeamMember(teamId, user);
+    addTeamMember(teamId, user);
   };
 
   const onRemoveUserFromTeam = (user) => {
-    void removeChannelMember(teamId, user.userInfo);
+    removeChannelMember(teamId, user.userInfo);
   };
 
   useEffect(() => {
@@ -63,7 +63,7 @@ const TeamMembers = ({ teamId }) => {
       setTeam(team);
     };
 
-    void fetchTeam();
+    fetchTeam();
   }, [teamId]);
 
   useEffect(() => {
@@ -98,7 +98,7 @@ const TeamMembers = ({ teamId }) => {
     };
 
     if (search.length) {
-      void getUsers();
+      getUsers();
     } else {
       setFilteredUsers([]);
     }
