@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useUserProfile } from './useUserProfile';
 import { createPrivateMessageRecord } from '../services/conversation.service';
 
-export default function useSendMessage() {
+export default function useMessage() {
   const { userProfile: author } = useUserProfile();
 
   const [loading, setLoading] = useState(false);

@@ -6,18 +6,22 @@ import PrivateMessageForm from './PrivateMessageForm';
 import LoadingIndicator from '../../Ui/LoadingIndicator';
 import MessagesPanel from './MessagesPanel';
 import { toast } from 'react-toastify';
-import useSendMessage from '../../../hooks/useSendMessage';
-import useUserConversation from '../../../hooks/useUserConversation';
+import useMessage from '../../../hooks/useMessage';
 import useConversation from '../../../hooks/useConversation';
 
 export default function PrivateMessages() {
   const [columns, setColumns] = useState('1fr 1px 4fr');
   const [selectedUser, setSelectedUser] = useState(null);
 
-  const { participants, conversationId, loading, createConversationNode } =
-    useConversation(selectedUser);
-  const { createUserConversationNode } = useUserConversation();
-  const { sendMessage } = useSendMessage();
+  const {
+    author,
+    conversationId,
+    loading,
+    setParticipants,
+    createConversationAndSendMessage,
+  } = useConversation();
+
+  const { sendMessage } = useMessage();
 
   const messagesEndRef = useRef(null);
 
@@ -39,9 +43,7 @@ export default function PrivateMessages() {
       if (conversationId) {
         await sendMessage(conversationId, text);
       } else {
-        const newConversationId = await createConversationNode();
-        await createUserConversationNode(newConversationId, participants);
-        await sendMessage(newConversationId, text);
+        await createConversationAndSendMessage(text);
         toast.success('Successfully created a new conversation');
       }
     } catch (error) {
@@ -56,6 +58,7 @@ export default function PrivateMessages() {
 
   const onSelectUserHandler = (user) => {
     setSelectedUser(user);
+    setParticipants([author, user]);
   };
 
   return (
