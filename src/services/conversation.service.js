@@ -12,15 +12,23 @@ import { db } from '../../firebaseAppConfig';
 const currentTimestamp = (() => new Date().toISOString())();
 
 export const generateParticipantsIdentifier = (participants) => {
-  return participants.slice().sort().join('-');
+  if (participants.length < 2) {
+    throw new Error('At least two participants are required');
+  }
+  const sortedParticipantIds = participants
+    .map((participant) => participant.id)
+    .sort();
+
+  return sortedParticipantIds.join('-');
 };
 
-export const findExistingConversationIdByParticipants = async (
-  participants
-) => {
-  let existingConversationId = null;
+export const findExistingConversationId = async (participants) => {
+  if (participants.length < 2) {
+    throw new Error('A conversation must include at least two participants');
+  }
 
   const participantsKey = generateParticipantsIdentifier(participants);
+
   const snapshot = await get(
     query(
       ref(db, 'conversations'),
@@ -29,63 +37,87 @@ export const findExistingConversationIdByParticipants = async (
     )
   );
 
+  let conversationId = null;
+
   if (snapshot.exists()) {
     snapshot.forEach((childSnapshot) => {
-      existingConversationId = childSnapshot.key;
+      conversationId = childSnapshot.key;
       return true;
     });
   }
 
-  return existingConversationId;
+  return conversationId;
 };
 
-export const createConversation = async (author, participants, text) => {
+const convertToParticipantsObject = (participants) => {
+  const participantsObject = participants.reduce((obj, user) => {
+    obj[user.id] = true;
+    return obj;
+  }, {});
+
+  return participantsObject;
+};
+
+export const findUniqueParticipants = (participants) => {
+  const uniqueParticipantIds = [];
+
+  const uniqueParticipants = participants.filter((participant) => {
+    if (!uniqueParticipantIds.includes(participant.id)) {
+      uniqueParticipantIds.push(participant.id);
+      return true;
+    }
+    return false;
+  });
+
+  return uniqueParticipants;
+};
+
+export const createConversationRecord = async (author, participants) => {
   try {
-    const participantsObject = participants.reduce((obj, userId) => {
-      obj[userId] = true;
-      return obj;
-    }, {});
+    const allParticipants = findUniqueParticipants([author, ...participants]);
 
-    let conversationId =
-      await findExistingConversationIdByParticipants(participants);
-
-    if (!conversationId) {
-      const participantsKey = generateParticipantsIdentifier(participants);
-
-      const result = await push(ref(db, `conversations`), {
-        author: author.id,
-        createdAt: currentTimestamp,
-        participants: participantsObject,
-        participantsKey: participantsKey,
-      });
-      conversationId = result.key;
+    if (allParticipants.length < 2) {
+      throw new Error('A conversation must include at least two participants');
     }
 
-    participants.forEach(async (userId) => {
-      await updateUserConversations(userId, conversationId);
+    let conversationId = await findExistingConversationId(allParticipants);
+
+    if (conversationId) {
+      throw new Error('Conversation already exists');
+    }
+
+    const participantsKey = generateParticipantsIdentifier(allParticipants);
+    const participantsObject = convertToParticipantsObject(allParticipants);
+
+    const snapshot = await push(ref(db, `conversations`), {
+      author: author.id,
+      createdAt: currentTimestamp,
+      participants: participantsObject,
+      participantsKey: participantsKey,
     });
+    conversationId = snapshot.key;
 
-    const messageRef = await push(
-      ref(db, `privateMessages/${conversationId}`),
-      {
-        authorId: author.id,
-        text: text,
-        createdAt: currentTimestamp,
-      }
-    );
-
-    return messageRef.key;
+    return conversationId;
   } catch (error) {
     console.error('Error on createConversation:', error);
     throw error;
   }
 };
 
-export const updateUserConversations = async (userId, conversationId) => {
+export const createUserConversationRecords = async (
+  participants,
+  conversationId
+) => {
+  participants.forEach(async (participant) => {
+    await createUserConversationRecord(participant, conversationId);
+  });
+};
+
+export const createUserConversationRecord = async (user, conversationId) => {
   try {
     const userConversationsRef = ref(
       db,
-      `userConversations/${userId}/${conversationId}`
+      `userConversations/${user.id}/${conversationId}`
     );
     await set(userConversationsRef, true);
   } catch (error) {
@@ -94,22 +126,19 @@ export const updateUserConversations = async (userId, conversationId) => {
   }
 };
 
-export const addMessageToConversation = async (
+export const createPrivateMessageRecord = async (
   conversationId,
   author,
   text
 ) => {
   try {
-    const messageRef = await push(
-      ref(db, `privateMessages/${conversationId}`),
-      {
-        authorId: author.id,
-        text: text,
-        createdAt: currentTimestamp,
-      }
-    );
+    const snapshot = await push(ref(db, `privateMessages/${conversationId}`), {
+      authorId: author.id,
+      text: text,
+      createdAt: currentTimestamp,
+    });
 
-    return messageRef.key;
+    return snapshot.key;
   } catch (error) {
     console.error('Error on createConversation:', error);
     throw error;

@@ -1,29 +1,55 @@
 import { PropTypes } from 'prop-types';
 import Message from './Message';
+import LoadingIndicator from '../../Ui/LoadingIndicator';
+import useLoadConversation from '../../../hooks/useLoadConversation';
+import Heading from '../../Ui/Heading';
 
-export default function MessagesPanel({ userProfiles, messages }) {
+export default function MessagesPanel({ conversationId, messagesEndRef }) {
+  const { messages, userProfiles, loading } =
+    useLoadConversation(conversationId);
+
   const findUserProfileForMessage = (message) => {
     return userProfiles.find((profile) => profile.id === message.authorId);
   };
 
   return (
-    <section className="bg-white dark:bg-gray-900 py-8 lg:py-16 antialiased">
-      <div className="max-w-2xl mx-auto px-4">
-        {messages.map((message) => {
-          return (
-            <Message
-              key={message.id}
-              userProfile={findUserProfileForMessage(message)}
-              message={message}
-            />
-          );
-        })}
-      </div>
-    </section>
+    <>
+      {loading && <LoadingIndicator />}
+      {!loading && (
+        <>
+          {messages.length === 0 && (
+            <Heading title="Start a new conversation" />
+          )}
+          {messages.length !== 0 && (
+            <>
+              <Heading title="You are currently in an active conversation..." />
+              <section className="dark:bg-gray-900 py-1 lg:py-1 antialiased">
+                <div className="px-4">
+                  {messages.map((message) => {
+                    const userProfile = findUserProfileForMessage(message);
+                    if (!userProfile) return;
+
+                    return (
+                      <Message
+                        key={message.id}
+                        userProfile={userProfile}
+                        message={message}
+                      />
+                    );
+                  })}
+                  {/* Attach the ref to an element at the bottom of your messages */}
+                  <div ref={messagesEndRef} />
+                </div>
+              </section>
+            </>
+          )}
+        </>
+      )}
+    </>
   );
 }
 
 MessagesPanel.propTypes = {
-  userProfiles: PropTypes.array.isRequired,
-  messages: PropTypes.array.isRequired,
+  conversationId: PropTypes.string,
+  messagesEndRef: PropTypes.object,
 };
