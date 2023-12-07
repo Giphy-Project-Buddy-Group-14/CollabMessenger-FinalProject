@@ -1,16 +1,16 @@
-import { Fragment } from 'react';
-import { Disclosure, Menu, Transition } from '@headlessui/react';
+import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Link } from 'react-router-dom';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import ImageWithLoading from '../helper/ImageWithLoading';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useUserProfile } from '../../hooks/useUserProfile';
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
+import {
+  Dropdown,
+  DropdownButton,
+  DropdownItems,
+  DropdownItem,
+} from '../Ui/Dropdown/Dropdown';
 
 export default function Navbar() {
   const { logout } = useAuth();
@@ -18,8 +18,7 @@ export default function Navbar() {
   const { profilePictureURL, profileLoading } = useUserProfile();
   const navigate = useNavigate();
 
-  const logoutNavbar = (event) => {
-    event.preventDefault();
+  const logoutNavbar = () => {
     logout();
     navigate('/signin');
   };
@@ -64,78 +63,29 @@ export default function Navbar() {
                       <BellIcon className="h-6 w-6" aria-hidden="true" />
                     </button>
 
-                    {profileLoading}
                     {!profileLoading && (
-                      <Menu as="div" className="relative ml-3">
-                        <div>
-                          <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                            <span className="absolute -inset-1.5" />
-                            <span className="sr-only">Open user menu</span>
-                            <ImageWithLoading
-                              className="w-24 h-24 mb-3 rounded-full shadow-lg"
-                              src={
-                                profilePictureURL ||
-                                '/src/assets/empty_profile_pic.webp'
-                              }
-                              alt="Some image"
-                              width="2rem"
-                              height="2rem"
-                            />
-                          </Menu.Button>
-                        </div>
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-100"
-                          enterFrom="transform opacity-0 scale-95"
-                          enterTo="transform opacity-100 scale-100"
-                          leave="transition ease-in duration-75"
-                          leaveFrom="transform opacity-100 scale-100"
-                          leaveTo="transform opacity-0 scale-95"
+                      <Dropdown>
+                        <DropdownButton
+                          className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                          id="user-menu-button"
+                          aria-expanded="false"
+                          data-dropdown-toggle="user-dropdown"
+                          data-dropdown-placement="bottom"
                         >
-                          <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            <Menu.Item>
-                              {({ active }) => (
-                                <Link
-                                  to="/profile"
-                                  className={classNames(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700'
-                                  )}
-                                >
-                                  Your Profile
-                                </Link>
-                              )}
-                            </Menu.Item>
-                            <Menu.Item>
-                              {({ active }) => (
-                                <Link
-                                  to="#"
-                                  className={classNames(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700'
-                                  )}
-                                >
-                                  Settings
-                                </Link>
-                              )}
-                            </Menu.Item>
-                            <Menu.Item>
-                              {({ active }) => (
-                                <Link
-                                  to="#"
-                                  onClick={logoutNavbar}
-                                  className={classNames(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700'
-                                  )}
-                                >
-                                  Logout
-                                </Link>
-                              )}
-                            </Menu.Item>
-                          </Menu.Items>
-                        </Transition>
-                      </Menu>
+                          <ImageWithLoading
+                            className="w-24 h-24 mb-3 rounded-full shadow-lg"
+                            src={profilePictureURL}
+                            alt="Some image"
+                            width="2rem"
+                            height="2rem"
+                          />
+                        </DropdownButton>
+                        <DropdownItems>
+                          <DropdownItem to="/profile" title="Your Profile" />
+                          <DropdownItem title="Settings" />
+                          <DropdownItem title="Logout" onClick={logoutNavbar} />
+                        </DropdownItems>
+                      </Dropdown>
                     )}
                   </div>
                 </>

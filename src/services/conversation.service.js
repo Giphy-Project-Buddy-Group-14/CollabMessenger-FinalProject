@@ -1,6 +1,7 @@
 import {
   get,
   set,
+  remove,
   ref,
   push,
   query,
@@ -141,6 +142,16 @@ export const createPrivateMessageRecord = async (
     return snapshot.key;
   } catch (error) {
     console.error('Error on createConversation:', error);
+    throw error;
+  }
+};
+
+export const deletePrivateMessageRecord = async (conversationId, messageId) => {
+  try {
+    await remove(ref(db, `privateMessages/${conversationId}/${messageId}`));
+    console.log('Message deleted successfully');
+  } catch (error) {
+    console.error('Error on deletePrivateMessageRecord:', error);
     throw error;
   }
 };
