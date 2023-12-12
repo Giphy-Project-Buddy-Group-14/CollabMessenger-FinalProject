@@ -1,5 +1,5 @@
 import { Disclosure } from '@headlessui/react';
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import ImageWithLoading from '../helper/ImageWithLoading';
 import { useAuth } from '../../hooks/useAuth';
@@ -60,7 +60,6 @@ export default function Navbar() {
                     >
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">View notifications</span>
-                      <BellIcon className="h-6 w-6" aria-hidden="true" />
                     </button>
 
                     {!loading && (
@@ -85,7 +84,6 @@ export default function Navbar() {
                             to={USER_PROFILE_PATH(currentUserProfile.username)}
                             title="Your Profile"
                           />
-                          <DropdownItem title="Settings" />
                           <DropdownItem title="Logout" onClick={logoutNavbar} />
                         </DropdownItems>
                       </Dropdown>

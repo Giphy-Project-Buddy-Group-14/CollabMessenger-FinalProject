@@ -11,7 +11,7 @@ export default function ConversationItem({ conversation, isSelected }) {
   const [otherParticipants, setOtherParticipants] = useState([]);
   const { currentUserProfile } = useAuth();
 
-  const { messagesCount, loading } = useLoadConversation(conversation.id);
+  const { loading } = useLoadConversation(conversation.id);
 
   useEffect(() => {
     if (!currentUserProfile) {
@@ -38,7 +38,7 @@ export default function ConversationItem({ conversation, isSelected }) {
                 : 'hover:bg-gray-100 dark:hover:bg-gray-700'
             } group`}
           >
-            {otherParticipants.map((participant, index) => {
+            {otherParticipants.map((participant) => {
               return (
                 <div
                   key={participant.id}
@@ -56,11 +56,11 @@ export default function ConversationItem({ conversation, isSelected }) {
                       {participant.displayName}
                     </span>
                   </div>
-                  {index === 0 && (
+                  {/* {index === 0 && (
                     <span className="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
                       {messagesCount}
                     </span>
-                  )}
+                  )} */}
                 </div>
               );
             })}

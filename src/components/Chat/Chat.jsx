@@ -38,7 +38,7 @@ export default function Chat() {
 
   let offPreviousChannel;
   let offPreviousMessages;
-  
+
   const selectChannel = (channel) => {
     offPreviousChannel && offPreviousChannel();
 
@@ -187,7 +187,6 @@ export default function Chat() {
                       />
                     </div>
                   )}
-
                 </div>
               </div>
             </div>
