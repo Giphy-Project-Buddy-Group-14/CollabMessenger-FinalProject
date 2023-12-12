@@ -94,7 +94,7 @@ export default function Users() {
   }, [currentPage, usersPerPage]);
 
   return (
-    <>
+    <div className="p-6">
       {loadingSearchBar}
       {!loadingSearchBar && (
         <SearchBar allUsers={allUsers} onSearch={onSearchHandler} />
@@ -103,9 +103,8 @@ export default function Users() {
       {!loading && (
         <>
           <UsersList users={users} />
+
           <div className="flex items-center justify-center w-full">
-            {/* Invisible Left Spacer (Same width as the 'Per Page' div) */}
-            <div className="flex-1">{/* Invisible Spacer */}</div>
             <div className="flex justify-center">
               <nav aria-label="Page navigation example">
                 <ul className="flex items-center -space-x-px h-20 text-sm">
@@ -235,6 +234,6 @@ export default function Users() {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 }

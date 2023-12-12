@@ -1,23 +1,12 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 // import { useAuth } from "../../context/AuthContext";
 import Navbar from '../Navbar/Navbar';
 import { auth } from '../../../firebaseAppConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useAuth } from '../../hooks/useAuth';
 
 export default function Sidebar() {
-  const navigate = useNavigate();
-
-  const { logout } = useAuth();
   const [user, loading] = useAuthState(auth);
-
-  const signOutHandler = (event) => {
-    event.preventDefault();
-
-    logout();
-    navigate('/signin');
-  };
 
   return (
     <>
@@ -49,7 +38,7 @@ export default function Sidebar() {
 
           <aside
             id="default-sidebar"
-            className="transition-transform -translate-x-full sm:translate-x-0 bg-gray-50 dark:bg-gray-800"
+            className="transition-transform -translate-x-full sm:translate-x-0 bg-gray-50"
             style={{ width: '18rem' }}
             aria-label="Sidebar"
           >
@@ -61,7 +50,7 @@ export default function Sidebar() {
                     className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                   >
                     <svg
-                      className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                      className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                       viewBox="0 0 24 24"
                       strokeWidth="1"
                       stroke="currentColor"
@@ -75,7 +64,7 @@ export default function Sidebar() {
                       <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />{' '}
                       <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
                     </svg>
-                    <span className="ms-3">Home</span>
+                    <span className="ms-3 text-sm">Home</span>
                   </Link>
                 </li>
 
@@ -87,7 +76,7 @@ export default function Sidebar() {
                         className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                       >
                         <svg
-                          className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                          className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -100,7 +89,7 @@ export default function Sidebar() {
                           />
                         </svg>
 
-                        <span className="flex-1 ms-3 whitespace-nowrap">
+                        <span className="flex-1 ms-3 text-sm whitespace-nowrap">
                           Profile
                         </span>
                       </Link>
@@ -113,7 +102,7 @@ export default function Sidebar() {
                     className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                   >
                     <svg
-                      className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                      className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -127,7 +116,9 @@ export default function Sidebar() {
                       <path d="M23 21v-2a4 4 0 0 0-3-3.87" />{' '}
                       <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                     </svg>
-                    <span className="flex-1 ms-3 whitespace-nowrap">Users</span>
+                    <span className="flex-1 ms-3 whitespace-nowrap text-sm">
+                      Users
+                    </span>
                   </Link>
                 </li>
 
@@ -138,7 +129,7 @@ export default function Sidebar() {
                       className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                     >
                       <svg
-                        className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                        className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -151,7 +142,7 @@ export default function Sidebar() {
                         />
                       </svg>
 
-                      <span className="flex-1 ms-3 whitespace-nowrap">
+                      <span className="flex-1 ms-3 whitespace-nowrap text-sm">
                         Teams
                       </span>
                     </Link>
@@ -166,7 +157,7 @@ export default function Sidebar() {
                         className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                       >
                         <svg
-                          className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                          className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -179,8 +170,8 @@ export default function Sidebar() {
                           />
                         </svg>
 
-                        <span className="flex-1 ms-3 whitespace-nowrap">
-                          Chat
+                        <span className="flex-1 ms-3 whitespace-nowrap text-sm">
+                          Chats
                         </span>
                       </Link>
                     </li>
@@ -190,7 +181,7 @@ export default function Sidebar() {
                         className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                       >
                         <svg
-                          className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                          className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                           width="24"
                           height="24"
                           viewBox="0 0 24 24"
@@ -208,7 +199,7 @@ export default function Sidebar() {
                           <line x1="16" y1="11" x2="16" y2="11.01" />
                         </svg>
 
-                        <span className="flex-1 ms-3 whitespace-nowrap">
+                        <span className="flex-1 ms-3 whitespace-nowrap text-sm">
                           Private Messages
                         </span>
                       </Link>
@@ -223,7 +214,7 @@ export default function Sidebar() {
                       className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                     >
                       <svg
-                        className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                        className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                         width="24"
                         height="24"
                         viewBox="0 0 24 24"
@@ -252,7 +243,7 @@ export default function Sidebar() {
                       className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                     >
                       <svg
-                        className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                        className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -271,43 +262,15 @@ export default function Sidebar() {
                     </Link>
                   </li>
                 )}
-
-                {user && (
-                  <li>
-                    <Link
-                      to="/"
-                      onClick={signOutHandler}
-                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                    >
-                      <svg
-                        className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1"
-                        stroke="currentColor"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        {' '}
-                        <path stroke="none" d="M0 0h24v24H0z" />{' '}
-                        <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />{' '}
-                        <path d="M20 12h-13l3 -3m0 6l-3 -3" />
-                      </svg>
-                      <span className="flex-1 ms-3 whitespace-nowrap">
-                        Logout
-                      </span>
-                    </Link>
-                  </li>
-                )}
               </ul>
             </div>
           </aside>
 
-          <div className="flex-1 flex flex-col dark:border-gray-500">
+          <div className="flex-1 flex flex-col">
             <Navbar />
-            <Outlet />
+            <div className="bg-white flex-1 flex flex-col">
+              <Outlet />
+            </div>
           </div>
         </>
       )}

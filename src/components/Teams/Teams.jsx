@@ -1,5 +1,5 @@
 import Button from '../Ui/Button';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getTeamsByUserUids } from '../../services/teams.service';
 import { useState, useEffect } from 'react';
 import { useUserProfile } from '../../hooks/useUserProfile';
@@ -34,15 +34,14 @@ export default function Teams() {
   };
 
   return (
-    <section className="bg-gray-100 py-8">
-      <div className="container mx-auto text-center px-4 pl-4">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Teams</h2>
-
-        <div className="flex justify-start items-center mb-4">
+    <section className="p-6">
+      <div>
+        <div className="flex items-center justify-between">
+          <div className="text-lg font-bold text-gray-800 mb-4">My Teams</div>
           <Button title="New team" onClick={newTeam} />
         </div>
 
-        <div className="flex flex-wrap -mx-4">
+        <div className="flex flex-wrap gap-4">
           {teams
             .filter((team) => {
               return team.members && team.members[user.uid];
@@ -50,20 +49,42 @@ export default function Teams() {
             .map((team) => (
               <div
                 key={team.uid}
-                className="w-full md:w-1/2 lg:w-1/4 px-4 mb-8 hover:cursor-pointer"
+                className="w-1/4 cursor-pointer relative"
                 onClick={() => handleTeamClick(team)}
               >
-                <div className="block p-6 mb-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:hover:bg-gray-700 hover:bg-gray-100 dark:border-gray-700 lg:mb-0">
-                  <h3 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                <div className="border flex justify-center flex-col border-spacing-1 p-4 rounded-lg dark:bg-gray-800 dark:hover:bg-gray-700 hover:bg-gray-100 dark:border-gray-700 lg:mb-0 bg-slate-50">
+                  <div className="text-l font-bold tracking-tight text-gray-900 dark:text-white pr-16">
                     {team.name}
-                  </h3>
-                  <p className="text-base text-gray-700 dark:text-gray-400 mb-2">
-                    {`${Object.keys(team.members || {}).length} member${Object.keys(team.members || {}).length !== 1 ? 's' : ''
-                      } `}
+                  </div>
+
+                  <p className="text-sm text-gray-700 dark:text-gray-400">
+                    {`${Object.keys(team.members || {}).length} member${
+                      Object.keys(team.members || {}).length !== 1 ? 's' : ''
+                    } `}
                   </p>
-                  <p className="font-normal text-gray-700 dark:text-gray-400">
-                    {team.description}
-                  </p>
+                </div>
+
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '12px',
+                    right: '12px',
+                    userSelect: 'none',
+                  }}
+                >
+                  <svg
+                    className="flex-shrink-0 w-16 h-16 opacity-20 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1"
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    ></path>
+                  </svg>
                 </div>
               </div>
             ))}

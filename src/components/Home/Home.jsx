@@ -6,7 +6,7 @@ import Button from '../Ui/Button';
 export default function Home() {
   const navigate = useNavigate();
 
-  const { currentUser, logout } = useAuth();
+  const { currentUser } = useAuth();
 
   const signUpHandler = () => {
     navigate('/signup');
@@ -14,14 +14,9 @@ export default function Home() {
   const signInHandler = () => {
     navigate('/signin');
   };
-  const signOutHandler = () => {
-    logout();
-    navigate('/');
-  };
 
   return (
-    <>
-      <h1>Home</h1>
+    <div className="p-6">
       {!currentUser && (
         <div>
           <Button title="Sign Up" onClick={signUpHandler} />
@@ -30,12 +25,7 @@ export default function Home() {
         </div>
       )}
 
-      {currentUser && (
-        <div>
-          <h1>Logged In</h1>
-          <Button title="Sign Out" onClick={signOutHandler} />
-        </div>
-      )}
-    </>
+      {currentUser && <div></div>}
+    </div>
   );
 }

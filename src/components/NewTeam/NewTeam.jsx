@@ -7,10 +7,7 @@ import {
   MIN_TEAM_NAME_LENGTH,
   MAX_TEAM_NAME_LENGTH,
 } from '../../common/constants';
-import {
-  addTeam,
-  checkIfTeamNameExists,
-} from '../../services/teams.service';
+import { addTeam, checkIfTeamNameExists } from '../../services/teams.service';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import { useUserProfile } from '../../hooks/useUserProfile';
 import { createChannel } from '../../services/channel.service';
@@ -55,10 +52,10 @@ export default function NewTeam() {
 
   return (
     <>
-      <div className="flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0 bg-gray-50">
+      <div className="flex flex-col items-center pt-6 bg-gray-50">
         <div>
           <Link to="/">
-            <h3 className="text-4xl font-bold text-gray-600">Create Team </h3>
+            <h3 className="text-sm font-bold text-gray-600">Create Team</h3>
           </Link>
         </div>
         <div className="w-full px-6 py-4 mt-6 overflow-hidden bg-gray-700 shadow-md sm:max-w-lg sm:rounded-lg">

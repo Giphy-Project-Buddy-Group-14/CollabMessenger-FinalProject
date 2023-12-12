@@ -12,10 +12,11 @@ export default function ChatItem({ channel, onClick, selectedChannel }) {
         className="cursor-pointer py-1 hover:text-cyan-500"
         onClick={clickHandler}
       >
-        {!!selectedChannel && selectedChannel.id === channel.id && (
-          <span>⭐️</span>
+        {!!selectedChannel && selectedChannel.id === channel.id ? (
+          <span className="text-cyan-600">#{channel.title}</span>
+        ) : (
+          `#${channel.title}`
         )}
-        {channel.title}
       </div>
     </>
   );

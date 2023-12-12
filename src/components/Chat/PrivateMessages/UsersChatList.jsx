@@ -3,7 +3,6 @@ import UserChatItem from './UserChatItem';
 import { useState } from 'react';
 import useLoadUserProfiles from '../../../hooks/useLoadUserProfiles';
 import LoadingIndicator from '../../Ui/LoadingIndicator';
-import Heading from '../../Ui/Heading';
 
 export default function UsersChatList({ onSelectUser }) {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -19,8 +18,7 @@ export default function UsersChatList({ onSelectUser }) {
     <>
       {loading && <LoadingIndicator />}
       {!loading && (
-        <>
-          <Heading title="Private Messages" />
+        <div className="p-6">
           <div className="h-full px-2 pt-2 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
             <ul className="space-y-2 font-medium">
               {users.map((user) => (
@@ -33,7 +31,7 @@ export default function UsersChatList({ onSelectUser }) {
               ))}
             </ul>
           </div>
-        </>
+        </div>
       )}
     </>
   );

@@ -39,13 +39,13 @@ export function ChannelForm({ onSubmit, onCancel, teamId }) {
 
       <div className="gap-1 flex">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-sm py-2 px-4 rounded-full"
           type="submit"
         >
-          Create Channel
+          Create
         </button>
         <button
-          className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-gray-500 hover:bg-gray-700 text-white font-sm py-2 px-4 rounded-full"
           onClick={onCancel}
         >
           Cancel
