@@ -66,12 +66,6 @@ export function UsersTableRow({ userProfile, onCheckboxChange }) {
       <td className="px-6 py-4">{userProfile.username}</td>
       <td className="px-6 py-4">{userProfile.phone}</td>
       <td className="px-6 py-4">
-        <div className="flex items-center">
-          <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>{' '}
-          Online
-        </div>
-      </td>
-      <td className="px-6 py-4">
         <Button title="Send Message" onClick={sendMessageHandler} />
       </td>
     </tr>
