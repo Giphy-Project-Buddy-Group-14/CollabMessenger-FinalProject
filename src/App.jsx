@@ -10,12 +10,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import Profile from './components/Profile/Profile';
 import EditProfile from './components/EditProfile/EditProfile';
 import RouteOutlet from './components/RouteOutlet/RouteOutlet';
-import Users from './components/Users/Users';
 import AuthenticatedRoute from './components/hoc/AuthenticatedRoute';
 import Chat from './components/Chat/Chat';
 import Teams from './components/Teams/Teams';
 import NewTeam from './components/NewTeam/NewTeam';
-import PrivateMessages from './components/Chat/PrivateMessages/PrivateMessages';
+import Users from './components/Users/Users';
+import Conversations from './components/Conversations/Conversations';
+import { ConversationsProvider } from './context/ConversationsContext';
+import Conversation from './components/Conversations/Conversation';
+import DefaultConversationView from './components/Conversations/DefaultConversationView';
 
 function App() {
   return (
@@ -37,10 +40,30 @@ function App() {
           <Routes>
             <Route exact path="/" element={<Sidebar />}>
               <Route index element={<Home />} />
-              <Route path="users" element={<Users />} />
+
+              <Route path="users" element={<RouteOutlet />}>
+                <Route index element={<Users />} />
+                <Route path=":username" element={<RouteOutlet />}>
+                  <Route index element={<Profile />} />
+                  <Route path="edit" element={<EditProfile />} />
+                </Route>
+              </Route>
+
               <Route path="teams" element={<Teams />} />
               <Route path="chat" element={<Chat />} />
-              <Route path="private-messages" element={<PrivateMessages />} />
+
+              <Route
+                path="conversations"
+                element={
+                  <ConversationsProvider>
+                    <Conversations />
+                  </ConversationsProvider>
+                }
+              >
+                <Route index element={<DefaultConversationView />} />
+                <Route path=":conversationId" element={<Conversation />} />
+              </Route>
+
               <Route path="profile" element={<RouteOutlet />}>
                 <Route
                   index

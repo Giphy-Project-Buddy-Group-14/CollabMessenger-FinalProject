@@ -31,6 +31,6 @@ export default function useLoadUserProfiles() {
 
   return {
     userProfiles,
-    loading,
+    loading: loading || profileLoading,
   };
 }

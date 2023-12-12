@@ -20,118 +20,55 @@ export default function useConversation() {
   const [conversationId, setConversationId] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const getConversationId = useCallback(async () => {
-    try {
-      if (participants.length < 2) {
-        throw new Error(
-          'A conversation must include at least two participants'
-        );
-      }
-
-      const conversationId = await findExistingConversationId(participants);
-      return conversationId;
-    } catch (error) {
-      console.error('Error with finding conversation ID: ', error);
-      throw error;
-    }
-  }, [participants]);
-
-  const createConversationAndSendMessage = async (text) => {
-    try {
-      setLoading(true);
-
-      if (participants.length < 2) {
-        throw new Error(
-          'A conversation must include at least two participants'
-        );
-      }
-
-      const newConversationId = await createConversationRecord(
-        author,
-        participants
-      );
-      setConversationId(newConversationId);
-
-      await createUserConversationNode(newConversationId);
-      await sendMessage(newConversationId, text);
-
-      return newConversationId;
-    } catch (error) {
-      console.error('Error with finding conversation ID: ', error);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const createConversationNode = async () => {
-    try {
-      setLoading(true);
-
-      if (participants.length < 2) {
-        throw new Error(
-          'A conversation must include at least two participants'
-        );
-      }
-
-      const newConversationId = await createConversationRecord(
-        author,
-        participants
-      );
-      setConversationId(newConversationId);
-      return newConversationId;
-    } catch (error) {
-      console.error('Error with finding conversation ID: ', error);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const createUserConversationNode = async (conversationId) => {
-    if (!conversationId) {
-      throw new Error('Conversation ID cannot be empty');
-    }
-
+  // Check for an existing conversation or create a new one
+  const manageConversation = useCallback(async () => {
     if (participants.length < 2) {
       throw new Error('A conversation must include at least two participants');
     }
+    setLoading(true);
 
     try {
-      setLoading(true);
-
-      (async () => {
-        await createUserConversationRecords(participants, conversationId);
-      })();
+      let existingConversationId =
+        await findExistingConversationId(participants);
+      if (existingConversationId) {
+        setConversationId(existingConversationId);
+      } else {
+        const newConversationId = await createConversationRecord(
+          author,
+          participants
+        );
+        setConversationId(newConversationId);
+        await createUserConversationRecords(participants, newConversationId);
+      }
     } catch (error) {
-      console.error('Error sending message: ', error);
-      throw new Error('An error occurred while sending the message');
+      console.error('Error in manageConversation: ', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, [author, participants]);
+
+  // Function to send a message within a conversation
+  const sendAndCreateConversation = async (text) => {
+    try {
+      setLoading(true);
+      await manageConversation();
+      await sendMessage(conversationId, text);
+    } catch (error) {
+      console.error('Error in sendAndCreateConversation: ', error);
+      throw error;
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (participants.length < 2) {
+    if (participants.length >= 2) {
+      manageConversation();
+    } else {
       setConversationId(null);
-      setLoading(false);
-      return;
     }
-
-    try {
-      setLoading(true);
-
-      (async () => {
-        let existingConversationId = await getConversationId();
-        setConversationId(existingConversationId);
-      })();
-    } catch (error) {
-      console.error('Error with fetching messages: ', error);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  }, [participants, conversationId, getConversationId]);
+  }, [participants, manageConversation]);
 
   return {
     author,
@@ -141,9 +78,6 @@ export default function useConversation() {
     addParticipant,
     removeParticipant,
     setParticipants,
-    createConversationNode,
-    createUserConversationNode,
-    sendMessage,
-    createConversationAndSendMessage,
+    sendAndCreateConversation,
   };
 }

@@ -1,16 +1,20 @@
 import { PropTypes } from 'prop-types';
-import { formatDateAsMonthDayYear } from '../../helper/dateHelper';
-import ImageWithLoading from '../../helper/ImageWithLoading';
+import { formatDateAsMonthDayYear } from '../helper/dateHelper';
+import ImageWithLoading from '../helper/ImageWithLoading';
 import {
   Dropdown,
   DropdownButton,
   DropdownItems,
   DropdownItem,
-} from '../../Ui/Dropdown/Dropdown';
-import useMessage from '../../../hooks/useMessage';
+} from '../Ui/Dropdown/Dropdown';
+import useMessage from '../../hooks/useMessage';
 import { toast } from 'react-toastify';
 
-export default function Message({ userProfile, message, conversationId }) {
+export default function ConversationMessage({
+  userProfile,
+  message,
+  conversationId,
+}) {
   const { deleteMessage, author, loading } = useMessage();
 
   const deleteMessageHandler = async () => {
@@ -69,7 +73,7 @@ export default function Message({ userProfile, message, conversationId }) {
         )}
       </footer>
       <p className="text-gray-500 dark:text-gray-400">{message.text}</p>
-      <div className="flex items-center mt-4 space-x-4">
+      {/* <div className="flex items-center mt-4 space-x-4">
         <button
           type="button"
           className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium"
@@ -91,12 +95,12 @@ export default function Message({ userProfile, message, conversationId }) {
           </svg>
           Reply
         </button>
-      </div>
+      </div> */}
     </article>
   );
 }
 
-Message.propTypes = {
+ConversationMessage.propTypes = {
   userProfile: PropTypes.object.isRequired,
   message: PropTypes.object.isRequired,
   conversationId: PropTypes.string.isRequired,

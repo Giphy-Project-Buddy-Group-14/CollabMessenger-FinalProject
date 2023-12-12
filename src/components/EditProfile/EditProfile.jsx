@@ -8,6 +8,7 @@ import { updateUserProfile } from '../../services/user.service';
 import { useNavigate } from 'react-router-dom';
 import ImageWithLoading from '../helper/ImageWithLoading';
 import { useUserProfile } from '../../hooks/useUserProfile';
+import { USER_PROFILE_PATH } from '../../common/routes';
 
 export default function EditProfile() {
   const {
@@ -44,9 +45,7 @@ export default function EditProfile() {
     setEditedLastName(event.target.value);
   };
 
-  const updateHandler = async (event) => {
-    event.preventDefault();
-
+  const updateHandler = async () => {
     try {
       const userData = {
         firstName: editedFirstName,
@@ -55,7 +54,7 @@ export default function EditProfile() {
       };
       await updateUserProfile(uid, userData);
       toast.success('Successfully updated profile');
-      navigate('/profile');
+      navigate(USER_PROFILE_PATH(userProfile.username));
     } catch (error) {
       console.error(error.message);
       toast.error(error.message);
