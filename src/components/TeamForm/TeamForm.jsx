@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import { getTeamsByUid } from '../../services/teams.service';
 import { useNavigate } from 'react-router';
+import InputSection from '../Ui/InputSection';
 
 const TeamMembers = ({ teamId }) => {
   const { user: loggedUser } = useFirebaseAuth();
@@ -26,6 +27,9 @@ const TeamMembers = ({ teamId }) => {
   };
 
   const onRemoveUserFromTeam = (user) => {
+    if (!window.confirm('Are you sure?')) {
+      return;
+    }
     removeChannelMember(teamId, user.userInfo);
   };
 
@@ -112,16 +116,17 @@ const TeamMembers = ({ teamId }) => {
   }, [memberUUIDs, search]);
 
   return (
-    <div className="flex flex-col space-y-1 mt-2 -mx-2">
-      <div className="flex flex-row items-center justify-between text-s mt-6">
-        <span className="font-bold text-xs mb-2">Team members</span>
+    <div className="flex flex-col space-y-1 mt-2 mr-4 w-48">
+      <div className="flex flex-row items-center justify-between text-s mt-6 mb-4">
+        <span className="font-bold text-sm">Team members</span>
         <span className="flex items-center justify-center bg-gray-300 w-4 h-4 text-xs rounded-full ml-4">
           {teamMembers.length}
         </span>
       </div>
-      <div className="flex flex-col space-y-1 mt-4">
+
+      <div className="flex flex-col space-y-1 gap-2">
         {teamMembers.map((member) => (
-          <div key={member.userInfo.uid} className="mb-2">
+          <div key={member.userInfo.uid}>
             <div className="flex items-center">
               <div className="relative">
                 <img
@@ -144,31 +149,30 @@ const TeamMembers = ({ teamId }) => {
                 loggedUser.uid === team.owner &&
                 member.userInfo.uid !== loggedUser.uid && (
                   <div
-                    className="cursor-pointer bg-gray-300 h-4 w-4 text-xs flex justify-center items-center rounded-full"
+                    className="cursor-pointer h-8 w-8 text-xs flex justify-center items-center opacity-25 hover:opacity-100 transition"
                     onClick={() => onRemoveUserFromTeam(member)}
                   >
-                    x
+                    ☒
                   </div>
                 )}
-              {member.userInfo.uid === loggedUser.uid && (
-                <div
-                  onClick={() => onLeaveTeam(member)}
-                >
-                  <svg
-                    className="cursor-pointer h-4 w-4 text-red-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                    />
-                  </svg>
-                </div>
-              )}
+              {member.userInfo.uid === loggedUser.uid &&
+                loggedUser.uid !== team.owner && (
+                  <div onClick={() => onLeaveTeam(member)}>
+                    <svg
+                      className="cursor-pointer h-4 w-4 text-red-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                      />
+                    </svg>
+                  </div>
+                )}
             </div>
           </div>
         ))}
@@ -176,17 +180,18 @@ const TeamMembers = ({ teamId }) => {
         {isAddMembersFormVisible && (
           <div className="flex flex-col mt-4">
             <div className="mt-8">
-              <h3 className="text-xs font-bold">Add members</h3>
-              <input
-                type="text"
-                value={search}
+              <div className="text-sm font-bold">Add members</div>
+
+              <InputSection
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search for a user"
-                className="mt-2 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:border-blue-500"
+                type="text"
+                value={search}
               />
+
               {/* Cancel button */}
               <button
-                className="mt-2 px-3 py-1 rounded-md text-xs bg-slate-500 text-white focus:outline-none flex items-center"
+                className="bg-gray-500 hover:bg-gray-700 text-white text-sm py-2 px-4 rounded-full mt-2"
                 onClick={() => setIsAddMembersFormVisible(false)}
               >
                 Close
@@ -200,15 +205,16 @@ const TeamMembers = ({ teamId }) => {
 
               {filteredUsers.length !== 0 && (
                 <div>
-                  <div className="text-xs mt-4">SELECT A USER:</div>
+                  <div className="text-xs mt-4">Select a user:</div>
                   <ul className="bg-white">
                     {filteredUsers.map((user, index) => (
-                      <li key={index} className="py-2 flex text-xs">
+                      <li key={index} className="py-2 flex text-sm">
                         <div
                           onClick={() => onSelectUserToAdd(user)}
-                          className="hover:text-teal-500 cursor-pointer"
+                          className="hover:bg-slate-300 cursor-pointer block rounded-full px-4 py-2 bg-slate-100"
                         >
-                          <b>{user.username}</b> ({user.email})
+                          <div>{user.username}</div>
+                          <div className="text-xs">{user.email}</div>
                         </div>
                       </li>
                     ))}
@@ -226,7 +232,7 @@ const TeamMembers = ({ teamId }) => {
               onClick={handleAddMembers}
             >
               <svg
-                className="h-3 w-3"
+                className="h-4 w-4"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -241,7 +247,7 @@ const TeamMembers = ({ teamId }) => {
                 <line x1="9" y1="12" x2="15" y2="12" />
                 <line x1="12" y1="9" x2="12" y2="15" />
               </svg>
-              <p className="text-gray-500 ml-1 text-xs">Add member</p>
+              <p className="text-gray-500 ml-1 text-sm">Add member</p>
             </button>
           </div>
         )}

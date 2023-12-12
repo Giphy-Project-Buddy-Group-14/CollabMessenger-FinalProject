@@ -91,67 +91,61 @@ export default function EditProfile() {
     <>
       {profileLoading && <LoadingIndicator />}
       {!profileLoading && (
-        <div>
-          <div className="w-full px-6 py-4 mt-6 overflow-hidden bg-gray-700 shadow-md sm:max-w-lg sm:rounded-lg">
-            <form>
-              <div className="mb-4">
-                <div className="mb-4">
-                  <InputSection
-                    onChange={firstNameChangeHandler}
-                    label="First Name"
-                    type="text"
-                    value={editedFirstName}
-                  />
-                </div>
-                <InputSection
-                  onChange={lastNameChangeHandler}
-                  label="Last Name"
-                  type="text"
-                  value={editedLastName}
+        <div className="w-full flex-1 px-6 py-4 overflow-hidden bg-gray-700">
+          <form>
+            <div className="mb-6">
+              <ImageWithLoading
+                key={profilePictureURL}
+                className="rounded-full shadow-lg"
+                src={profilePictureURL}
+                width="8rem"
+                height="8rem"
+              />
+              <div className="flex flex-col items-start">
+                <input
+                  type="file"
+                  id="fileInput"
+                  onChange={updateImageHandler}
+                  className="rounded-full bg-slate-50 mt-4"
                 />
               </div>
-              <div>
-                <InputSection
-                  onChange={usernameChangeHandler}
-                  label="Username"
-                  type="text"
-                  value={editedUsername}
-                />
-              </div>
+            </div>
+
+            <div className="mb-4">
               <div className="mb-4">
                 <InputSection
-                  onChange={phoneChangeHandler}
-                  label="Phone"
+                  onChange={firstNameChangeHandler}
+                  label="First Name"
                   type="text"
-                  value={editedPhone}
+                  value={editedFirstName}
                 />
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <ImageWithLoading
-                  key={profilePictureURL}
-                  className="w-24 h-24 mb-3 rounded-full shadow-lg"
-                  src={profilePictureURL}
-                  width="6rem"
-                  height="6rem"
-                />
-                <div className="flex flex-col items-start">
-                  <input
-                    type="file"
-                    id="fileInput"
-                    onChange={updateImageHandler}
-                  />
-                </div>
-              </div>
-              <Button title="Update" onClick={updateHandler} />
-            </form>
-          </div>
+              <InputSection
+                onChange={lastNameChangeHandler}
+                label="Last Name"
+                type="text"
+                value={editedLastName}
+              />
+            </div>
+            <div>
+              <InputSection
+                onChange={usernameChangeHandler}
+                label="Username"
+                type="text"
+                value={editedUsername}
+              />
+            </div>
+            <div className="mb-4">
+              <InputSection
+                onChange={phoneChangeHandler}
+                label="Phone"
+                type="text"
+                value={editedPhone}
+              />
+            </div>
+
+            <Button title="Update" onClick={updateHandler} />
+          </form>
         </div>
       )}
     </>

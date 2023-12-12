@@ -22,7 +22,7 @@ import DefaultConversationView from './components/Conversations/DefaultConversat
 
 function App() {
   return (
-    <div className="flex h-screen">
+    <div className="flex flex-1 rounded-lg overflow-hidden shadow-lg">
       <ToastContainer
         position="bottom-left"
         autoClose={2000}

@@ -276,7 +276,10 @@ export default function Sidebar() {
 
           <div className="flex-1 flex flex-col dark:border-gray-500">
             <Navbar />
-            <Outlet />
+
+            <div className="flex-1 flex flex-col bg-white">
+              <Outlet />
+            </div>
           </div>
         </>
       )}

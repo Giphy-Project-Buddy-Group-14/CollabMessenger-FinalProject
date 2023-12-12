@@ -23,8 +23,8 @@ export default function Profile() {
                 '/src/assets/empty_profile_pic.webp'
               }
               alt="Some image"
-              width="6rem"
-              height="6rem"
+              width="12rem"
+              height="12rem"
             />
             <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
               {userProfile.firstName} {userProfile.lastName}
