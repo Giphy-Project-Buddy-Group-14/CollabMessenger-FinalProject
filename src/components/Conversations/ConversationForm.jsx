@@ -1,8 +1,10 @@
 import { PropTypes } from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-export default function PrivateMessageForm({ user, onSubmit }) {
+export default function ConversationForm({ onSubmit }) {
   const [text, setText] = useState('');
+
+  const inputRef = useRef(null);
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -10,6 +12,12 @@ export default function PrivateMessageForm({ user, onSubmit }) {
     onSubmit(text);
     setText('');
   };
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   return (
     <>
@@ -73,13 +81,13 @@ export default function PrivateMessageForm({ user, onSubmit }) {
               <span className="sr-only">Add emoji</span>
             </button>
             <input
-              disabled={!user}
               id="chat"
               rows="1"
               className="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Your message..."
               onChange={(e) => setText(e.target.value)}
               value={text}
+              ref={inputRef}
             />
 
             <button
@@ -104,7 +112,7 @@ export default function PrivateMessageForm({ user, onSubmit }) {
   );
 }
 
-PrivateMessageForm.propTypes = {
+ConversationForm.propTypes = {
   user: PropTypes.shape({
     id: PropTypes.string.isRequired,
   }),

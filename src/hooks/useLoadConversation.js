@@ -11,6 +11,13 @@ export default function useLoadConversation(conversationId) {
   const realtimeData = useRealtimeFirebaseData(conversationPath);
   const [userProfiles, setUserProfiles] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [messagesCount, setMessagesCount] = useState(0);
+
+  useEffect(() => {
+    if (realtimeData.data) {
+      setMessagesCount(Object.keys(realtimeData.data).length);
+    }
+  }, [realtimeData.data]);
 
   useEffect(() => {
     if (!conversationId) {
@@ -40,5 +47,5 @@ export default function useLoadConversation(conversationId) {
   }, [conversationId]);
 
   const { data, ...otherData } = realtimeData;
-  return { messages: data, ...otherData, userProfiles, loading };
+  return { messages: data, messagesCount, ...otherData, userProfiles, loading };
 }

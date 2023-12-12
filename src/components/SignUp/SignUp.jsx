@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { signUp } from '../../services/auth.service';
+import { signUp, registerUser } from '../../services/auth.service';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import Button from '../Ui/Button';
@@ -11,7 +11,10 @@ import {
   MAX_USERNAME_LENGTH,
 } from '../../common/constants';
 
+import { useAuth } from '../../hooks/useAuth';
+
 export default function SignUp() {
+  const { register } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -29,9 +32,7 @@ export default function SignUp() {
     setUsername(event.target.value);
   };
 
-  const signUpHandler = async (event) => {
-    event.preventDefault();
-
+  const signUpHandler = async () => {
     if (
       username.length < MIN_USERNAME_LENGTH ||
       username.length > MAX_USERNAME_LENGTH
@@ -48,13 +49,8 @@ export default function SignUp() {
     }
 
     try {
-      const authenticatedUser = await signUp(email, password);
-      const userData = {
-        uid: authenticatedUser.uid,
-        email: email,
-        username: username,
-      };
-      await createUserProfile(userData);
+      const userProfile = await register(email, password, username);
+      console.log('XXX created new userProfile: ', userProfile);
       toast.success('Sign up successful');
       navigate('/signin');
     } catch (error) {

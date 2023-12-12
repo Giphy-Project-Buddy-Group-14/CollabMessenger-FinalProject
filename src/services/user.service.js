@@ -6,7 +6,10 @@ import {
   update,
   query,
   limitToFirst,
+  orderByChild,
+  equalTo,
 } from 'firebase/database';
+
 import { db, auth } from '../../firebaseAppConfig';
 import { setFileToStorage } from './storage.service';
 import { DEFAULT_TIME_ZONE } from '../common/constants';
@@ -62,11 +65,39 @@ export const getUserProfileByUID = async (uid) => {
         id: uid,
         uid,
       };
+    }
+  } catch (error) {
+    console.error('Error fetching user profile data:', error);
+    throw error;
+  }
+};
+
+export const getUserProfileByUsername = async (username) => {
+  try {
+    // Assuming 'users' is the collection where user profiles are stored
+    const usersRef = ref(db, 'users');
+    const usernameQuery = query(
+      usersRef,
+      orderByChild('username'),
+      equalTo(username)
+    );
+
+    const snapshot = await get(usernameQuery);
+
+    if (snapshot.exists() && snapshot.hasChildren()) {
+      const userKey = Object.keys(snapshot.val())[0]; // Get the first user key
+      const userProfile = snapshot.val()[userKey];
+      return {
+        ...userProfile,
+        displayName: userProfile.displayName, // Assuming displayName is an attribute
+        id: userKey,
+        uid: userKey, // Assuming UID is the same as the user key
+      };
     } else {
       throw new Error('User not found.');
     }
   } catch (error) {
-    console.error('Error fetching user profile data:', error);
+    console.error('Error fetching user profile by username:', error);
     throw error;
   }
 };
