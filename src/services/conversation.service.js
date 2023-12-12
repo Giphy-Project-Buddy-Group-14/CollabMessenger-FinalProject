@@ -163,13 +163,34 @@ export const getConversationById = async (conversationId) => {
     const snapshot = await get(conversationRef);
 
     if (snapshot.exists()) {
-      return snapshot.val();
+      return {
+        id: snapshot.key,
+        ...snapshot.val(),
+      };
     } else {
       console.log('No conversation found with ID:', conversationId);
       return null;
     }
   } catch (error) {
     console.error('Error on getConversationById:', error);
+    throw error;
+  }
+};
+
+export const fetchUserConversationsById = async (userId) => {
+  try {
+    const userConversationsRef = ref(db, `userConversations/${userId}`);
+
+    const snapshot = await get(userConversationsRef);
+
+    if (snapshot.exists()) {
+      return snapshot.val();
+    } else {
+      console.log('No user conversations found with user ID:', userId);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error on fetchUserConversationsById:', error);
     throw error;
   }
 };

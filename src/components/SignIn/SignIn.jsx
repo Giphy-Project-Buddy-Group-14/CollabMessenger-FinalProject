@@ -5,19 +5,25 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Button from '../Ui/Button';
 import InputSection from '../Ui/InputSection';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function SignIn() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const navigate = useNavigate();
 
-  // const { login } = useAuth();
+  const { login } = useAuth();
 
   const signInHandler = async (event) => {
-    event.preventDefault();
+    console.log('email: ', email);
+    console.log('password: ', password);
+    console.log('event: ', event);
+
+    // event.preventDefault();
 
     try {
-      await signIn(email, password);
+      // await signIn(email, password);
+      await login(email, password);
       // login(user);
       toast.success('Login successful');
       navigate('/');

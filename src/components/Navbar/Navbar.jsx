@@ -4,18 +4,18 @@ import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import ImageWithLoading from '../helper/ImageWithLoading';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { useUserProfile } from '../../hooks/useUserProfile';
 import {
   Dropdown,
   DropdownButton,
   DropdownItems,
   DropdownItem,
 } from '../Ui/Dropdown/Dropdown';
+import { USER_PROFILE_PATH } from '../../common/routes';
 
 export default function Navbar() {
-  const { logout } = useAuth();
+  const { currentUserProfile, loading, logout } = useAuth();
   const { isAuthenticated } = useFirebaseAuth();
-  const { profilePictureURL, profileLoading } = useUserProfile();
+
   const navigate = useNavigate();
 
   const logoutNavbar = () => {
@@ -63,7 +63,7 @@ export default function Navbar() {
                       <BellIcon className="h-6 w-6" aria-hidden="true" />
                     </button>
 
-                    {!profileLoading && (
+                    {!loading && (
                       <Dropdown>
                         <DropdownButton
                           className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -74,14 +74,17 @@ export default function Navbar() {
                         >
                           <ImageWithLoading
                             className="w-24 h-24 mb-3 rounded-full shadow-lg"
-                            src={profilePictureURL}
+                            src={currentUserProfile.profilePictureURL}
                             alt="Some image"
                             width="2rem"
                             height="2rem"
                           />
                         </DropdownButton>
                         <DropdownItems>
-                          <DropdownItem to="/profile" title="Your Profile" />
+                          <DropdownItem
+                            to={USER_PROFILE_PATH(currentUserProfile.username)}
+                            title="Your Profile"
+                          />
                           <DropdownItem title="Settings" />
                           <DropdownItem title="Logout" onClick={logoutNavbar} />
                         </DropdownItems>

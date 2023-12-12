@@ -4,6 +4,7 @@ import {
   signOut,
 } from 'firebase/auth';
 import { auth } from '../../firebaseAppConfig';
+import { createUserProfile } from './user.service';
 
 export const signUp = async (email, password) => {
   try {
@@ -37,6 +38,32 @@ export const signIn = async (email, password) => {
   } catch (error) {
     console.error('Sign in error:', error.message);
     throw new Error(error.message);
+  }
+};
+
+export const registerUser = async (email, password, username) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    console.log('User registered successfully', userCredential);
+    const user = userCredential.user;
+
+    const userProfileData = {
+      uid: user.uid,
+      id: user.uid,
+      email: email,
+      username: username,
+    };
+    await createUserProfile(userProfileData);
+
+    return user;
+  } catch (error) {
+    console.error('Error during user registration:', error);
+    // Handle errors
+    throw new Error(error);
   }
 };
 

@@ -1,44 +1,42 @@
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link, useParams } from 'react-router-dom'; // Import Link from react-router-dom
 import ImageWithLoading from '../helper/ImageWithLoading';
-import { useUserProfile } from '../../hooks/useUserProfile';
+import LoadingIndicator from '../Ui/LoadingIndicator';
+import useLoadUserProfileByUsername from '../../hooks/useLoadUserProfileByUsername';
 
 export default function Profile() {
-  const {
-    email,
-    firstName,
-    lastName,
-    username,
-    phone,
-    profilePictureURL,
-    profileLoading,
-  } = useUserProfile();
+  const params = useParams();
+  const username = params.username;
+  const { loading, userProfile } = useLoadUserProfileByUsername(username);
 
   return (
     <>
-      {profileLoading}
-      {!profileLoading && (
+      {loading && <LoadingIndicator />}
+      {!loading && (
         <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <div className="flex justify-end px-4 pt-4"></div>
 
           <div className="flex flex-col items-center pb-10">
             <ImageWithLoading
               className="w-24 h-24 mb-3 rounded-full shadow-lg"
-              src={profilePictureURL || '/src/assets/empty_profile_pic.webp'}
+              src={
+                userProfile.profilePictureURL ||
+                '/src/assets/empty_profile_pic.webp'
+              }
               alt="Some image"
               width="6rem"
               height="6rem"
             />
             <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-              {firstName} {lastName}
+              {userProfile.firstName} {userProfile.lastName}
             </h5>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              Username: {username}
+              Username: {userProfile.username}
             </span>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              Email: {email}
+              Email: {userProfile.email}
             </span>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              Phone: {phone}
+              Phone: {userProfile.phone}
             </span>
             <div className="flex mt-4 md:mt-6">
               <Link

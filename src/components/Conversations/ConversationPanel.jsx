@@ -1,10 +1,10 @@
 import { PropTypes } from 'prop-types';
-import Message from './Message';
-import LoadingIndicator from '../../Ui/LoadingIndicator';
-import useLoadConversation from '../../../hooks/useLoadConversation';
-import Heading from '../../Ui/Heading';
+import ConversationMessage from './ConversationMessage';
+import LoadingIndicator from '../Ui/LoadingIndicator';
+import useLoadConversation from '../../hooks/useLoadConversation';
+import Heading from '../Ui/Heading';
 
-export default function MessagesPanel({ conversationId, messagesEndRef }) {
+export default function ConversationPanel({ conversationId, messagesEndRef }) {
   const { messages, userProfiles, loading } =
     useLoadConversation(conversationId);
 
@@ -30,7 +30,7 @@ export default function MessagesPanel({ conversationId, messagesEndRef }) {
                     if (!userProfile) return;
 
                     return (
-                      <Message
+                      <ConversationMessage
                         key={message.id}
                         userProfile={userProfile}
                         message={message}
@@ -50,7 +50,7 @@ export default function MessagesPanel({ conversationId, messagesEndRef }) {
   );
 }
 
-MessagesPanel.propTypes = {
+ConversationPanel.propTypes = {
   conversationId: PropTypes.string,
   messagesEndRef: PropTypes.object,
 };
