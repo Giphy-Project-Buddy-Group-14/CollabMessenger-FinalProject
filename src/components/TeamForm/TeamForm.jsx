@@ -149,15 +149,19 @@ const TeamMembers = ({ teamId }) => {
                 loggedUser.uid === team.owner &&
                 member.userInfo.uid !== loggedUser.uid && (
                   <div
-                    className="cursor-pointer h-8 w-8 text-xs flex justify-center items-center opacity-25 hover:opacity-100 transition"
+                    className="cursor-pointer text-xs flex flex-col whitespace-nowrap opacity-25 hover:opacity-100 transition"
                     onClick={() => onRemoveUserFromTeam(member)}
                   >
-                    ☒
+                    ☒ delete
                   </div>
                 )}
+
               {member.userInfo.uid === loggedUser.uid &&
                 loggedUser.uid !== team.owner && (
-                  <div onClick={() => onLeaveTeam(member)}>
+                  <div
+                    onClick={() => onLeaveTeam(member)}
+                    className="flex flex-row text-xs gap-1 text-zinc-500 pl-4 cursor-pointer"
+                  >
                     <svg
                       className="cursor-pointer h-4 w-4 text-red-500"
                       fill="none"
@@ -171,6 +175,7 @@ const TeamMembers = ({ teamId }) => {
                         d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
                       />
                     </svg>
+                    leave
                   </div>
                 )}
             </div>

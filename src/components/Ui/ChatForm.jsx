@@ -1,35 +1,84 @@
 import { useState } from 'react';
 import { addMessageToChannel } from '../../services/message.service';
 import { PropTypes } from 'prop-types';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function ChatForm({ selectedChannel }) {
   const [text, setText] = useState('');
   const [error, setError] = useState(null);
+  const { currentUserProfile } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError(null);
 
     if (!text.trim()) {
-      setError('Message cannot be empty');
       return;
     }
 
     try {
-      await addMessageToChannel(selectedChannel.id, text);
+      await addMessageToChannel({
+        channelId: selectedChannel.id,
+        text,
+        profilePictureURL: currentUserProfile.profilePictureURL,
+        ownerName:
+          currentUserProfile.firstName + ' ' + currentUserProfile.lastName,
+      });
       setText(''); // Reset text field after successful send
     } catch (err) {
       setError(err.message);
     }
   };
 
+  const icons = [
+    '😂',
+    '😄',
+    '😃',
+    '😀',
+    '😊',
+    '😉',
+    '😍',
+    '😘',
+    '😚',
+    '😗',
+    '😙',
+    '😜',
+  ];
+
+  const [isIconsOpen, setIsIconsOpen] = useState(false);
+
   return (
     <form onSubmit={handleSubmit}>
       <label htmlFor="chat" className="sr-only">
         Your message
       </label>
-      <div className="flex items-center px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-700">
+      <div className="flex items-center rounded-lg bg-gray-50 ">
+        <div>
+          <div className="relative">
+            {isIconsOpen && (
+              <div className="absolute bottom-6 left-0 bg-slate-50 rounded-lg shadow-xl flex flex-auto rid-cols-10">
+                {icons.map((icon, index) => {
+                  return (
+                    <div
+                      className="cursor-pointer p-2 px-3 rounded-full hover:bg-slate-100 inline-block"
+                      key={'icon-' + index}
+                      onClick={() => {
+                        setText(text + icon);
+                        setIsIconsOpen(false);
+                      }}
+                    >
+                      {icon}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
         <button
+          onClick={() => {
+            setIsIconsOpen(!isIconsOpen);
+          }}
           type="button"
           className="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
         >

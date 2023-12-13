@@ -1,11 +1,7 @@
 import { PropTypes } from 'prop-types';
 
 export default function Heading({ title }) {
-  return (
-    <h6 className="text-lg font-bold dark:text-white text-center pb-4 pt-4">
-      {title}
-    </h6>
-  );
+  return <div className="text-m font-bold dark:text-white pb-6">{title}</div>;
 }
 
 Heading.propTypes = {

@@ -21,43 +21,70 @@ export default function ConversationItem({ conversation, isSelected }) {
     setOtherParticipants(otherParticipants);
   }, [conversation.participants, currentUserProfile]);
 
+  const conversationImage = (participants) => {
+    return (
+      <div className="flex w-8 h-8 overflow-clip rounded-full">
+        {participants.map((participant, index) => {
+          return (
+            <ImageWithLoading
+              key={index}
+              className="w-8 h-8"
+              src={participant.profilePictureURL}
+              alt={participant.displayName}
+              width="2rem"
+              height="2rem"
+            />
+          );
+        })}
+      </div>
+    );
+  };
+
+  const formatConversationName = (participants) => {
+    if (participants.length === 1) {
+      const participant = participants[0];
+
+      return (
+        <div className="flex items-center gap-2">
+          {conversationImage(participants)}
+          <div>
+            {participant.firstName} {participant.lastName}
+          </div>
+        </div>
+      );
+    }
+
+    const restCount = participants.length - 2;
+
+    if (participants.length > 1) {
+      return (
+        <div className="flex items-center gap-2">
+          {conversationImage(participants)}
+          <div>
+            {participants[0].firstName}, {participants[1].firstName}
+            {restCount ? (
+              <span className="text-gray-400 ml-2">+{restCount}</span>
+            ) : null}
+          </div>
+        </div>
+      );
+    }
+
+    return '';
+  };
+
   return (
     <>
       <li>
         <Link
           to={CONVERSATION_PATH(conversation.id)}
-          className={`flex flex-col p-2 text-gray-900 rounded-lg border border-transparent dark:text-white ${
+          className={`flex flex-col p-2 text-gray-900 rounded-lg border text-sm border-transparent dark:text-white ${
             isSelected
               ? 'bg-gray-100 border-blue-500 ring-blue-500'
               : 'hover:bg-gray-100 dark:hover:bg-gray-700'
           } group`}
         >
-          {otherParticipants.map((participant) => {
-            return (
-              <div
-                key={participant.id}
-                className="flex items-center justify-between w-full"
-              >
-                <div className="flex items-center">
-                  <ImageWithLoading
-                    className="w-8 h-8 rounded-full shadow-lg"
-                    src={participant.profilePictureURL}
-                    alt={participant.displayName}
-                    width="2rem"
-                    height="2rem"
-                  />
-                  <span className="flex-1 ms-3 whitespace-nowrap">
-                    {participant.displayName}
-                  </span>
-                </div>
-                {/* {index === 0 && (
-                    <span className="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                      {messagesCount}
-                    </span>
-                  )} */}
-              </div>
-            );
-          })}
+          {formatConversationName(otherParticipants)}
         </Link>
       </li>
     </>

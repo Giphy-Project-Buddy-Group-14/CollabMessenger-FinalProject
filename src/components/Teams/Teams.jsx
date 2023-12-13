@@ -5,12 +5,14 @@ import { useState, useEffect } from 'react';
 import { useUserProfile } from '../../hooks/useUserProfile';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
 import { NEW_TEAM_PATH } from '../../common/routes';
+import Heading from '../Ui/Heading';
 
 export default function Teams() {
   const { user } = useFirebaseAuth();
   const navigate = useNavigate();
   const [teams, setTeams] = useState([]);
   const { MyTeams } = useUserProfile();
+  console.log(MyTeams);
   const handleTeamClick = (team) => {
     navigate(`/teams/${team.uid}`);
   };
@@ -38,7 +40,7 @@ export default function Teams() {
     <section className="p-6">
       <div>
         <div className="flex items-center justify-between">
-          <div className="text-lg font-bold text-gray-800 mb-4">My Teams</div>
+          <Heading title="My Teams" />
           <Button title="New team" onClick={newTeam} />
         </div>
 

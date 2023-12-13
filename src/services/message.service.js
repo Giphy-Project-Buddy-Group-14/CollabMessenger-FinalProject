@@ -2,14 +2,12 @@ import { getDatabase, ref, push, get } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebaseAppConfig';
 
-/**
- * Sends a message to a specified channel in Firebase Realtime Database.
- *
- * @param {string} channelId - The ID of the channel to send the message to.
- * @param {string} text - The text of the message to send.
- * @returns {Promise<void>} A promise that resolves when the message is sent successfully.
- */
-export const addMessageToChannel = async (channelId, text) => {
+export const addMessageToChannel = async ({
+  channelId,
+  text,
+  profilePictureURL,
+  ownerName,
+}) => {
   const database = getDatabase();
   const auth = getAuth();
   const currentUser = auth.currentUser;
@@ -22,6 +20,8 @@ export const addMessageToChannel = async (channelId, text) => {
     uid: currentUser.uid,
     owner: currentUser.email || 'unknown', // Default to 'Anonymous' if displayName is not set
     text,
+    profilePictureURL,
+    ownerName,
     createdOn: new Date().toISOString(),
   };
 

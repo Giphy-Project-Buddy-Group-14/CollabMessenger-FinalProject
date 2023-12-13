@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom';
 import TeamMembers from '../TeamForm/TeamForm';
 import ImageWithLoading from '../helper/ImageWithLoading';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
+import Heading from '../Ui/Heading';
 
 export default function Chat() {
   const params = useParams();
@@ -111,6 +112,14 @@ export default function Chat() {
     );
   }, [teamId]);
 
+  useEffect(() => {
+    console.log('channels', channels, selectChannel);
+
+    if (!!channels.length && !selectedChannel) {
+      selectChannel(channels[0]);
+    }
+  }, [channels, selectedChannel]);
+
   const createChannelHandler = async (teamId, title, userId) => {
     const newChannel = await createChannel(teamId, title, userId);
     return newChannel;
@@ -120,18 +129,20 @@ export default function Chat() {
     <>
       {loading && <LoadingIndicator />}
       {!loading && (
-        <div className="flex flex-row h-full w-full overflow-x-hidden pl-4">
-          <div className="flex flex-col pb-8 pl-2 pr-2 bg-white flex-shrink-0 w-44">
+        <div className="flex flex-row h-full w-full overflow-x-hidden p-6">
+          <div className="flex flex-col bg-white flex-shrink-0 w-44">
             {/* ... Sidebar Content ... */}
-            <div className="my-8">
+            <div>
               {/* ... Active Conversations ... */}
               <div className="text-sm">
-                <div className="font-bold mb-4">Active channels</div>
+                <Heading title="Active channels" />
+
                 <ChatList
                   channels={channels}
                   onClick={(channel) => selectChannel(channel)}
                   selectedChannel={selectedChannel}
                 />
+
                 <div className="my-8">
                   {!isAddChannelFormVisible && (
                     <button
@@ -176,7 +187,7 @@ export default function Chat() {
           <div className="flex flex-col flex-auto h-full">
             {/* ... Chat Messages ... */}
             {!!selectedChannel && (
-              <div className="flex flex-col h-full p-6 pr-0">
+              <div className="flex flex-col h-full p-6 pr-0 bg-slate-50">
                 <h1 className="text-xl font-semibold mb-6">
                   {selectedChannel.title}
                 </h1>
@@ -187,6 +198,13 @@ export default function Chat() {
                       {Object.keys(selectedChannelMessages || {}).map(
                         (messageKey, index) => {
                           const message = selectedChannelMessages[messageKey];
+                          const options = {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          };
 
                           const classNames =
                             user.email === message.owner
@@ -205,8 +223,8 @@ export default function Chat() {
                             >
                               <div>
                                 <ImageWithLoading
-                                  className="mb-3 flex-shrink-0"
-                                  src={''}
+                                  className="mb-3 flex-shrink-0 rounded-full"
+                                  src={message.profilePictureURL}
                                   alt="Some image"
                                   width="2rem"
                                   height="2rem"
@@ -216,12 +234,15 @@ export default function Chat() {
                               <div
                                 className={`flex flex-col gap-2 p-2 px-4 rounded-xl shadow-sm ${bgClassNames}`}
                               >
-                                <div className="flex text-sm gap-2 items-center opacity-50">
+                                <div className="flex text-sm gap-4 items-center opacity-50">
                                   <div className="text-semibold">
-                                    {message.owner}
+                                    {message.ownerName || message.owner}
                                   </div>
                                   <div className="opacity-50 text-xs">
-                                    ({message.createdOn})
+                                    {new Date(message.createdOn).toLocaleString(
+                                      'en-us',
+                                      options
+                                    )}
                                   </div>
                                 </div>
                                 <p className="text-m">{message.text}</p>
@@ -240,7 +261,7 @@ export default function Chat() {
               </div>
             )}
           </div>
-          <div className="flex flex-col pb-8 pl-2 pr-2 w-56 bg-white flex-shrink-0">
+          <div className="flex flex-col pb-8 pl-6 pr-2 bg-white flex-shrink-0">
             {!!selectedChannel && <TeamMembers teamId={teamId} />}
           </div>
         </div>

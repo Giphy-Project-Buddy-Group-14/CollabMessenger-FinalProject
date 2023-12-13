@@ -30,7 +30,7 @@ export default function ConversationMessage({
   const authorized = () => message.authorId === author.id;
 
   return (
-    <article className="px-6 py-4 text-base bg-white rounded-lg dark:bg-gray-900">
+    <article className="py-4 text-base bg-white rounded-lg dark:bg-gray-900">
       <footer className="flex justify-between items-center mb-2">
         <div className="flex items-center">
           <ImageWithLoading
