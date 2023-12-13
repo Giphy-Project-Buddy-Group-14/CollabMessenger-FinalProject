@@ -9,7 +9,6 @@ export default function AuthenticatedRoute({ children }) {
   const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
-    // Redirect to the sign-in page, and pass the current location in state
     return <Navigate to={SIGNIN_PATH} state={{ from: location }} replace />;
   }
 
