@@ -22,8 +22,7 @@ export default function NewTeam() {
     setTeamName(event.target.value);
   };
 
-  const createTeam = async (event) => {
-    event.preventDefault();
+  const createTeam = async () => {
 
     if (
       teamName.length < MIN_TEAM_NAME_LENGTH ||
