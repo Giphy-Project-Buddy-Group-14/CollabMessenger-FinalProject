@@ -13,7 +13,6 @@ export default function Conversation() {
 
   const sendMessageHandler = async (text) => {
     if (!text.trim()) {
-      toast.error('Message cannot be empty');
       return;
     }
 
@@ -28,14 +27,12 @@ export default function Conversation() {
   };
 
   return (
-    <>
-      <div className="overflow-y-auto grow">
-        <ConversationPanel conversationId={conversationId} />
-      </div>
+    <div className="flex flex-1 flex-col bg-gray-50">
+      <ConversationPanel conversationId={conversationId} />
 
       <div className="mt-auto">
         <ConversationForm key={conversationId} onSubmit={sendMessageHandler} />
       </div>
-    </>
+    </div>
   );
 }

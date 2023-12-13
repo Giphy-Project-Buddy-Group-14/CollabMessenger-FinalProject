@@ -12,12 +12,24 @@ import {
   DropdownItem,
 } from '../Ui/Dropdown/Dropdown';
 import { SIGNIN_PATH } from '../../common/routes';
+import { useParams } from 'react-router-dom';
 
 export default function Navbar() {
   const { logout } = useAuth();
   const { isAuthenticated } = useFirebaseAuth();
-  const { profilePictureURL, profileLoading, ...userDetails } =
+  const { profilePictureURL, profileLoading, MyTeams, ...userDetails } =
     useUserProfile();
+
+  const params = useParams();
+
+  const teamName = Object.keys(MyTeams || {}).reduce((acc, teamName) => {
+    const teamId = MyTeams[teamName];
+    if (teamId === params.teamId) {
+      return teamName;
+    }
+
+    return acc;
+  }, '');
 
   const navigate = useNavigate();
 
@@ -44,7 +56,9 @@ export default function Navbar() {
                 </Disclosure.Button>
               </div>
 
-              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start"></div>
+              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start pl-6 text-white font-semibold">
+                {teamName}
+              </div>
               {/* Profile dropdown */}
               {isAuthenticated && (
                 <>
@@ -68,8 +82,10 @@ export default function Navbar() {
                             />
                           </DropdownButton>
                           <DropdownItems>
-                            <DropdownItem to="/profile" title="Your Profile" />
-                            <DropdownItem title="Settings" />
+                            <DropdownItem
+                              to={'/users/' + userDetails.username}
+                              title="Your Profile"
+                            />
                             <DropdownItem
                               title="Logout"
                               onClick={logoutNavbar}

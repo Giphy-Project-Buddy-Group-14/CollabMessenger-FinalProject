@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
 import { useAuth } from '../../hooks/useAuth';
@@ -8,20 +8,10 @@ import {
   USERS_PATH,
   CONVERSATIONS_PATH,
   TEAMS_PATH,
-  SIGNIN_PATH,
-  SIGNUP_PATH,
 } from '../../common/routes';
 
 export default function Sidebar() {
-  const navigate = useNavigate();
-  const { logout } = useAuth();
   const { loading, isAuthenticated, currentUserProfile } = useAuth();
-
-  const signOutHandler = (event) => {
-    event.preventDefault();
-    logout();
-    navigate('/signin');
-  };
 
   return (
     <>
@@ -201,7 +191,7 @@ export default function Sidebar() {
                   </>
                 )}
 
-                {!isAuthenticated && (
+                {/* {!isAuthenticated && (
                   <li>
                     <Link
                       to={SIGNIN_PATH}
@@ -228,9 +218,9 @@ export default function Sidebar() {
                       </span>
                     </Link>
                   </li>
-                )}
+                )} */}
 
-                {!isAuthenticated && (
+                {/* {!isAuthenticated && (
                   <li>
                     <Link
                       to={SIGNUP_PATH}
@@ -255,9 +245,9 @@ export default function Sidebar() {
                       </span>
                     </Link>
                   </li>
-                )}
+                )} */}
 
-                {isAuthenticated && (
+                {/* {isAuthenticated && (
                   <li>
                     <Link
                       to={HOME_PATH}
@@ -285,7 +275,7 @@ export default function Sidebar() {
                       </span>
                     </Link>
                   </li>
-                )}
+                )} */}
               </ul>
             </div>
           </aside>

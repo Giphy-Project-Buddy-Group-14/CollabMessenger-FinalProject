@@ -88,38 +88,44 @@ export default function ConversationPanel({ conversationId }) {
   };
 
   return (
-    <>
+    <div className="flex flex-1">
       {loading && <LoadingIndicator />}
       {!loading && (
-        <>
+        <div className="flex-1 flex flex-col">
           {messages.length === 0 && (
-            <Heading title="Start a new conversation" />
+            <div className="h-16 flex items-center pl-6 pt-6">
+              <Heading title="Start a new conversation" />
+            </div>
           )}
-          {messages.length !== 0 && (
-            <>
-              <Heading title="You are currently in an active conversation..." />
-              <section className="dark:bg-gray-900 py-1 lg:py-1 antialiased">
-                <div className="px-4">
-                  {messages.map((message) => {
-                    const userProfile = findUserProfileForMessage(message);
-                    if (!userProfile) return;
 
-                    return (
-                      <ConversationMessage
-                        key={message.id}
-                        userProfile={userProfile}
-                        message={message}
-                        conversationId={conversationId}
-                      />
-                    );
-                  })}
-                </div>
-              </section>
-            </>
+          {messages.length !== 0 && (
+            <div className="h-16 flex items-center pl-6 pt-6">
+              <Heading title="You are currently in an active conversation..." />
+            </div>
           )}
-        </>
+
+          {messages.length !== 0 && (
+            <div className="flex-1 relative overflow-auto">
+              <section className="p-6 absolute">
+                {messages.map((message) => {
+                  const userProfile = findUserProfileForMessage(message);
+                  if (!userProfile) return;
+
+                  return (
+                    <ConversationMessage
+                      key={message.id}
+                      userProfile={userProfile}
+                      message={message}
+                      conversationId={conversationId}
+                    />
+                  );
+                })}
+              </section>
+            </div>
+          )}
+        </div>
       )}
-    </>
+    </div>
   );
 }
 

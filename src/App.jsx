@@ -35,6 +35,7 @@ function App() {
         pauseOnHover
         theme="light"
       />
+
       <AuthProvider>
         <BrowserRouter>
           <Routes>
