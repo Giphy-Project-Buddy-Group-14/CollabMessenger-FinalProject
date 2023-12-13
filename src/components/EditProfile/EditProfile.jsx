@@ -23,15 +23,10 @@ export default function EditProfile() {
   } = useUserProfile();
 
   const [editedPhone, setEditedPhone] = useState('');
-  const [editedUsername, setEditedUsername] = useState('');
   const [editedFirstName, setEditedFirstName] = useState('');
   const [editedLastName, setEditedLastName] = useState('');
 
   const navigate = useNavigate();
-
-  const usernameChangeHandler = (event) => {
-    setEditedUsername(event.target.value);
-  };
 
   const phoneChangeHandler = (event) => {
     setEditedPhone(event.target.value);
@@ -65,7 +60,6 @@ export default function EditProfile() {
     if (!userProfile) return;
 
     setEditedPhone(phone);
-    setEditedUsername(username);
     setEditedFirstName(firstName);
     setEditedLastName(lastName);
   }, [firstName, lastName, phone, profileLoading, userProfile, username]);
@@ -125,14 +119,6 @@ export default function EditProfile() {
                 label="Last Name"
                 type="text"
                 value={editedLastName}
-              />
-            </div>
-            <div>
-              <InputSection
-                onChange={usernameChangeHandler}
-                label="Username"
-                type="text"
-                value={editedUsername}
               />
             </div>
             <div className="mb-4">
