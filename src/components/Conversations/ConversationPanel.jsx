@@ -29,8 +29,6 @@ export default function ConversationPanel({ conversationId }) {
         if (snapshot.exists()) {
           let realtimeData = snapshot.val();
 
-          console.log('realtimeData.data:', realtimeData.data);
-
           if (
             realtimeData &&
             typeof realtimeData === 'object' &&
