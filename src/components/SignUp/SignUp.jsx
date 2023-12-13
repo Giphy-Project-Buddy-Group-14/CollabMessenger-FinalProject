@@ -10,7 +10,7 @@ import {
 } from '../../common/constants';
 
 import { useAuth } from '../../hooks/useAuth';
-import { SIGNIN_PATH } from '../../common/routes';
+import { HOME_PATH } from '../../common/routes';
 
 export default function SignUp() {
   const { register } = useAuth();
@@ -50,7 +50,7 @@ export default function SignUp() {
     try {
       await register(email, password, username);
       toast.success('Sign up successful');
-      navigate(SIGNIN_PATH);
+      navigate(HOME_PATH);
     } catch (error) {
       toast.error(error.message);
     }

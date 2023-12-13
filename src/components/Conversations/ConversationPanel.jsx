@@ -1,14 +1,16 @@
 import { PropTypes } from 'prop-types';
-import ConversationMessage from './ConversationMessage';
 import LoadingIndicator from '../Ui/LoadingIndicator';
 import Heading from '../Ui/Heading';
 import { useEffect, useState } from 'react';
 import { getDatabase, ref, onValue, off } from 'firebase/database';
 import { getConversationById } from '../../services/conversation.service';
 import { getUserProfileByUID } from '../../services/user.service';
+import useFirebaseAuth from '../../hooks/useFirebaseAuth';
+import ImageWithLoading from '../helper/ImageWithLoading';
 
 export default function ConversationPanel({ conversationId }) {
   const path = conversationId ? `privateMessages/${conversationId}` : null;
+  const { user } = useFirebaseAuth();
 
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -106,6 +108,77 @@ export default function ConversationPanel({ conversationId }) {
 
           {messages.length !== 0 && (
             <div className="flex-1 relative overflow-auto">
+              <div className="absolute inset-0 p-6">
+                <ul className="flex flex-col gap-6 pb-8 pr-6 w-full">
+                  {Object.keys(messages || {}).map((messageKey, index) => {
+                    const message = messages[messageKey];
+                    const userProfile = findUserProfileForMessage(message);
+
+                    console.log('userProfile', userProfile);
+
+                    const options = {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    };
+
+                    const classNames =
+                      user.uid === message.authorId
+                        ? ' flex-row-reverse pl-20'
+                        : ' pr-20';
+
+                    const bgClassNames =
+                      user?.uid === message.authorId
+                        ? ' bg-sky-100'
+                        : ' bg-emerald-100';
+
+                    return (
+                      <li
+                        key={messageKey + index}
+                        className={'flex gap-4' + classNames}
+                      >
+                        <div>
+                          {userProfile && (
+                            <ImageWithLoading
+                              className="mb-3 flex-shrink-0 rounded-full"
+                              src={userProfile.profilePictureURL}
+                              alt="Some image"
+                              width="2rem"
+                              height="2rem"
+                            />
+                          )}
+                        </div>
+
+                        <div
+                          className={`flex flex-col gap-2 p-2 px-4 rounded-xl shadow-sm ${bgClassNames}`}
+                        >
+                          <div className="flex text-sm gap-4 items-center opacity-50">
+                            <div className="text-semibold">
+                              {userProfile?.firstName +
+                                ' ' +
+                                userProfile?.lastName || userProfile.owner}
+                            </div>
+                            <div className="opacity-50 text-xs">
+                              {new Date(message.createdAt).toLocaleString(
+                                'en-us',
+                                options
+                              )}
+                            </div>
+                          </div>
+                          <p className="text-m">{message.text}</p>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+          )}
+
+          {/* {messages.length !== 0 && (
+            <div className="flex-1 relative overflow-auto">
               <section className="p-6 absolute">
                 {messages.map((message) => {
                   const userProfile = findUserProfileForMessage(message);
@@ -122,7 +195,7 @@ export default function ConversationPanel({ conversationId }) {
                 })}
               </section>
             </div>
-          )}
+          )} */}
         </div>
       )}
     </div>
