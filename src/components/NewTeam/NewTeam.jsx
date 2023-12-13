@@ -23,7 +23,6 @@ export default function NewTeam() {
   };
 
   const createTeam = async () => {
-
     if (
       teamName.length < MIN_TEAM_NAME_LENGTH ||
       teamName.length > MAX_TEAM_NAME_LENGTH
