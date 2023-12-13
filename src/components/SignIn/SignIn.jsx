@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { signIn } from '../../services/auth.service';
 import { Link, useNavigate } from 'react-router-dom';
 // import { useAuth } from "../../context/AuthContext";
 import { toast } from 'react-toastify';
@@ -14,17 +13,9 @@ export default function SignIn() {
 
   const { login } = useAuth();
 
-  const signInHandler = async (event) => {
-    console.log('email: ', email);
-    console.log('password: ', password);
-    console.log('event: ', event);
-
-    // event.preventDefault();
-
+  const signInHandler = async () => {
     try {
-      // await signIn(email, password);
       await login(email, password);
-      // login(user);
       toast.success('Login successful');
       navigate('/');
     } catch (error) {

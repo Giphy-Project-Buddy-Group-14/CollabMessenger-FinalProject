@@ -1,19 +1,18 @@
-import { Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import useFirebaseAuth from '../../hooks/useFirebaseAuth';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+import { SIGNIN_PATH } from '../../common/routes';
 
 export default function AuthenticatedRoute({ children }) {
   const location = useLocation();
 
-  const { isAuthenticated, loading } = useFirebaseAuth();
-
-  if (loading) {
-    return;
-  }
+  const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
-    return <Navigate to="/signin" path={location.pathname}></Navigate>;
+    // Redirect to the sign-in page, and pass the current location in state
+    return <Navigate to={SIGNIN_PATH} state={{ from: location }} replace />;
   }
+
   return children;
 }
 

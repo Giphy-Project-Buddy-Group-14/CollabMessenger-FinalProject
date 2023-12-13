@@ -41,7 +41,14 @@ function App() {
             <Route exact path="/" element={<Sidebar />}>
               <Route index element={<Home />} />
 
-              <Route path="users" element={<RouteOutlet />}>
+              <Route
+                path="users"
+                element={
+                  <AuthenticatedRoute>
+                    <RouteOutlet />
+                  </AuthenticatedRoute>
+                }
+              >
                 <Route index element={<Users />} />
                 <Route path=":username" element={<RouteOutlet />}>
                   <Route index element={<Profile />} />
@@ -49,43 +56,45 @@ function App() {
                 </Route>
               </Route>
 
-              <Route path="teams" element={<Teams />} />
-              <Route path="chat" element={<Chat />} />
-
+              <Route
+                path="teams"
+                element={
+                  <AuthenticatedRoute>
+                    <RouteOutlet />
+                  </AuthenticatedRoute>
+                }
+              >
+                <Route index element={<Teams />} />
+                <Route path="new-team" element={<NewTeam />} />
+                <Route path=":teamId" element={<Chat />} />
+              </Route>
               <Route
                 path="conversations"
                 element={
-                  <ConversationsProvider>
-                    <Conversations />
-                  </ConversationsProvider>
+                  <AuthenticatedRoute>
+                    <ConversationsProvider>
+                      <Conversations />
+                    </ConversationsProvider>
+                  </AuthenticatedRoute>
                 }
               >
                 <Route index element={<DefaultConversationView />} />
                 <Route path=":conversationId" element={<Conversation />} />
               </Route>
 
-              <Route path="profile" element={<RouteOutlet />}>
-                <Route
-                  index
-                  element={
-                    <AuthenticatedRoute>
-                      <Profile />
-                    </AuthenticatedRoute>
-                  }
-                />
-                <Route
-                  path="edit"
-                  element={
-                    <AuthenticatedRoute>
-                      <EditProfile />
-                    </AuthenticatedRoute>
-                  }
-                />
+              <Route
+                path="profile"
+                element={
+                  <AuthenticatedRoute>
+                    <RouteOutlet />
+                  </AuthenticatedRoute>
+                }
+              >
+                <Route index element={<Profile />} />
+                <Route path="edit" element={<EditProfile />} />
               </Route>
               <Route path="signup" element={<SignUp />} />
               <Route path="signin" element={<SignIn />} />
-              <Route path="new-team" element={<NewTeam />} />
-              <Route path="teams/:teamId" element={<Chat />} />
             </Route>
           </Routes>
         </BrowserRouter>

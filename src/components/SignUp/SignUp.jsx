@@ -1,10 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { signUp, registerUser } from '../../services/auth.service';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import Button from '../Ui/Button';
 import InputSection from '../Ui/InputSection';
-import { createUserProfile } from '../../services/user.service';
 import { checkIfUsernameExists } from '../../services/user.service';
 import {
   MIN_USERNAME_LENGTH,
@@ -12,6 +10,7 @@ import {
 } from '../../common/constants';
 
 import { useAuth } from '../../hooks/useAuth';
+import { SIGNIN_PATH } from '../../common/routes';
 
 export default function SignUp() {
   const { register } = useAuth();
@@ -49,10 +48,9 @@ export default function SignUp() {
     }
 
     try {
-      const userProfile = await register(email, password, username);
-      console.log('XXX created new userProfile: ', userProfile);
+      await register(email, password, username);
       toast.success('Sign up successful');
-      navigate('/signin');
+      navigate(SIGNIN_PATH);
     } catch (error) {
       toast.error(error.message);
     }
