@@ -11,6 +11,7 @@ import {
   DropdownItems,
   DropdownItem,
 } from '../Ui/Dropdown/Dropdown';
+import { SIGNIN_PATH } from '../../common/routes';
 
 export default function Navbar() {
   const { logout } = useAuth();
@@ -22,7 +23,7 @@ export default function Navbar() {
 
   const logoutNavbar = () => {
     logout();
-    navigate('/signin');
+    navigate(SIGNIN_PATH);
   };
 
   return (

@@ -2,7 +2,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
 import { useAuth } from '../../hooks/useAuth';
-import { USER_PROFILE_PATH, USERS_PATH } from '../../common/routes';
+import {
+  HOME_PATH,
+  USER_PROFILE_PATH,
+  USERS_PATH,
+  CONVERSATIONS_PATH,
+  TEAMS_PATH,
+  SIGNIN_PATH,
+  SIGNUP_PATH,
+} from '../../common/routes';
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -53,7 +61,7 @@ export default function Sidebar() {
               <ul className="space-y-2 font-medium">
                 <li>
                   <Link
-                    to="/"
+                    to={HOME_PATH}
                     className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                   >
                     <svg
@@ -104,58 +112,66 @@ export default function Sidebar() {
                   </>
                 )}
 
-                <li>
-                  <Link
-                    to={USERS_PATH}
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                  >
-                    <svg
-                      className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                {isAuthenticated && (
+                  <li>
+                    <Link
+                      to={USERS_PATH}
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                     >
-                      {' '}
-                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />{' '}
-                      <circle cx="9" cy="7" r="4" />{' '}
-                      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />{' '}
-                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                    <span className="flex-1 ms-3 whitespace-nowrap">Users</span>
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    to="/teams"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                  >
-                    <svg
-                      className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
+                      <svg
+                        className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        strokeWidth="1"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                      />
-                    </svg>
+                      >
+                        {' '}
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />{' '}
+                        <circle cx="9" cy="7" r="4" />{' '}
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />{' '}
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                      </svg>
+                      <span className="flex-1 ms-3 whitespace-nowrap">
+                        Users
+                      </span>
+                    </Link>
+                  </li>
+                )}
 
-                    <span className="flex-1 ms-3 whitespace-nowrap">Teams</span>
-                  </Link>
-                </li>
+                {isAuthenticated && (
+                  <li>
+                    <Link
+                      to={TEAMS_PATH}
+                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                    >
+                      <svg
+                        className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1"
+                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                        />
+                      </svg>
 
-                {!loading && (
+                      <span className="flex-1 ms-3 whitespace-nowrap">
+                        Teams
+                      </span>
+                    </Link>
+                  </li>
+                )}
+
+                {isAuthenticated && (
                   <>
                     <li>
                       <Link
-                        to="/conversations"
+                        to={CONVERSATIONS_PATH}
                         className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                       >
                         <svg
@@ -188,7 +204,7 @@ export default function Sidebar() {
                 {!isAuthenticated && (
                   <li>
                     <Link
-                      to="/signin"
+                      to={SIGNIN_PATH}
                       className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                     >
                       <svg
@@ -217,7 +233,7 @@ export default function Sidebar() {
                 {!isAuthenticated && (
                   <li>
                     <Link
-                      to="/signup"
+                      to={SIGNUP_PATH}
                       className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                     >
                       <svg
@@ -244,7 +260,7 @@ export default function Sidebar() {
                 {isAuthenticated && (
                   <li>
                     <Link
-                      to="/"
+                      to={HOME_PATH}
                       onClick={signOutHandler}
                       className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                     >

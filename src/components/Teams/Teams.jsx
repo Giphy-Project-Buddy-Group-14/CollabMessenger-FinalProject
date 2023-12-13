@@ -4,6 +4,7 @@ import { getTeamsByUserUids } from '../../services/teams.service';
 import { useState, useEffect } from 'react';
 import { useUserProfile } from '../../hooks/useUserProfile';
 import useFirebaseAuth from '../../hooks/useFirebaseAuth';
+import { NEW_TEAM_PATH } from '../../common/routes';
 
 export default function Teams() {
   const { user } = useFirebaseAuth();
@@ -30,7 +31,7 @@ export default function Teams() {
   }, [MyTeams]);
 
   const newTeam = () => {
-    navigate('/new-team');
+    navigate(NEW_TEAM_PATH);
   };
 
   return (

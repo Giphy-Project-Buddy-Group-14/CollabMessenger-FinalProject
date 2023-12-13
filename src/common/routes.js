@@ -6,3 +6,7 @@ export const REGISTER_PATH = '/register';
 export const USER_MESSAGES_PATH = (username) => `/user-messages/${username}`;
 export const CONVERSATIONS_PATH = '/conversations';
 export const CONVERSATION_PATH = (id) => `/conversations/${id}`;
+export const TEAMS_PATH = '/teams';
+export const NEW_TEAM_PATH = '/teams/new-team';
+export const SIGNIN_PATH = '/signin';
+export const SIGNUP_PATH = '/signup';
