@@ -19,6 +19,22 @@ export default function ConversationForm({ onSubmit }) {
     }
   }, []);
 
+  const icons = [
+    '😂',
+    '😄',
+    '😃',
+    '😀',
+    '😊',
+    '😉',
+    '😍',
+    '😘',
+    '😚',
+    '😗',
+    '😙',
+    '😜',
+  ];
+  const [isIconsOpen, setIsIconsOpen] = useState(false);
+
   return (
     <>
       <div className="rounded-2xl h-full p-6">
@@ -27,7 +43,32 @@ export default function ConversationForm({ onSubmit }) {
             Your message
           </label>
           <div className="flex items-center px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+            <div>
+              <div className="relative">
+                {isIconsOpen && (
+                  <div className="absolute bottom-6 left-0 bg-slate-50 rounded-lg shadow-xl flex flex-auto rid-cols-10">
+                    {icons.map((icon, index) => {
+                      return (
+                        <div
+                          className="cursor-pointer p-2 px-3 rounded-full hover:bg-slate-100 inline-block"
+                          key={'icon-' + index}
+                          onClick={() => {
+                            setText(text + icon);
+                            setIsIconsOpen(false);
+                          }}
+                        >
+                          {icon}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
             <button
+              onClick={() => {
+                setIsIconsOpen(!isIconsOpen);
+              }}
               type="button"
               className="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
             >
@@ -46,7 +87,6 @@ export default function ConversationForm({ onSubmit }) {
                   d="M13.408 7.5h.01m-6.876 0h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM4.6 11a5.5 5.5 0 0 0 10.81 0H4.6Z"
                 />
               </svg>
-              <span className="sr-only">Add emoji</span>
             </button>
             <input
               id="chat"
@@ -57,7 +97,6 @@ export default function ConversationForm({ onSubmit }) {
               value={text}
               ref={inputRef}
             />
-
             <button
               type="submit"
               className="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
