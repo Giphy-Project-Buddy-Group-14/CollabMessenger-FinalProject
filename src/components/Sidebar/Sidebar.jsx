@@ -73,7 +73,7 @@ export default function Sidebar() {
                   </Link>
                 </li>
 
-                {isAuthenticated && (
+                {isAuthenticated && currentUserProfile && (
                   <>
                     <li>
                       <Link
