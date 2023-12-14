@@ -94,7 +94,7 @@ export default function Navbar() {
                       <b>
                         {userDetails.firstName} {userDetails.lastName}
                       </b>
-                      <div className="opacity-80">{userDetails.email}</div>
+                      <div className="opacity-80">@{userDetails.username}</div>
                     </div>
                   </div>
                 )}
