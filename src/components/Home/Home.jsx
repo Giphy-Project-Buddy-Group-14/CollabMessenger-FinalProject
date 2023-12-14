@@ -16,16 +16,10 @@ export default function Home() {
   };
 
   return (
-    <div className="p-12 pl-0 flex gap-6">
-      <div>
-        <img src="/src/assets/home.jpg" />
-      </div>
-
-      <div className="w-1/3 flex flex-col gap-6 items-center justify-center">
-        <h2
-          className="text-gray-700 text-4xl font-black"
-          style={{ lineHeight: 1.6 }}
-        >
+    <div className="p-12 gap-6 home-page flex-1 justify-center">
+      <div className="flex w-1/2 p-6 flex-col gap-6 bg-white backdrop-blur-md bg-opacity-40 rounded-xl">
+        <h2 className="text-gray-700 text-5xl font-black">CHATIFY</h2>
+        <h2 className="text-gray-700 text-3xl font-semibold">
           Connect, Collaborate, Chatify: Your Ultimate Text Messenger for
           Seamless Friendships!
         </h2>

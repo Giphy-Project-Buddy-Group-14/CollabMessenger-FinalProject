@@ -32,34 +32,37 @@ export default function SignIn() {
   };
 
   return (
-    <div>
-      <div className="flex flex-col flex-1 items-center bg-gray-50">
-        <div className="w-full px-6 py-6 overflow-hidden bg-gray-700">
-          <div className="w-1/3">
-            <form>
-              <div className="mt-4">
-                <InputSection
-                  onChange={emailChangeHandler}
-                  label="Email"
-                  type="email"
-                  placeholder="name@mail.com"
-                />
-              </div>
-              <div className="mt-4">
-                <InputSection
-                  onChange={passwordChangeHandler}
-                  label="Password"
-                  type="password"
-                />
-              </div>
-              <Link to="#" className="text-xs text-gray-50 hover:underline">
-                Forget Password?
-              </Link>
-              <div className="flex items-center mt-4">
-                <Button title="Sign In" onClick={signInHandler} />
-              </div>
-            </form>
-          </div>
+    <div className="flex flex-col flex-1 bg-gray-700">
+      <div className="h-18">
+        <div className="text-m font-bold text-white bg-slate-800 p-6">
+          LogIn
+        </div>
+      </div>
+      <div className="w-full px-6 py-4 overflow-hidden ">
+        <div className="w-1/3">
+          <form>
+            <div className="mt-4">
+              <InputSection
+                onChange={emailChangeHandler}
+                label="Email"
+                type="email"
+                placeholder="name@mail.com"
+              />
+            </div>
+            <div className="mt-4">
+              <InputSection
+                onChange={passwordChangeHandler}
+                label="Password"
+                type="password"
+              />
+            </div>
+            <Link to="#" className="text-xs text-gray-50 hover:underline">
+              Forget Password?
+            </Link>
+            <div className="flex items-center mt-4">
+              <Button title="Sign In" onClick={signInHandler} />
+            </div>
+          </form>
         </div>
       </div>
     </div>

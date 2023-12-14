@@ -129,8 +129,8 @@ export default function Chat() {
     <>
       {loading && <LoadingIndicator />}
       {!loading && (
-        <div className="flex flex-row h-full w-full overflow-x-hidden p-6">
-          <div className="flex flex-col bg-white flex-shrink-0 w-44">
+        <div className="flex flex-row h-full w-full overflow-x-hidden p-6 page-with-bg">
+          <div className="flex flex-col flex-shrink-0 w-44">
             {/* ... Sidebar Content ... */}
             <div>
               {/* ... Active Conversations ... */}
@@ -187,7 +187,7 @@ export default function Chat() {
           <div className="flex flex-col flex-auto h-full">
             {/* ... Chat Messages ... */}
             {!!selectedChannel && (
-              <div className="flex flex-col h-full p-6 pr-0 bg-slate-50">
+              <div className="flex flex-col h-full p-6 pr-0 bg-slate-50 rounded-2xl backdrop-blur-lg bg-opacity-70">
                 <h1 className="text-xl font-semibold mb-6">
                   {selectedChannel.title}
                 </h1>
@@ -261,7 +261,7 @@ export default function Chat() {
               </div>
             )}
           </div>
-          <div className="flex flex-col pb-8 pl-6 pr-2 bg-white flex-shrink-0">
+          <div className="flex flex-col pb-8 pl-6 pr-2 flex-shrink-0">
             {!!selectedChannel && <TeamMembers teamId={teamId} />}
           </div>
         </div>

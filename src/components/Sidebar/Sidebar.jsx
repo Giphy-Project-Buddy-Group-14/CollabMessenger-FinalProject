@@ -18,37 +18,19 @@ export default function Sidebar() {
       {loading}
       {!loading && (
         <>
-          <button
-            data-drawer-target="default-sidebar"
-            data-drawer-toggle="default-sidebar"
-            aria-controls="default-sidebar"
-            type="button"
-            className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-          >
-            <span className="sr-only">Open sidebar</span>
-            <svg
-              className="w-6 h-6"
-              aria-hidden="true"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                clipRule="evenodd"
-                fillRule="evenodd"
-                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
-              ></path>
-            </svg>
-          </button>
-
           <aside
-            id="default-sidebar"
             className="transition-transform -translate-x-full sm:translate-x-0 bg-gray-50 dark:bg-gray-800"
             style={{ width: '18rem' }}
-            aria-label="Sidebar"
           >
-            <div className="px-3 py-4 overflow-y-auto">
-              <ul className="space-y-2 font-medium">
+            <div className="overflow-y-auto flex flex-col">
+              <div
+                className="relative flex h-16 items-center justify-between pl-6"
+                style={{ backgroundColor: '#F3D262' }}
+              >
+                <div className="logo">CHATIFY</div>
+              </div>
+
+              <ul className="p-4 font-medium sidebar flex-1">
                 <li>
                   <Link
                     to={HOME_PATH}
@@ -190,92 +172,6 @@ export default function Sidebar() {
                     </li>
                   </>
                 )}
-
-                {/* {!isAuthenticated && (
-                  <li>
-                    <Link
-                      to={SIGNIN_PATH}
-                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                    >
-                      <svg
-                        className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1"
-                        stroke="currentColor"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        {' '}
-                        <path stroke="none" d="M0 0h24v24H0z" />{' '}
-                        <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />{' '}
-                        <path d="M7 12h14l-3 -3m0 6l3 -3" />
-                      </svg>
-                      <span className="flex-1 ms-3 whitespace-nowrap">
-                        Sign In
-                      </span>
-                    </Link>
-                  </li>
-                )} */}
-
-                {/* {!isAuthenticated && (
-                  <li>
-                    <Link
-                      to={SIGNUP_PATH}
-                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                    >
-                      <svg
-                        className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="1"
-                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                        />
-                      </svg>
-
-                      <span className="flex-1 ms-3 whitespace-nowrap">
-                        Sign Up
-                      </span>
-                    </Link>
-                  </li>
-                )} */}
-
-                {/* {isAuthenticated && (
-                  <li>
-                    <Link
-                      to={HOME_PATH}
-                      onClick={signOutHandler}
-                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                    >
-                      <svg
-                        className="flex-shrink-0 w-8 h-8 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1"
-                        stroke="currentColor"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        {' '}
-                        <path stroke="none" d="M0 0h24v24H0z" />{' '}
-                        <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />{' '}
-                        <path d="M20 12h-13l3 -3m0 6l-3 -3" />
-                      </svg>
-                      <span className="flex-1 ms-3 whitespace-nowrap">
-                        Logout
-                      </span>
-                    </Link>
-                  </li>
-                )} */}
               </ul>
             </div>
           </aside>

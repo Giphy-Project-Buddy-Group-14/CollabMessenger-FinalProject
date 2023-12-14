@@ -27,7 +27,7 @@ export default function Conversation() {
   };
 
   return (
-    <div className="flex flex-1 flex-col bg-gray-50">
+    <div className="flex flex-1 flex-col bg-gray-50 opacity-80 backdrop-blur-2xl">
       <ConversationPanel conversationId={conversationId} />
 
       <div className="mt-auto">
