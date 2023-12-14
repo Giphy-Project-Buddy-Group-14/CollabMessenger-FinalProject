@@ -41,7 +41,8 @@ export default function Navbar() {
   return (
     <Disclosure
       as="nav"
-      className="bg-gray-800 bg-opacity-25 backdrop-blur-lg relative z-100"
+      className="bg-gray-800 bg-opacity-25 backdrop-blur-lg relative"
+      style={{ zIndex: 100 }}
     >
       {({ open }) => (
         <div className="mx-auto mr-4 px-2">
@@ -103,6 +104,6 @@ export default function Navbar() {
           </div>
         </div>
       )}
-    </Disclosure>
+    </Disclosure >
   );
 }
