@@ -117,7 +117,7 @@ const TeamMembers = ({ teamId }) => {
 
   return (
     <div className="flex flex-col space-y-1 mt-2 mr-4 w-48">
-      <div className="flex flex-row items-center justify-between text-s mt-6 mb-4">
+      <div className="flex flex-row items-center justify-between text-s mb-4">
         <span className="font-bold text-sm">Team members</span>
         <span className="flex items-center justify-center bg-gray-300 w-4 h-4 text-xs rounded-full ml-4">
           {teamMembers.length}

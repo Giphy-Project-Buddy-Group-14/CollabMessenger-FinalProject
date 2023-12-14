@@ -62,7 +62,7 @@ export default function Users() {
   }, [userProfiles, loading]);
 
   return (
-    <div className="p-6 flex-1 flex flex-col">
+    <div className="p-6 flex-1 flex flex-col page-with-bg">
       <div className="h-18">
         <Heading title="Registered Users" />
       </div>
@@ -111,7 +111,7 @@ export default function Users() {
               {/* <!-- Dropdown menu --> */}
               <div
                 id="dropdownAction"
-                className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+                className="z-10 hidden bg-white bg-opacity-50 divide-y divide-gray-100 rounded-lg shadow w-44"
               >
                 <ul
                   className="py-1 text-sm text-gray-700 dark:text-gray-200"

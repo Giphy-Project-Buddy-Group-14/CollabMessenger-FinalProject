@@ -1,0 +1,19 @@
+.sidebar {}
+
+.logo {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: white;
+    font-size: 1.2rem;
+    background: #383B4A;
+    padding: 3px 10px;
+    border-radius: 5px;
+    margin-left: -10px;
+}
+
+.home-page {
+    background: url(/src/assets/home2.jpg) no-repeat bottom center;
+}
+
+.page-with-bg {
+    background: url(/src/assets/home2-opacity-blured.jpg) no-repeat bottom center;
+}

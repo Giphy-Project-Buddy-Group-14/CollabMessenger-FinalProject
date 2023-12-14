@@ -37,7 +37,7 @@ export default function Teams() {
   };
 
   return (
-    <section className="p-6">
+    <section className="p-6 flex-1 page-with-bg">
       <div>
         <div className="flex items-center justify-between">
           <Heading title="My Teams" />
@@ -55,12 +55,15 @@ export default function Teams() {
                 className="w-1/4 cursor-pointer relative"
                 onClick={() => handleTeamClick(team)}
               >
-                <div className="border flex justify-center flex-col border-spacing-1 p-4 rounded-lg dark:bg-gray-800 dark:hover:bg-gray-700 hover:bg-gray-100 dark:border-gray-700 lg:mb-0 bg-slate-50">
-                  <div className="text-l font-bold tracking-tight text-gray-900 dark:text-white pr-16">
+                <div
+                  className="border flex = justify-center flex-col opacity-90 hover:opacity-100 transition border-spacing-1 p-4 rounded-lg dark:bg-gray-800 dark:hover:bg-gray-700 hover:bg-gray-100 dark:border-gray-700 lg:mb-0"
+                  style={{ background: '#495164' }}
+                >
+                  <div className="text-l font-bold tracking-tight text-gray-50 dark:text-white pr-16">
                     {team.name}
                   </div>
 
-                  <p className="text-sm text-gray-700 dark:text-gray-400">
+                  <p className="text-sm text-gray-400">
                     {`${Object.keys(team.members || {}).length} member${
                       Object.keys(team.members || {}).length !== 1 ? 's' : ''
                     } `}
@@ -70,13 +73,13 @@ export default function Teams() {
                 <div
                   style={{
                     position: 'absolute',
-                    top: '12px',
-                    right: '12px',
+                    bottom: '-10px',
+                    right: '16px',
                     userSelect: 'none',
                   }}
                 >
                   <svg
-                    className="flex-shrink-0 w-16 h-16 opacity-20 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                    className="flex-shrink-0 w-20 h-20 opacity-20 text-gray-50 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"

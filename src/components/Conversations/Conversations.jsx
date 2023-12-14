@@ -18,7 +18,7 @@ export default function Conversations() {
         onDrag={handleDrag}
         cursor="col-resize"
         render={({ getGridProps, getGutterProps }) => (
-          <div className="split-grid" {...getGridProps()}>
+          <div className="split-grid page-with-bg" {...getGridProps()}>
             <div className="split-column">
               <ConversationsList />
             </div>

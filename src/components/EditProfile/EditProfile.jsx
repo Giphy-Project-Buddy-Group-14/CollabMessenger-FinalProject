@@ -86,7 +86,7 @@ export default function EditProfile() {
       {profileLoading && <LoadingIndicator />}
       {!profileLoading && (
         <div className="w-full flex-1 px-6 py-4 overflow-hidden bg-gray-700">
-          <form>
+          <form className="w-1/3">
             <div className="mb-6">
               <ImageWithLoading
                 key={profilePictureURL}
